@@ -28,11 +28,11 @@ export type PlayerState = {
 };
 
 export const SEAT_POSITIONS: Record<number, string> = {
-    0: "absolute -bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-30",
-    1: "absolute top-1/2 -left-10 -translate-y-1/2 flex flex-col items-center gap-2 z-20",
-    2: "absolute -top-10 left-[20%] flex flex-col items-center gap-2 group z-20",
-    3: "absolute -top-10 right-[20%] flex flex-col items-center gap-2 z-20",
-    4: "absolute top-1/2 -right-10 -translate-y-1/2 flex flex-col items-center gap-2 z-20"
+    0: "absolute -bottom-12 md:-bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 md:gap-3 z-30",
+    1: "absolute top-1/2 -left-4 md:-left-10 -translate-y-1/2 flex flex-col items-center gap-1 md:gap-2 z-20",
+    2: "absolute -top-6 md:-top-10 left-[15%] md:left-[20%] flex flex-col items-center gap-1 md:gap-2 group z-20",
+    3: "absolute -top-6 md:-top-10 right-[15%] md:right-[20%] flex flex-col items-center gap-1 md:gap-2 z-20",
+    4: "absolute top-1/2 -right-4 md:-right-10 -translate-y-1/2 flex flex-col items-center gap-1 md:gap-2 z-20"
 };
 
 const DEALER_POOL = [
@@ -877,49 +877,49 @@ export default function GameTablePage() {
     return (
         <div className="bg-[#1a160a] h-screen text-slate-100 flex flex-col font-['Noto_Sans_TC'] overflow-hidden">
 
-            <header className="flex items-center justify-between whitespace-nowrap border-b border-accent-gold/20 bg-[#121212] px-6 py-3 shrink-0 z-50 shadow-lg">
-                <div className="flex items-center gap-4 text-white">
-                    <div className="flex items-center justify-center size-10 rounded bg-gradient-to-br from-primary to-primary-dark shadow-lg border border-white/10">
-                        <span className="material-symbols-outlined !text-[24px] text-white drop-shadow-md">poker_chip</span>
-                    </div>
+            <header className="flex items-center justify-between whitespace-nowrap border-b border-accent-gold/20 bg-[#121212] px-3 md:px-6 py-2 md:py-3 shrink-0 z-50 shadow-lg">
+                <div className="flex items-center gap-2 md:gap-4 text-white">
+                    <Link href="/lobby" className="flex items-center justify-center size-8 md:size-10 rounded bg-gradient-to-br from-primary to-primary-dark shadow-lg border border-white/10">
+                        <span className="material-symbols-outlined !text-[20px] md:!text-[24px] text-white drop-shadow-md">poker_chip</span>
+                    </Link>
                     <div>
-                        <h2 className="text-accent-gold-light text-xl font-serif font-bold leading-tight tracking-wide">皇家德州撲克</h2>
-                        <div className="text-[10px] text-gray-400 uppercase tracking-widest">頂級真人娛樂場</div>
+                        <h2 className="text-accent-gold-light text-base md:text-xl font-serif font-bold leading-tight tracking-wide">皇家德州撲克</h2>
+                        <div className="text-[8px] md:text-[10px] text-gray-400 uppercase tracking-widest hidden sm:block">頂級真人娛樂場</div>
                     </div>
                 </div>
-                <div className="flex flex-1 justify-end gap-8">
+                <div className="flex flex-1 justify-end gap-2 md:gap-8">
                     <div className="hidden md:flex items-center gap-8">
                         <Link className="text-slate-400 hover:text-accent-gold transition-colors text-sm font-medium tracking-wide uppercase" href="/lobby">大廳</Link>
                         <Link className="text-accent-gold text-sm font-bold tracking-wide uppercase border-b-2 border-accent-gold pb-1" href="/">牌桌</Link>
                         <Link className="text-slate-400 hover:text-accent-gold transition-colors text-sm font-medium tracking-wide uppercase" href="/tournaments">錦標賽</Link>
                         <button onClick={() => setIsComingSoonModalOpen(true)} className="text-slate-400 hover:text-accent-gold transition-colors text-sm font-medium tracking-wide uppercase">VIP 俱樂部</button>
                     </div>
-                    <div className="flex gap-4 items-center pl-6 border-l border-white/10">
-                        <div className="flex items-center gap-3 bg-black/40 rounded px-4 py-2 border border-accent-gold/30 shadow-inner">
-                            <div className="w-5 h-5 rounded-full bg-accent-gold flex items-center justify-center text-black text-xs font-bold">$</div>
-                            <span className="text-sm font-mono font-bold text-white tracking-wider">{playerBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <div className="flex gap-2 md:gap-4 items-center md:pl-6 md:border-l border-white/10">
+                        <div className="flex items-center gap-1.5 md:gap-3 bg-black/40 rounded px-2 md:px-4 py-1.5 md:py-2 border border-accent-gold/30 shadow-inner">
+                            <div className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-accent-gold flex items-center justify-center text-black text-[10px] md:text-xs font-bold">$</div>
+                            <span className="text-xs md:text-sm font-mono font-bold text-white tracking-wider">{playerBalance.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</span>
                             <button
                                 onClick={() => setIsRewardModalOpen(true)}
-                                className="ml-2 bg-gradient-to-b from-primary to-primary-dark hover:from-red-600 hover:to-red-800 text-white text-[10px] font-bold px-3 py-1 rounded shadow-md border border-white/10 uppercase tracking-wider transition-all"
+                                className="ml-1 md:ml-2 bg-gradient-to-b from-primary to-primary-dark hover:from-red-600 hover:to-red-800 text-white text-[9px] md:text-[10px] font-bold px-2 md:px-3 py-1 rounded shadow-md border border-white/10 uppercase tracking-wider transition-all"
                             >
-                                領取獎勵
+                                獎勵
                             </button>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1.5 md:gap-3">
                             <button
                                 onClick={() => setIsSettingsModalOpen(true)}
-                                className="flex items-center justify-center rounded-full size-10 bg-surface-dark hover:bg-neutral-700 text-gray-300 transition-colors border border-white/5"
+                                className="flex items-center justify-center rounded-full size-8 md:size-10 bg-surface-dark hover:bg-neutral-700 text-gray-300 transition-colors border border-white/5"
                             >
-                                <span className="material-symbols-outlined text-[20px]">settings</span>
+                                <span className="material-symbols-outlined text-[18px] md:text-[20px]">settings</span>
                             </button>
-                            <button className="flex items-center justify-center rounded-full size-10 bg-surface-dark hover:bg-neutral-700 text-gray-300 transition-colors relative border border-white/5">
-                                <span className="material-symbols-outlined text-[20px]">notifications</span>
-                                <span className="absolute top-2 right-2 size-2 bg-accent-gold rounded-full shadow-[0_0_8px_rgba(197,160,89,0.6)]"></span>
-                            </button>
-                            <div className="bg-center bg-no-repeat bg-cover rounded-full size-10 border-2 border-accent-gold/50 cursor-pointer shadow-lg" data-alt="User profile avatar" style={{ backgroundImage: `url('${clerkUser?.imageUrl || 'https://ui-avatars.com/api/?name=You&background=random'}')` }}></div>
+                            <div className="hidden sm:flex items-center justify-center rounded-full size-8 md:size-10 bg-surface-dark hover:bg-neutral-700 text-gray-300 transition-colors relative border border-white/5">
+                                <span className="material-symbols-outlined text-[18px] md:text-[20px]">notifications</span>
+                                <span className="absolute top-1.5 right-1.5 size-2 bg-accent-gold rounded-full shadow-[0_0_8px_rgba(197,160,89,0.6)]"></span>
+                            </div>
+                            <div className="bg-center bg-no-repeat bg-cover rounded-full size-8 md:size-10 border-2 border-accent-gold/50 cursor-pointer shadow-lg" data-alt="User profile avatar" style={{ backgroundImage: `url('${clerkUser?.imageUrl || 'https://ui-avatars.com/api/?name=You&background=random'}')` }}></div>
                             <button
                                 onClick={() => signOut({ redirectUrl: '/sign-in' })}
-                                className="flex items-center justify-center gap-1.5 rounded-lg h-9 px-3 bg-white/5 hover:bg-red-900/40 border border-white/10 hover:border-red-500/30 text-slate-400 hover:text-red-300 text-xs font-medium transition-all"
+                                className="hidden sm:flex items-center justify-center gap-1.5 rounded-lg h-8 md:h-9 px-2 md:px-3 bg-white/5 hover:bg-red-900/40 border border-white/10 hover:border-red-500/30 text-slate-400 hover:text-red-300 text-xs font-medium transition-all"
                             >
                                 <span className="material-symbols-outlined text-[16px]">logout</span>
                                 <span className="hidden lg:inline">登出</span>
@@ -935,11 +935,11 @@ export default function GameTablePage() {
                         <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black"></div>
                     </div>
                     {/* Dealer Showcase */}
-                    <div className="relative z-10 w-full h-[14vh] lg:h-[16vh] bg-black shadow-2xl overflow-hidden border-b border-accent-gold/20 group shrink-0">
+                    <div className="relative z-10 w-full h-[10vh] md:h-[14vh] lg:h-[16vh] bg-black shadow-2xl overflow-hidden border-b border-accent-gold/20 group shrink-0">
                         <div className="absolute inset-0 bg-cover bg-center opacity-70 blur-[2px]" data-alt="Soft focus luxury casino background" style={{ backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuAJsqf8ld7f8d1XU4UL3JDeujclDuwLT0SwQHyn6vIihMIOJ9OsQcaF6LEiLQ9_2SRbtuwNVG6p8-qgGM12NkG3b7TM5H7Stackc3pAQ8td7UhAM12iwCRJgWmUfowJAmG0JrMMGJSsJQzHCSlMj41A0Fhvml8Ip8NdHnFyItDtfGtzNknKb3fMXjoqKCApUYp_tPnHJUuRo7FoD080f-VbZdq04-lqfcJWeGGKuWY7r-mVXq7sREyKI8nFwV8GjH1Q3pOlIPd-QUhj')` }}></div>
                         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60"></div>
                         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-full flex items-end justify-center z-10 pointer-events-none">
-                            <div className="relative w-[140px] md:w-[180px] lg:w-[220px] h-[110%] bg-no-repeat transition-all duration-700 rounded-t-xl" style={{ backgroundImage: `url('${dealer.image}')`, backgroundSize: '180%', backgroundPosition: 'center 12%' }}>
+                            <div className="relative w-[100px] md:w-[180px] lg:w-[220px] h-[110%] bg-no-repeat transition-all duration-700 rounded-t-xl" style={{ backgroundImage: `url('${dealer.image}')`, backgroundSize: '180%', backgroundPosition: 'center 12%' }}>
                                 <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none"></div>
                                 {dealerMessage && (
                                     <div className="absolute top-[10%] right-[-30%] bg-surface-dark/95 border border-primary/40 text-white px-4 py-2 rounded-2xl rounded-bl-sm font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)] animate-bounce z-50 backdrop-blur text-xs whitespace-nowrap">
@@ -975,33 +975,33 @@ export default function GameTablePage() {
                     </div>
                     {/* Poker Table */}
                     <div className="flex-1 relative flex items-center justify-center p-2 z-10 overflow-hidden -mt-6">
-                        <div className="relative w-full max-w-5xl aspect-[2.1/1] bg-[#35654d] rounded-[200px] border-[16px] border-[#3e2723] shadow-[0_0_60px_rgba(0,0,0,0.8),inset_0_0_40px_rgba(0,0,0,0.6)] flex items-center justify-center felt-texture ring-1 ring-white/5 wood-texture">
+                        <div className="relative w-full max-w-5xl aspect-[1.8/1] md:aspect-[2.1/1] bg-[#35654d] rounded-[100px] md:rounded-[200px] border-[8px] md:border-[16px] border-[#3e2723] shadow-[0_0_60px_rgba(0,0,0,0.8),inset_0_0_40px_rgba(0,0,0,0.6)] flex items-center justify-center felt-texture ring-1 ring-white/5 wood-texture">
                             <div className="absolute inset-4 rounded-[180px] border border-yellow-400/10 pointer-events-none"></div>
                             <div className="absolute opacity-5 pointer-events-none select-none flex flex-col items-center justify-center transform scale-y-75">
                                 <span className="text-6xl font-serif font-bold text-black tracking-[0.5em] mb-2">ROYAL</span>
                                 <span className="text-4xl font-serif text-black tracking-[0.3em]">CASINO</span>
                             </div>
                             {/* Community Cards */}
-                            <div className="flex gap-3 items-center justify-center mb-10 z-20 h-24">
+                            <div className="flex gap-1.5 md:gap-3 items-center justify-center mb-6 md:mb-10 z-20 h-16 md:h-24">
                                 {communityCards.map((card, idx) => (
-                                    <div key={idx} className="w-16 h-24 bg-white rounded shadow-card flex flex-col justify-between p-1.5 border border-gray-300 transform hover:-translate-y-1 transition-transform duration-200 animate-fade-in-up">
-                                        <div className={`${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} font-card font-bold text-lg leading-none`}>{card.rank}</div>
-                                        <div className={`self-center text-4xl ${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} leading-none`}>{card.suit}</div>
-                                        <div className={`${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} font-card font-bold text-lg leading-none self-end rotate-180`}>{card.rank}</div>
+                                    <div key={idx} className="w-10 h-16 md:w-16 md:h-24 bg-white rounded shadow-card flex flex-col justify-between p-1 md:p-1.5 border border-gray-300 transform hover:-translate-y-1 transition-transform duration-200 animate-fade-in-up">
+                                        <div className={`${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} font-card font-bold text-xs md:text-lg leading-none`}>{card.rank}</div>
+                                        <div className={`self-center text-2xl md:text-4xl ${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} leading-none`}>{card.suit}</div>
+                                        <div className={`${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} font-card font-bold text-xs md:text-lg leading-none self-end rotate-180`}>{card.rank}</div>
                                     </div>
                                 ))}
                                 {Array(5 - communityCards.length).fill(0).map((_, idx) => (
-                                    <div key={`empty-${idx}`} className="w-16 h-24 rounded border border-white/10 shadow-inner bg-black/10 flex items-center justify-center">
-                                        <div className="w-14 h-22 border-2 border-dashed border-white/10 rounded-sm"></div>
+                                    <div key={`empty-${idx}`} className="w-10 h-16 md:w-16 md:h-24 rounded border border-white/10 shadow-inner bg-black/10 flex items-center justify-center">
+                                        <div className="w-8 h-14 md:w-14 md:h-22 border-2 border-dashed border-white/10 rounded-sm"></div>
                                     </div>
                                 ))}
                             </div>
                             {/* Pot Display */}
                             <div className="absolute top-[60%] left-1/2 -translate-x-1/2 flex flex-col items-center z-10">
-                                <div className={`bg-black/60 px-5 py-1.5 rounded-full text-accent-gold font-mono text-lg font-bold border border-accent-gold/30 shadow-lg backdrop-blur-sm mb-2 transition-all duration-500 ${winAnimation?.active ? 'scale-125 text-yellow-300 shadow-[0_0_30px_rgba(250,204,21,0.6)]' : ''}`}>
+                                <div className={`bg-black/60 px-3 md:px-5 py-1 md:py-1.5 rounded-full text-accent-gold font-mono text-sm md:text-lg font-bold border border-accent-gold/30 shadow-lg backdrop-blur-sm mb-1 md:mb-2 transition-all duration-500 ${winAnimation?.active ? 'scale-125 text-yellow-300 shadow-[0_0_30px_rgba(250,204,21,0.6)]' : ''}`}>
                                     ${displayPot.toLocaleString()}
                                 </div>
-                                <div className="text-white/40 text-[10px] uppercase tracking-widest font-bold mb-1">總底池</div>
+                                <div className="text-white/40 text-[8px] md:text-[10px] uppercase tracking-widest font-bold mb-1">總底池</div>
                                 {/* Static chip stack (hidden during win animation) */}
                                 {!winAnimation?.active && (
                                     <div className="flex items-center justify-center -space-x-4 mt-1 perspective-500">
@@ -1054,19 +1054,19 @@ export default function GameTablePage() {
                                 if (isUser) {
                                     return (
                                         <div key={player.id} className={posClass}>
-                                            <div className="flex gap-2 -mb-8 z-10 hover:-translate-y-6 transition-transform duration-300 cursor-pointer">
+                                            <div className="flex gap-1 md:gap-2 -mb-6 md:-mb-8 z-10 hover:-translate-y-6 transition-transform duration-300 cursor-pointer">
                                                 {player.cards?.map((card, idx) => (
-                                                    <div key={idx} className={`w-20 h-28 bg-white rounded-md shadow-[0_5px_15px_rgba(0,0,0,0.4)] flex flex-col justify-between p-2 border border-gray-300 relative transform ${idx === 0 ? '-rotate-6 hover:rotate-0 origin-bottom-right' : 'rotate-6 hover:rotate-0 origin-bottom-left'} transition-transform group`}>
-                                                        <div className={`${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} font-card font-bold text-xl leading-none`}>{card.rank}</div>
-                                                        <div className={`self-center text-5xl ${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} leading-none mt-1`}>{card.suit}</div>
-                                                        <div className={`${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} font-card font-bold text-xl leading-none self-end rotate-180`}>{card.rank}</div>
+                                                    <div key={idx} className={`w-14 h-20 md:w-20 md:h-28 bg-white rounded-md shadow-[0_5px_15px_rgba(0,0,0,0.4)] flex flex-col justify-between p-1.5 md:p-2 border border-gray-300 relative transform ${idx === 0 ? '-rotate-6 hover:rotate-0 origin-bottom-right' : 'rotate-6 hover:rotate-0 origin-bottom-left'} transition-transform group`}>
+                                                        <div className={`${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} font-card font-bold text-base md:text-xl leading-none`}>{card.rank}</div>
+                                                        <div className={`self-center text-3xl md:text-5xl ${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} leading-none mt-1`}>{card.suit}</div>
+                                                        <div className={`${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} font-card font-bold text-base md:text-xl leading-none self-end rotate-180`}>{card.rank}</div>
                                                         <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none rounded-md"></div>
                                                     </div>
                                                 ))}
                                             </div>
-                                            <div className="relative z-20 mt-6 flex flex-col items-center">
+                                            <div className="relative z-20 mt-4 md:mt-6 flex flex-col items-center">
                                                 <div className="relative">
-                                                    <div className={`w-24 h-24 rounded-full border-[4px] ${player.isWinner ? 'border-yellow-400 animate-[winnerGlow_1.5s_ease-in-out_infinite]' : isCurrentTurn ? 'border-green-400 shadow-[0_0_25px_rgba(74,222,128,0.5)] animate-pulse' : 'border-accent-gold'} bg-gray-700 bg-cover bg-center shadow-[0_0_20px_rgba(197,160,89,0.3)]`} style={{ backgroundImage: `url('${player.avatar}')` }}></div>
+                                                    <div className={`w-16 h-16 md:w-24 md:h-24 rounded-full border-[3px] md:border-[4px] ${player.isWinner ? 'border-yellow-400 animate-[winnerGlow_1.5s_ease-in-out_infinite]' : isCurrentTurn ? 'border-green-400 shadow-[0_0_25px_rgba(74,222,128,0.5)] animate-pulse' : 'border-accent-gold'} bg-gray-700 bg-cover bg-center shadow-[0_0_20px_rgba(197,160,89,0.3)]`} style={{ backgroundImage: `url('${player.avatar}')` }}></div>
                                                     {/* Turn countdown ring */}
                                                     {turnTimeLeft > 0 && isCurrentTurn && (
                                                         <svg className="absolute inset-[-4px] w-[104px] h-[104px] -rotate-90 pointer-events-none" viewBox="0 0 36 36">
@@ -1087,7 +1087,7 @@ export default function GameTablePage() {
                                                         <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-red-600 rounded-full flex items-center justify-center border-2 border-red-300 shadow-[0_0_10px_rgba(239,68,68,0.5)] text-[9px] text-white font-bold z-20">大盲</div>
                                                     )}
                                                 </div>
-                                                <div className={`bg-surface-dark px-6 py-2 rounded-lg border text-center min-w-[120px] shadow-xl -mt-4 z-20 relative ${player.isWinner ? 'border-yellow-400 animate-[winnerGlow_1.5s_ease-in-out_infinite]' : 'border-accent-gold/50'}`}>
+                                                <div className={`bg-surface-dark px-3 md:px-6 py-1.5 md:py-2 rounded-lg border text-center min-w-[80px] md:min-w-[120px] shadow-xl -mt-3 md:-mt-4 z-20 relative ${player.isWinner ? 'border-yellow-400 animate-[winnerGlow_1.5s_ease-in-out_infinite]' : 'border-accent-gold/50'}`}>
                                                     {/* Action badge */}
                                                     {player.lastAction && (
                                                         <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-black/90 text-yellow-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-yellow-500/40 whitespace-nowrap animate-fade-in-up z-30 shadow-[0_0_8px_rgba(250,204,21,0.3)]">
@@ -1120,7 +1120,7 @@ export default function GameTablePage() {
                                 return (
                                     <div key={player.id} className={`${posClass} ${foldedClass}`.trim()}>
                                         <div className="relative">
-                                            <div className={`w-16 h-16 rounded-full border-[3px] ${player.isWinner ? 'border-yellow-400 animate-[winnerGlow_1.5s_ease-in-out_infinite]' : isCurrentTurn ? 'border-green-400 shadow-[0_0_20px_rgba(74,222,128,0.5)] animate-pulse' : 'border-surface-dark'} bg-gray-800 bg-cover bg-center shadow-lg hover:ring-2 hover:ring-primary/50 transition-all cursor-pointer`} style={{ backgroundImage: `url('${player.avatar}')` }}></div>
+                                            <div className={`w-10 h-10 md:w-16 md:h-16 rounded-full border-2 md:border-[3px] ${player.isWinner ? 'border-yellow-400 animate-[winnerGlow_1.5s_ease-in-out_infinite]' : isCurrentTurn ? 'border-green-400 shadow-[0_0_20px_rgba(74,222,128,0.5)] animate-pulse' : 'border-surface-dark'} bg-gray-800 bg-cover bg-center shadow-lg hover:ring-2 hover:ring-primary/50 transition-all cursor-pointer`} style={{ backgroundImage: `url('${player.avatar}')` }}></div>
                                             {player.role === 'dealer' && (
                                                 <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center border border-yellow-300 shadow text-[10px] text-black font-bold">D</div>
                                             )}
@@ -1138,7 +1138,7 @@ export default function GameTablePage() {
                                             )}
                                         </div>
 
-                                        <div className={`bg-surface-dark/95 backdrop-blur px-4 py-1.5 rounded border ${player.status === 'thinking' ? 'border-accent-gold shadow-[0_0_15px_rgba(197,160,89,0.15)]' : player.isWinner ? 'border-yellow-400' : 'border-gray-700 shadow-lg'} text-center min-w-[90px] ${player.isWinner ? 'animate-[winnerGlow_1.5s_ease-in-out_infinite]' : ''} relative`}>
+                                        <div className={`bg-surface-dark/95 backdrop-blur px-2 md:px-4 py-1 md:py-1.5 rounded border ${player.status === 'thinking' ? 'border-accent-gold shadow-[0_0_15px_rgba(197,160,89,0.15)]' : player.isWinner ? 'border-yellow-400' : 'border-gray-700 shadow-lg'} text-center min-w-[60px] md:min-w-[90px] ${player.isWinner ? 'animate-[winnerGlow_1.5s_ease-in-out_infinite]' : ''} relative`}>
                                             {/* Action badge */}
                                             {player.lastAction && (
                                                 <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-black/90 text-yellow-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-yellow-500/40 whitespace-nowrap animate-fade-in-up z-30 shadow-[0_0_8px_rgba(250,204,21,0.3)]">
@@ -1195,7 +1195,7 @@ export default function GameTablePage() {
                         </div>
                     </div>
                     {/* Action Bar */}
-                    <div className="bg-[#1a1a1a] border-t border-accent-gold/20 z-40 shadow-[0_-5px_20px_rgba(0,0,0,0.3)] relative shrink-0 py-2 px-4">
+                    <div className="bg-[#1a1a1a] border-t border-accent-gold/20 z-40 shadow-[0_-5px_20px_rgba(0,0,0,0.3)] relative shrink-0 py-2 px-2 md:px-4">
                         {/* Auto-fold countdown */}
                         {turnTimeLeft > 0 && turnTimeLeft <= 10 && isUserTurn && (
                             <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-red-600/95 text-white font-bold text-sm px-5 py-1 rounded-t-lg shadow-[0_0_20px_rgba(239,68,68,0.5)] animate-pulse z-50 flex items-center gap-2">
@@ -1279,8 +1279,8 @@ export default function GameTablePage() {
                         )}
                     </div>
                 </div>
-                {/* Right Sidebar */}
-                <div className="w-80 bg-[#151515] border-l border-accent-gold/20 flex flex-col shrink-0 z-20 shadow-2xl">
+                {/* Right Sidebar - hidden on mobile */}
+                <div className="hidden lg:flex w-80 bg-[#151515] border-l border-accent-gold/20 flex-col shrink-0 z-20 shadow-2xl">
                     <div className="flex border-b border-white/5 bg-[#1a1a1a]">
                         <button className="flex-1 py-4 text-xs font-bold uppercase tracking-widest text-accent-gold border-b-2 border-accent-gold bg-white/5">聊天</button>
                         <button className="flex-1 py-4 text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-gray-300 hover:bg-white/5 transition-colors">歷史</button>
