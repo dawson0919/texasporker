@@ -393,14 +393,14 @@ export default function LobbyPage() {
               <span className="material-symbols-outlined group-hover:-translate-y-1 transition-transform">home</span>
               <span className="text-[10px] font-medium uppercase tracking-wide">首頁</span>
             </Link>
-            <button onClick={() => setIsComingSoonModalOpen(true)} className="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors group">
+            <Link className="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors group" href="/welfare">
               <span className="material-symbols-outlined group-hover:-translate-y-1 transition-transform">redeem</span>
               <span className="text-[10px] font-medium uppercase tracking-wide">福利</span>
-            </button>
-            <button onClick={() => setIsComingSoonModalOpen(true)} className="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors group">
+            </Link>
+            <Link className="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors group" href="/tasks">
               <span className="material-symbols-outlined group-hover:-translate-y-1 transition-transform">assignment</span>
               <span className="text-[10px] font-medium uppercase tracking-wide">任務</span>
-            </button>
+            </Link>
             <button onClick={() => setIsComingSoonModalOpen(true)} className="md:hidden -mt-8 size-14 rounded-full bg-gradient-to-br from-primary to-red-800 text-white shadow-lg shadow-red-900/50 flex items-center justify-center border-4 border-surface-darker">
               <span className="material-symbols-outlined text-3xl">play_arrow</span>
             </button>
