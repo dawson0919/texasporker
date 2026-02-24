@@ -162,12 +162,15 @@ export default function MultiplayerGamePage() {
             }
         }
 
-        // Update balance from our seat
-        const mySeat = newState.seats[mySeatIndex];
-        if (mySeat) {
-            setPlayerBalance(mySeat.chipBalance);
-        }
     }, [mySeatIndex, playSound, tableId]);
+
+    // Keep playerBalance in sync with game state (fixes stale closure in Realtime subscription)
+    useEffect(() => {
+        if (gameState && mySeatIndex >= 0) {
+            const seat = gameState.seats[mySeatIndex];
+            if (seat) setPlayerBalance(seat.chipBalance);
+        }
+    }, [gameState, mySeatIndex]);
 
     // Auto-start first hand with visible countdown
     const autoStartTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -379,9 +382,9 @@ export default function MultiplayerGamePage() {
                     </div>
                 </div>
                 <div className="flex gap-2 md:gap-4 items-center">
-                    <div className="flex items-center gap-1.5 md:gap-3 bg-black/40 rounded px-2 md:px-4 py-1.5 md:py-2 border border-accent-gold/30 shadow-inner">
-                        <div className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-accent-gold flex items-center justify-center text-black text-[10px] md:text-xs font-bold">$</div>
-                        <span className="text-xs md:text-sm font-mono font-bold text-white tracking-wider">{playerBalance.toLocaleString()}</span>
+                    <div className="flex items-center gap-1.5 md:gap-2 bg-gradient-to-b from-[#2a2a1a] to-[#1a1a0a] rounded-lg px-3 md:px-4 py-1.5 md:py-2 border border-accent-gold/40 shadow-[inset_0_1px_0_rgba(255,215,0,0.1),0_2px_8px_rgba(0,0,0,0.4)]">
+                        <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-gradient-to-b from-accent-gold to-yellow-600 flex items-center justify-center text-black text-[10px] md:text-xs font-black shadow-[0_2px_4px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.3)]">$</div>
+                        <span className="text-sm md:text-base font-mono font-bold text-accent-gold-light tracking-wider drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">{playerBalance.toLocaleString()}</span>
                     </div>
                     <button onClick={() => setSoundEnabled(!soundEnabled)} className="flex items-center justify-center rounded-full size-8 md:size-10 bg-surface-dark hover:bg-neutral-700 text-gray-300 transition-colors border border-white/5">
                         <span className="material-symbols-outlined text-[18px] md:text-[20px]">{soundEnabled ? 'volume_up' : 'volume_off'}</span>
@@ -628,32 +631,34 @@ export default function MultiplayerGamePage() {
                                 <span className="text-accent-gold/70 text-sm font-bold animate-pulse">準備開始...</span>
                             </div>
                         ) : (
-                            <div className="flex flex-col items-center gap-1.5 max-w-2xl mx-auto">
+                            <div className="flex flex-col items-center gap-2 max-w-2xl mx-auto">
                                 {/* Bet controls */}
                                 <div className="flex items-center gap-3 w-full">
-                                    <div className="flex gap-1.5 shrink-0">
-                                        <button onClick={() => setBetAmount(Math.max(minRaise, Math.floor(potSize / 2)))} className="h-6 px-2 rounded bg-[#2a2a2a] hover:bg-[#3a3a3a] border border-white/10 text-gray-400 text-[10px] font-bold transition-colors">½</button>
-                                        <button onClick={() => setBetAmount(Math.max(minRaise, Math.floor(potSize * 0.75)))} className="h-6 px-2 rounded bg-[#2a2a2a] hover:bg-[#3a3a3a] border border-white/10 text-gray-400 text-[10px] font-bold transition-colors">¾</button>
-                                        <button onClick={() => setBetAmount(Math.max(minRaise, potSize))} className="h-6 px-2 rounded bg-[#2a2a2a] hover:bg-[#3a3a3a] border border-white/10 text-gray-400 text-[10px] font-bold transition-colors">底池</button>
-                                        <button onClick={() => setBetAmount(playerBalance + (mySeat?.bet ?? 0))} className="h-6 px-2 rounded bg-[#2a2a2a] hover:bg-[#3a3a3a] border border-accent-gold/30 text-accent-gold text-[10px] font-bold transition-colors">MAX</button>
+                                    <div className="flex gap-1 shrink-0">
+                                        <button onClick={() => setBetAmount(Math.max(minRaise, Math.floor(potSize / 2)))} className="h-7 px-2.5 rounded-md bg-gradient-to-b from-[#3a3a3a] to-[#222] hover:from-[#4a4a4a] hover:to-[#333] border border-white/10 border-b-2 border-b-black/40 text-gray-300 text-[10px] font-bold transition-all active:translate-y-px active:border-b active:border-b-black/20 shadow-md">½</button>
+                                        <button onClick={() => setBetAmount(Math.max(minRaise, Math.floor(potSize * 0.75)))} className="h-7 px-2.5 rounded-md bg-gradient-to-b from-[#3a3a3a] to-[#222] hover:from-[#4a4a4a] hover:to-[#333] border border-white/10 border-b-2 border-b-black/40 text-gray-300 text-[10px] font-bold transition-all active:translate-y-px active:border-b active:border-b-black/20 shadow-md">¾</button>
+                                        <button onClick={() => setBetAmount(Math.max(minRaise, potSize))} className="h-7 px-2.5 rounded-md bg-gradient-to-b from-[#3a3a3a] to-[#222] hover:from-[#4a4a4a] hover:to-[#333] border border-white/10 border-b-2 border-b-black/40 text-gray-300 text-[10px] font-bold transition-all active:translate-y-px active:border-b active:border-b-black/20 shadow-md">底池</button>
+                                        <button onClick={() => setBetAmount(playerBalance + (mySeat?.bet ?? 0))} className="h-7 px-2.5 rounded-md bg-gradient-to-b from-accent-gold/30 to-accent-gold/10 hover:from-accent-gold/40 hover:to-accent-gold/20 border border-accent-gold/40 border-b-2 border-b-accent-gold/60 text-accent-gold text-[10px] font-bold transition-all active:translate-y-px shadow-md">MAX</button>
                                     </div>
-                                    <input className="flex-1 h-1.5 bg-gray-700 rounded-full appearance-none cursor-pointer accent-accent-gold" max={playerBalance + (mySeat?.bet ?? 0)} min={minRaise} type="range" value={betAmount} onChange={(e) => setBetAmount(Number(e.target.value))} />
-                                    <div className="bg-black/80 border border-accent-gold/40 px-3 py-0.5 rounded text-accent-gold font-mono font-bold text-sm min-w-[70px] text-center shrink-0">${betAmount.toLocaleString()}</div>
+                                    <div className="flex-1 relative flex items-center">
+                                        <input className="w-full h-2 bg-gradient-to-r from-gray-700 via-gray-600 to-accent-gold/40 rounded-full appearance-none cursor-pointer accent-accent-gold shadow-inner" max={playerBalance + (mySeat?.bet ?? 0)} min={minRaise} type="range" value={betAmount} onChange={(e) => setBetAmount(Number(e.target.value))} />
+                                    </div>
+                                    <div className="bg-gradient-to-b from-[#1a1a1a] to-black border border-accent-gold/50 px-3 py-1 rounded-lg text-accent-gold font-mono font-bold text-sm min-w-[80px] text-center shrink-0 shadow-[inset_0_1px_0_rgba(255,215,0,0.1),0_2px_8px_rgba(0,0,0,0.5)]">${betAmount.toLocaleString()}</div>
                                 </div>
                                 {/* Action buttons */}
-                                <div className="flex gap-2 w-full">
-                                    <button onClick={() => handleAction('fold')} disabled={!isMyTurn || isActionPending} className="flex-1 h-10 rounded-lg bg-gradient-to-b from-gray-600 to-gray-800 hover:from-gray-500 hover:to-gray-700 text-white font-bold text-sm border-b-2 border-gray-900 active:border-b-0 active:translate-y-0.5 transition-all shadow-lg disabled:opacity-30 disabled:cursor-not-allowed">
+                                <div className="flex gap-2.5 w-full">
+                                    <button onClick={() => handleAction('fold')} disabled={!isMyTurn || isActionPending} className="flex-1 h-12 rounded-xl bg-gradient-to-b from-gray-500 via-gray-600 to-gray-800 hover:from-gray-400 hover:via-gray-500 hover:to-gray-700 text-white font-bold text-sm border border-gray-500/30 border-b-[3px] border-b-gray-950 active:border-b active:translate-y-0.5 transition-all shadow-[0_4px_12px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.15)] disabled:opacity-30 disabled:cursor-not-allowed">
                                         棄牌
                                     </button>
-                                    <button onClick={() => handleAction(canCheck ? 'check' : 'call')} disabled={!isMyTurn || isActionPending} className="flex-1 h-10 rounded-lg bg-gradient-to-b from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700 text-white font-bold text-sm border-b-2 border-blue-950 active:border-b-0 active:translate-y-0.5 transition-all shadow-lg flex flex-col items-center justify-center leading-tight disabled:opacity-30 disabled:cursor-not-allowed">
+                                    <button onClick={() => handleAction(canCheck ? 'check' : 'call')} disabled={!isMyTurn || isActionPending} className="flex-1 h-12 rounded-xl bg-gradient-to-b from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white font-bold text-sm border border-blue-400/30 border-b-[3px] border-b-blue-950 active:border-b active:translate-y-0.5 transition-all shadow-[0_4px_12px_rgba(37,99,235,0.3),inset_0_1px_0_rgba(255,255,255,0.15)] flex flex-col items-center justify-center leading-tight disabled:opacity-30 disabled:cursor-not-allowed">
                                         <span>{canCheck ? '過牌' : '跟注'}</span>
-                                        {!canCheck && callAmount > 0 && <span className="text-[9px] font-normal text-blue-200">${callAmount.toLocaleString()}</span>}
+                                        {!canCheck && callAmount > 0 && <span className="text-[9px] font-normal text-blue-100/80">${callAmount.toLocaleString()}</span>}
                                     </button>
-                                    <button onClick={() => handleAction('raise', betAmount)} disabled={!isMyTurn || isActionPending || playerBalance <= 0} className="flex-[1.3] h-10 rounded-lg bg-gradient-to-b from-emerald-500 to-emerald-700 hover:from-emerald-400 hover:to-emerald-600 text-white font-bold text-sm border-b-2 border-emerald-900 active:border-b-0 active:translate-y-0.5 transition-all flex items-center justify-center gap-1.5 shadow-[0_0_12px_rgba(16,185,129,0.3)] disabled:opacity-30 disabled:cursor-not-allowed">
+                                    <button onClick={() => handleAction('raise', betAmount)} disabled={!isMyTurn || isActionPending || playerBalance <= 0} className="flex-[1.3] h-12 rounded-xl bg-gradient-to-b from-emerald-400 via-emerald-500 to-emerald-700 hover:from-emerald-300 hover:via-emerald-400 hover:to-emerald-600 text-white font-bold text-sm border border-emerald-400/30 border-b-[3px] border-b-emerald-900 active:border-b active:translate-y-0.5 transition-all flex items-center justify-center gap-1.5 shadow-[0_4px_12px_rgba(16,185,129,0.35),inset_0_1px_0_rgba(255,255,255,0.2)] disabled:opacity-30 disabled:cursor-not-allowed">
                                         <span>加注</span>
-                                        <span className="text-[10px] font-normal text-emerald-200">${betAmount.toLocaleString()}</span>
+                                        <span className="text-[10px] font-normal text-emerald-100/80">${betAmount.toLocaleString()}</span>
                                     </button>
-                                    <button onClick={() => handleAction('all-in')} disabled={!isMyTurn || isActionPending || playerBalance <= 0} className="flex-1 h-10 rounded-lg bg-gradient-to-b from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-bold text-sm border-b-2 border-red-950 active:border-b-0 active:translate-y-0.5 transition-all shadow-[0_0_12px_rgba(220,38,38,0.3)] disabled:opacity-30 disabled:cursor-not-allowed uppercase tracking-wider">
+                                    <button onClick={() => handleAction('all-in')} disabled={!isMyTurn || isActionPending || playerBalance <= 0} className="flex-1 h-12 rounded-xl bg-gradient-to-b from-red-500 via-red-600 to-red-800 hover:from-red-400 hover:via-red-500 hover:to-red-700 text-white font-bold text-sm border border-red-400/30 border-b-[3px] border-b-red-950 active:border-b active:translate-y-0.5 transition-all shadow-[0_4px_12px_rgba(220,38,38,0.35),inset_0_1px_0_rgba(255,255,255,0.15)] disabled:opacity-30 disabled:cursor-not-allowed uppercase tracking-wider">
                                         全下
                                     </button>
                                 </div>
