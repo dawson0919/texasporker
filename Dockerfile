@@ -30,7 +30,7 @@ ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 RUN npm run build
 
-# Production - cache bust v3
+# Production
 FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production
@@ -45,5 +45,4 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 USER nextjs
 EXPOSE 3000
 
-# Set HOSTNAME in JS to avoid Railway's special HOSTNAME handling
 CMD ["node", "-e", "process.env.HOSTNAME='0.0.0.0';require('./server.js')"]
