@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useUser } from '@clerk/nextjs';
 import { Deck, Card, evaluateHand, determineWinners } from '../../../utils/poker';
 import { GameSounds } from '../../../utils/sounds';
 
@@ -38,6 +39,7 @@ const HANDS_PER_LEVEL = 4;
 const AI_NAMES = ['龍王', '賭神', '鳳凰', '老虎', '黑豹', '金鷹', '銀狐'];
 
 export default function TournamentPlayPage() {
+    const { user: clerkUser } = useUser();
     const [tournamentState, setTournamentState] = useState<'LOBBY' | 'PLAYING' | 'FINISHED'>('LOBBY');
     const [players, setPlayers] = useState<TPlayer[]>([]);
     const [communityCards, setCommunityCards] = useState<Card[]>([]);
@@ -523,7 +525,7 @@ export default function TournamentPlayPage() {
                                         )}
                                         {/* Avatar */}
                                         <div className={`w-12 h-12 rounded-full border-[3px] ${isTurn ? 'border-green-400 shadow-[0_0_15px_rgba(74,222,128,0.5)] animate-pulse' : player.isUser ? 'border-primary' : 'border-gray-600'} bg-gray-800 bg-cover bg-center ${player.status === 'folded' ? 'opacity-40 grayscale' : ''}`}
-                                            style={{ backgroundImage: `url('https://ui-avatars.com/api/?name=${encodeURIComponent(player.name)}&background=random')` }}>
+                                            style={{ backgroundImage: `url('${player.isUser && clerkUser?.imageUrl ? clerkUser.imageUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(player.name)}&background=random`}')` }}>
                                         </div>
                                         {player.role && (
                                             <div className={`absolute -bottom-0 -right-0 w-5 h-5 rounded-full flex items-center justify-center text-[7px] font-bold border shadow

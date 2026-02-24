@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Teal theme - calm smile -->
+  <circle cx="50" cy="50" r="50" fill="#E0F2F1"/>
+  <circle cx="50" cy="55" r="35" fill="#FFE4C4"/>
+  <ellipse cx="50" cy="30" rx="38" ry="25" fill="#008080"/>
+  <rect x="15" y="28" width="70" height="20" rx="10" fill="#008080"/>
+  <!-- gentle closed eyes -->
+  <path d="M33,52 Q38,48 43,52" stroke="#006060" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M57,52 Q62,48 67,52" stroke="#006060" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- small eyelashes -->
+  <line x1="33" y1="52" x2="31" y2="50" stroke="#006060" stroke-width="1"/>
+  <line x1="67" y1="52" x2="69" y2="50" stroke="#006060" stroke-width="1"/>
+  <ellipse cx="33" cy="58" rx="6" ry="3" fill="#80CBC4" opacity="0.5"/>
+  <ellipse cx="67" cy="58" rx="6" ry="3" fill="#80CBC4" opacity="0.5"/>
+  <!-- gentle smile -->
+  <path d="M44,63 Q50,70 56,63" stroke="#d88" stroke-width="1.5" fill="none"/>
+</svg>

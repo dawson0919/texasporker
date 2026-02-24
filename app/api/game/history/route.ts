@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/utils/supabase/server';
-import { auth } from '@clerk/nextjs/server';
+import { currentUser } from '@clerk/nextjs/server';
 
 export async function GET(request: Request) {
-    const { userId } = await auth();
-    if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const clerkUser = await currentUser();
+    if (!clerkUser) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const userId = clerkUser.id;
 
     // Get user UUID
     let { data: user, error: userError } = await supabase
@@ -13,11 +14,14 @@ export async function GET(request: Request) {
         .eq('auth_id', userId)
         .single();
 
-    // FALLBACK: Auto-provision user
+    // FALLBACK: Auto-provision user with real Clerk data
     if (userError || !user) {
+        const email = clerkUser.emailAddresses?.[0]?.emailAddress || 'unknown@example.com';
+        const name = [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(' ') || clerkUser.username || 'Player';
+
         const { data: newUser, error: insertError } = await supabase
             .from('users')
-            .insert([{ auth_id: userId, email: 'user@example.com', name: 'Player' }])
+            .insert([{ auth_id: userId, email, name, avatar_url: clerkUser.imageUrl }])
             .select('id')
             .single();
 
@@ -40,8 +44,9 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-    const { userId } = await auth();
-    if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const postUser = await currentUser();
+    if (!postUser) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const userId = postUser.id;
 
     const body = await request.json();
     const { gameType, stake, profitLoss, stageReached } = body;

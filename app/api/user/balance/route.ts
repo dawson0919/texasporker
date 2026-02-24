@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/utils/supabase/server';
-import { auth } from '@clerk/nextjs/server';
+import { currentUser } from '@clerk/nextjs/server';
 
 export async function GET(request: Request) {
-    const { userId } = await auth();
-    if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const clerkUser = await currentUser();
+    if (!clerkUser) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const userId = clerkUser.id;
 
     // Get user's UUID from public.users using auth_id
     let { data: user, error: userError } = await supabase
@@ -15,10 +16,13 @@ export async function GET(request: Request) {
 
     // FALLBACK: Auto-provision user if they do not exist (useful for localhost ignoring webhooks)
     if (userError || !user) {
-        // Attempt to create user
+        const email = clerkUser.emailAddresses?.[0]?.emailAddress || 'unknown@example.com';
+        const name = [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(' ') || clerkUser.username || 'Player';
+        const avatarUrl = clerkUser.imageUrl || null;
+
         const { data: newUser, error: insertError } = await supabase
             .from('users')
-            .insert([{ auth_id: userId, email: 'user@example.com', name: 'Player' }])
+            .insert([{ auth_id: userId, email, name, avatar_url: avatarUrl }])
             .select('id')
             .single();
 
@@ -29,6 +33,17 @@ export async function GET(request: Request) {
         // Give $10,000 starting cash
         await supabase.from('balances').insert([{ user_id: newUser.id, chip_balance: 10000 }]);
         user = newUser;
+    }
+
+    // Sync Clerk profile data to Supabase (fixes stale "Player" / "user@example.com")
+    const clerkEmail = clerkUser.emailAddresses?.[0]?.emailAddress;
+    const clerkName = [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(' ') || clerkUser.username;
+    if (clerkEmail || clerkName || clerkUser.imageUrl) {
+        const updates: Record<string, string> = {};
+        if (clerkEmail) updates.email = clerkEmail;
+        if (clerkName) updates.name = clerkName;
+        if (clerkUser.imageUrl) updates.avatar_url = clerkUser.imageUrl;
+        await supabase.from('users').update(updates).eq('auth_id', userId);
     }
 
     // Get balance
@@ -46,8 +61,9 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-    const { userId } = await auth();
-    if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const postUser = await currentUser();
+    if (!postUser) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const userId = postUser.id;
 
     const body = await request.json();
     const { newBalance } = body;

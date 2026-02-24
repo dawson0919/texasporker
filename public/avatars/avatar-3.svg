@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Green theme - happy wink -->
+  <circle cx="50" cy="50" r="50" fill="#E8F5E9"/>
+  <circle cx="50" cy="55" r="35" fill="#FFE4C4"/>
+  <ellipse cx="50" cy="30" rx="38" ry="25" fill="#228B22"/>
+  <rect x="15" y="28" width="70" height="20" rx="10" fill="#228B22"/>
+  <!-- left eye open -->
+  <circle cx="38" cy="52" r="5" fill="white"/>
+  <circle cx="39" cy="53" r="3" fill="#2E5E1E"/>
+  <circle cx="40" cy="51" r="1.2" fill="white"/>
+  <!-- right eye wink -->
+  <path d="M57,53 Q62,49 67,53" stroke="#2E5E1E" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <ellipse cx="33" cy="60" rx="6" ry="3" fill="#66BB6A" opacity="0.5"/>
+  <ellipse cx="67" cy="60" rx="6" ry="3" fill="#66BB6A" opacity="0.5"/>
+  <path d="M42,64 Q50,73 58,64" stroke="#e88" stroke-width="1.8" fill="none"/>
+  <!-- open mouth -->
+  <ellipse cx="50" cy="68" rx="5" ry="3" fill="#e88" opacity="0.3"/>
+</svg>

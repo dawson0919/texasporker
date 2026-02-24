@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@clerk/nextjs';
 import { Modal } from '../components/Modal';
 
 const SUITS = ['h', 'd', 'c', 's'] as const;
@@ -214,6 +215,7 @@ function MiniTable({ table, onJoin }: { table: TableState; onJoin: () => void })
 }
 
 export default function MultiTablePage() {
+  const { user: clerkUser } = useUser();
   const router = useRouter();
   const [isRewardModalOpen, setIsRewardModalOpen] = useState(false);
   const [table1, setTable1] = useState(() => createTable(1, '龍廳', '$100/200'));

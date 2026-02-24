@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useUser } from '@clerk/nextjs';
 
 type GameRecord = {
   id: string;
@@ -13,6 +14,7 @@ type GameRecord = {
 };
 
 export default function HistoryPage() {
+  const { user: clerkUser } = useUser();
   const [timeRange, setTimeRange] = useState<'7days' | '30days' | 'all'>('30days');
   const [history, setHistory] = useState<GameRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -68,7 +70,7 @@ export default function HistoryPage() {
             <span className="text-accent-gold text-sm font-bold border-b-2 border-accent-gold pb-0.5">歷史紀錄</span>
           </nav>
           <div className="flex items-center gap-3 border-l border-white/10 pl-6">
-            <div className="bg-center bg-no-repeat bg-cover rounded-full size-10 border-2 border-accent-gold/50 shadow-md" style={{ backgroundImage: `url('https://ui-avatars.com/api/?name=You&background=random')` }}></div>
+            <div className="bg-center bg-no-repeat bg-cover rounded-full size-10 border-2 border-accent-gold/50 shadow-md" style={{ backgroundImage: `url('${clerkUser?.imageUrl || 'https://ui-avatars.com/api/?name=Me&background=random'}')` }}></div>
           </div>
         </div>
       </header>

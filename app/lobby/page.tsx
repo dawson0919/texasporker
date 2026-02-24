@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useClerk, useUser } from '@clerk/nextjs';
 import { Modal } from '../components/Modal';
 
 export default function LobbyPage() {
@@ -11,9 +12,25 @@ export default function LobbyPage() {
   const [chipBalance, setChipBalance] = useState<number | null>(null);
   const [rewardClaimed, setRewardClaimed] = useState(false);
   const [rewardMsg, setRewardMsg] = useState('');
+  const [stats, setStats] = useState<{ totalProfit: number; totalHands: number; title: string; vip: string; isTopPlayer: boolean; topWinners: { name: string; profit: number }[] } | null>(null);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [profileName, setProfileName] = useState('');
+  const [profileAvatar, setProfileAvatar] = useState('');
+  const [profileSaving, setProfileSaving] = useState(false);
+  const [profileMsg, setProfileMsg] = useState('');
+  const { signOut } = useClerk();
+  const { user: clerkUser } = useUser();
+
+  const PRESET_AVATARS = [
+    '/avatars/avatar-1.svg', '/avatars/avatar-2.svg', '/avatars/avatar-3.svg',
+    '/avatars/avatar-4.svg', '/avatars/avatar-5.svg', '/avatars/avatar-6.svg',
+    '/avatars/avatar-7.svg', '/avatars/avatar-8.svg', '/avatars/avatar-9.svg',
+    '/avatars/avatar-10.svg',
+  ];
 
   useEffect(() => {
     fetch('/api/user/balance').then(r => r.json()).then(d => setChipBalance(d.balance)).catch(() => {});
+    fetch('/api/user/stats').then(r => r.json()).then(d => { if (d.title) setStats(d); }).catch(() => {});
   }, []);
 
   const claimDailyReward = async () => {
@@ -30,6 +47,28 @@ export default function LobbyPage() {
     } catch {
       setRewardMsg('網路錯誤，請稍後再試');
     }
+  };
+
+  const saveProfile = async () => {
+    setProfileSaving(true);
+    setProfileMsg('');
+    try {
+      const res = await fetch('/api/user/profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: profileName || undefined, avatarUrl: profileAvatar || undefined }),
+      });
+      if (res.ok) {
+        setProfileMsg('儲存成功！');
+        setTimeout(() => { setIsProfileModalOpen(false); window.location.reload(); }, 800);
+      } else {
+        const d = await res.json();
+        setProfileMsg(d.error || '儲存失敗');
+      }
+    } catch {
+      setProfileMsg('網路錯誤');
+    }
+    setProfileSaving(false);
   };
 
   return (
@@ -88,9 +127,22 @@ export default function LobbyPage() {
                 <span>每日獎勵</span>
               </button>
               <div className="relative cursor-pointer group">
-                <div className="size-10 rounded-full bg-cover bg-center border-2 border-accent-gold shadow-md" data-alt="Player avatar close up" style={{ backgroundImage: `url('https://ui-avatars.com/api/?name=P1&background=random')` }}></div>
+                <div className="size-10 rounded-full bg-cover bg-center border-2 border-accent-gold shadow-md" data-alt="Player avatar close up" style={{ backgroundImage: `url('${clerkUser?.imageUrl || 'https://ui-avatars.com/api/?name=Me&background=random'}')` }}></div>
                 <div className="absolute bottom-0 right-0 size-3 bg-green-500 border-2 border-surface-darker rounded-full"></div>
               </div>
+              {clerkUser?.emailAddresses?.some(e => e.emailAddress === 'nbamoment@gmail.com') && (
+                <Link href="/admin" className="flex items-center justify-center gap-1.5 rounded-lg h-10 px-4 bg-red-900/30 hover:bg-red-900/50 border border-red-500/30 text-red-300 text-sm font-medium transition-all">
+                  <span className="material-symbols-outlined text-lg">admin_panel_settings</span>
+                  <span className="hidden sm:inline">管理</span>
+                </Link>
+              )}
+              <button
+                onClick={() => signOut({ redirectUrl: '/sign-in' })}
+                className="flex items-center justify-center gap-1.5 rounded-lg h-10 px-4 bg-white/5 hover:bg-red-900/40 border border-white/10 hover:border-red-500/30 text-slate-300 hover:text-red-300 text-sm font-medium transition-all"
+              >
+                <span className="material-symbols-outlined text-lg">logout</span>
+                <span className="hidden sm:inline">登出</span>
+              </button>
             </div>
           </div>
         </header>
@@ -98,77 +150,110 @@ export default function LobbyPage() {
           <aside className="lg:col-span-3 flex flex-col gap-6">
             <div className="gold-border rounded-2xl p-6 bg-surface-dark/80 backdrop-blur-sm shadow-xl flex flex-col items-center text-center relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-primary/20 to-transparent"></div>
-              <div className="relative mb-4">
-                <div className="size-24 rounded-full bg-cover bg-center border-4 border-accent-gold shadow-2xl" data-alt="High roller player avatar" style={{ backgroundImage: `url('https://ui-avatars.com/api/?name=P2&background=random')` }}></div>
+              <div className="relative mb-4 cursor-pointer group/avatar" onClick={() => { setProfileName(clerkUser?.firstName || ''); setProfileAvatar(clerkUser?.imageUrl || ''); setProfileMsg(''); setIsProfileModalOpen(true); }}>
+                <div className="size-24 rounded-full bg-cover bg-center border-4 border-accent-gold shadow-2xl transition-opacity group-hover/avatar:opacity-80" data-alt="High roller player avatar" style={{ backgroundImage: `url('${clerkUser?.imageUrl || 'https://ui-avatars.com/api/?name=Me&background=random'}')` }}></div>
+                <div className="absolute inset-0 rounded-full flex items-center justify-center bg-black/40 opacity-0 group-hover/avatar:opacity-100 transition-opacity">
+                  <span className="material-symbols-outlined text-white text-2xl">edit</span>
+                </div>
                 <div className="absolute -bottom-2 -right-2 bg-surface-darker rounded-full p-1.5 border border-accent-gold">
                   <span className="material-symbols-outlined text-accent-gold text-xl">workspace_premium</span>
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-white mb-1">至尊賭神</h3>
-              <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-6">
-                <span className="text-slate-400 text-xs mr-1">VIP 等級:</span>
-                <span className="text-accent-gold text-xs font-bold uppercase tracking-wide">鑽石龍</span>
+              <h3 className="text-xl font-bold text-white mb-1">{stats?.title || '新手玩家'}</h3>
+              {stats?.isTopPlayer && <span className="text-xs text-yellow-400 font-bold mb-1">👑 當前賭王</span>}
+              <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-4">
+                <span className="text-slate-400 text-xs mr-1">段位:</span>
+                <span className="text-accent-gold text-xs font-bold tracking-wide">{stats?.vip || '---'}</span>
               </div>
-              <div className="w-full bg-surface-darker/50 rounded-xl p-4 border border-white/5">
-                <p className="text-slate-400 text-xs uppercase font-medium mb-1">籌碼餘額</p>
-                <div className="flex items-center justify-center gap-2 text-2xl font-bold text-white">
-                  <span className="text-accent-gold">$</span> {chipBalance !== null ? chipBalance.toLocaleString() : '---'}
+              <div className="w-full grid grid-cols-2 gap-3 mb-4">
+                <div className="bg-surface-darker/50 rounded-xl p-3 border border-white/5 text-center">
+                  <p className="text-slate-400 text-[10px] uppercase font-medium mb-1">籌碼餘額</p>
+                  <div className="flex items-center justify-center gap-1 text-lg font-bold text-white">
+                    <span className="text-accent-gold">$</span>{chipBalance !== null ? chipBalance.toLocaleString() : '---'}
+                  </div>
+                </div>
+                <div className="bg-surface-darker/50 rounded-xl p-3 border border-white/5 text-center">
+                  <p className="text-slate-400 text-[10px] uppercase font-medium mb-1">累計盈利</p>
+                  <div className={`flex items-center justify-center gap-1 text-lg font-bold ${(stats?.totalProfit ?? 0) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                    <span>{(stats?.totalProfit ?? 0) >= 0 ? '+' : ''}</span>${Math.abs(stats?.totalProfit ?? 0).toLocaleString()}
+                  </div>
                 </div>
               </div>
-              <div className="mt-6 grid grid-cols-2 gap-3 w-full">
+              <div className="w-full grid grid-cols-2 gap-3">
                 <Link href="/history" className="bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-2 text-xs text-slate-300 transition-colors flex flex-col items-center gap-1">
                   <span className="material-symbols-outlined text-lg">history</span> 歷史紀錄
                 </Link>
-                <button className="bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-2 text-xs text-slate-300 transition-colors flex flex-col items-center gap-1">
-                  <span className="material-symbols-outlined text-lg">account_balance_wallet</span> 出納櫃檯
-                </button>
+                <Link href="/leaderboard" className="bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-2 text-xs text-slate-300 transition-colors flex flex-col items-center gap-1">
+                  <span className="material-symbols-outlined text-lg">emoji_events</span> 盈利排行
+                </Link>
               </div>
             </div>
             <div className="rounded-2xl p-5 bg-surface-dark/60 backdrop-blur-sm border border-white/5 shadow-lg hidden lg:block">
               <div className="flex items-center justify-between mb-4">
-                <h4 className="text-sm font-bold text-white uppercase tracking-wide">頂級贏家</h4>
+                <h4 className="text-sm font-bold text-white uppercase tracking-wide">盈利排行</h4>
                 <Link href="/leaderboard" className="text-xs text-primary cursor-pointer hover:underline">查看全部</Link>
               </div>
               <div className="space-y-3">
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="text-accent-gold font-bold">1</span>
-                    <div className="size-6 rounded-full bg-slate-700" data-alt="Winner 1 avatar" style={{ backgroundImage: `url('https://ui-avatars.com/api/?name=W1&background=random')` }}></div>
-                    <span className="text-slate-200">Dragon88</span>
+                {(stats?.topWinners && stats.topWinners.length > 0) ? stats.topWinners.map((w, i) => (
+                  <div key={i} className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-2">
+                      <span className={`font-bold ${i === 0 ? 'text-accent-gold' : i === 1 ? 'text-slate-400' : 'text-amber-700'}`}>{i + 1}</span>
+                      <div className="size-6 rounded-full bg-cover bg-center bg-slate-700" style={{ backgroundImage: `url('https://ui-avatars.com/api/?name=${encodeURIComponent(w.name.slice(0,2))}&background=random')` }}></div>
+                      <span className="text-slate-200 truncate max-w-[100px]">{w.name}</span>
+                      {i === 0 && <span className="text-[10px]">👑</span>}
+                    </div>
+                    <span className={`font-medium ${w.profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                      {w.profit >= 0 ? '+' : ''}{w.profit >= 1000 ? `$${(w.profit / 1000).toFixed(0)}k` : `$${w.profit.toLocaleString()}`}
+                    </span>
                   </div>
-                  <span className="text-green-400 font-medium">+$450k</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="text-slate-400 font-bold">2</span>
-                    <div className="size-6 rounded-full bg-slate-700" data-alt="Winner 2 avatar" style={{ backgroundImage: `url('https://ui-avatars.com/api/?name=W2&background=random')` }}></div>
-                    <span className="text-slate-200">PokerStar</span>
-                  </div>
-                  <span className="text-green-400 font-medium">+$210k</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="text-amber-700 font-bold">3</span>
-                    <div className="size-6 rounded-full bg-slate-700" data-alt="Winner 3 avatar" style={{ backgroundImage: `url('https://ui-avatars.com/api/?name=W3&background=random')` }}></div>
-                    <span className="text-slate-200">LuckyLady</span>
-                  </div>
-                  <span className="text-green-400 font-medium">+$180k</span>
-                </div>
+                )) : (
+                  <p className="text-xs text-slate-500 text-center py-2">暫無數據</p>
+                )}
               </div>
             </div>
           </aside>
           <div className="lg:col-span-6 flex flex-col gap-6">
             <Link href="/" className="group relative overflow-hidden rounded-2xl aspect-video lg:aspect-[16/9] shadow-2xl cursor-pointer block">
-              <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="Beautiful Chinese live dealer in red qipao" style={{ backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuBqCOPO7sGBiSWQfVrqJbX5dspt5SucZh-ecc2DOoIP7L6WuZmGK6VMgX4qq5cbYfMUPkSS4DSI5F-eENUazuf61Rcoe6xy-lRAax3fy9efUPNq9rEFQnUxrNgzxCZT3bk6S1sAJTS6jvI_dnO9yQfZgnEwyxZYEQmYLxhcppuAYpRN6I2-PqKD4b3vEdYzg88bVhBwPXE0rIU7JJ6Gzr9V4yllkP5OEgJYo3IzmCxloRb-uIoCly-N3SCUEgVTXeAkayfkKTYywpIZ')` }}></div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90"></div>
+              {/* Horse-year themed gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#8B0000] via-[#B22222] to-[#DAA520] transition-transform duration-700 group-hover:scale-105"></div>
+              {/* Decorative horse-year SVG elements */}
+              <svg className="absolute inset-0 w-full h-full opacity-10" viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice">
+                {/* Traditional Chinese cloud patterns */}
+                <circle cx="120" cy="80" r="40" fill="#FFD700" />
+                <circle cx="140" cy="80" r="40" fill="#FFD700" />
+                <circle cx="130" cy="60" r="35" fill="#FFD700" />
+                <circle cx="680" cy="350" r="35" fill="#FFD700" />
+                <circle cx="700" cy="350" r="35" fill="#FFD700" />
+                <circle cx="690" cy="330" r="30" fill="#FFD700" />
+                {/* Horse silhouette */}
+                <text x="600" y="180" fontSize="180" fill="#FFD700" opacity="0.5" fontFamily="serif">馬</text>
+                {/* Coin patterns */}
+                <circle cx="80" cy="300" r="25" fill="none" stroke="#FFD700" strokeWidth="2" />
+                <rect x="70" y="293" width="20" height="14" rx="2" fill="none" stroke="#FFD700" strokeWidth="2" />
+                <circle cx="720" cy="100" r="25" fill="none" stroke="#FFD700" strokeWidth="2" />
+                <rect x="710" y="93" width="20" height="14" rx="2" fill="none" stroke="#FFD700" strokeWidth="2" />
+                {/* Lucky knot motifs */}
+                <path d="M50,200 Q70,180 90,200 Q70,220 50,200Z" fill="#FFD700" opacity="0.3" />
+                <path d="M750,250 Q770,230 790,250 Q770,270 750,250Z" fill="#FFD700" opacity="0.3" />
+              </svg>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+              {/* Top badge */}
               <div className="absolute top-4 left-4">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-yellow-600 to-yellow-500 text-black text-xs font-bold shadow-lg">
+                  <span className="text-sm">🐴</span> 馬年限定
+                </span>
+              </div>
+              <div className="absolute top-4 right-4">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary text-white text-xs font-bold animate-pulse">
-                  <span className="size-2 rounded-full bg-white"></span> 直播中
+                  <span className="size-2 rounded-full bg-white"></span> 熱門
                 </span>
               </div>
               <div className="absolute bottom-0 left-0 w-full p-6 flex flex-col items-start gap-2">
-                <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight drop-shadow-lg">真人荷官桌</h2>
-                <p className="text-slate-200 text-sm md:text-base max-w-md drop-shadow-md mb-2">與我們的 VIP 荷官即時互動，體驗澳門的刺激快感。</p>
+                <div className="flex items-center gap-3">
+                  <span className="text-4xl drop-shadow-lg">🐎</span>
+                  <h2 className="text-3xl md:text-4xl font-bold leading-tight drop-shadow-lg gold-gradient-text">馬上有錢桌</h2>
+                </div>
+                <p className="text-slate-200 text-sm md:text-base max-w-md drop-shadow-md mb-2">馬年行大運，一馬當先贏大錢！無限注德州撲克。</p>
                 <div className="flex items-center gap-4 w-full">
                   <div className="flex-1 bg-gradient-to-r from-accent-gold to-[#AA823C] text-surface-darker hover:brightness-110 font-bold py-3 px-6 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2">
                     <span className="material-symbols-outlined">play_circle</span> 立即遊玩
@@ -411,6 +496,80 @@ export default function LobbyPage() {
             className="flex-1 bg-surface-dark border border-white/10 text-white font-bold py-3 px-6 rounded-xl hover:bg-white/5 transition"
           >
             儲存並關閉
+          </button>
+          <button
+            onClick={() => signOut({ redirectUrl: '/sign-in' })}
+            className="flex items-center justify-center gap-2 bg-red-900/30 border border-red-500/30 text-red-300 font-bold py-3 px-6 rounded-xl hover:bg-red-900/50 transition"
+          >
+            <span className="material-symbols-outlined text-lg">logout</span>
+            登出
+          </button>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        title="個人資料設定"
+        icon="person"
+      >
+        <div className="flex flex-col gap-5 py-2">
+          {/* Current avatar preview */}
+          <div className="flex flex-col items-center gap-2">
+            <div className="size-20 rounded-full bg-cover bg-center border-4 border-accent-gold shadow-xl" style={{ backgroundImage: `url('${profileAvatar || clerkUser?.imageUrl || ''}')` }}></div>
+            <p className="text-xs text-gray-400">點擊下方頭像更換</p>
+          </div>
+
+          {/* Google avatar option */}
+          <div>
+            <p className="text-white text-xs font-bold mb-2 uppercase tracking-wide">Google 頭像</p>
+            <button
+              onClick={() => setProfileAvatar(clerkUser?.imageUrl || '')}
+              className={`size-14 rounded-full bg-cover bg-center border-3 transition-all ${profileAvatar === clerkUser?.imageUrl ? 'border-accent-gold ring-2 ring-accent-gold/50 scale-110' : 'border-white/20 hover:border-white/50'}`}
+              style={{ backgroundImage: `url('${clerkUser?.imageUrl || ''}')` }}
+            />
+          </div>
+
+          {/* Preset avatars */}
+          <div>
+            <p className="text-white text-xs font-bold mb-2 uppercase tracking-wide">內建頭像</p>
+            <div className="grid grid-cols-5 gap-3">
+              {PRESET_AVATARS.map((av, i) => (
+                <button
+                  key={i}
+                  onClick={() => setProfileAvatar(av)}
+                  className={`size-14 rounded-full bg-cover bg-center border-3 transition-all ${profileAvatar === av ? 'border-accent-gold ring-2 ring-accent-gold/50 scale-110' : 'border-white/20 hover:border-white/50'}`}
+                  style={{ backgroundImage: `url('${av}')` }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Name input */}
+          <div>
+            <p className="text-white text-xs font-bold mb-2 uppercase tracking-wide">顯示名稱</p>
+            <input
+              type="text"
+              value={profileName}
+              onChange={e => setProfileName(e.target.value)}
+              maxLength={20}
+              placeholder="輸入暱稱（最多20字）"
+              className="w-full bg-black/50 border border-white/10 focus:border-accent-gold text-white px-4 py-2.5 rounded-lg text-sm focus:outline-none transition-colors"
+            />
+          </div>
+
+          {/* Message */}
+          {profileMsg && (
+            <p className={`text-sm font-medium text-center ${profileMsg.includes('成功') ? 'text-green-400' : 'text-red-400'}`}>{profileMsg}</p>
+          )}
+
+          {/* Save button */}
+          <button
+            onClick={saveProfile}
+            disabled={profileSaving}
+            className="w-full bg-gradient-to-r from-accent-gold to-[#AA823C] text-black font-bold py-3 px-6 rounded-xl shadow-lg hover:brightness-110 transition disabled:opacity-50"
+          >
+            {profileSaving ? '儲存中...' : '儲存變更'}
           </button>
         </div>
       </Modal>

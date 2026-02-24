@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useClerk, useUser } from '@clerk/nextjs';
 import { Modal } from './components/Modal';
 import { Deck, Card, evaluateHand, determineWinners } from '../utils/poker';
 import { GameSounds } from '../utils/sounds';
@@ -35,11 +36,14 @@ export const SEAT_POSITIONS: Record<number, string> = {
 };
 
 const DEALER_POOL = [
-    { id: '1', name: '由美 (Yumi)', style: '日系可愛風', desc: '實習荷官 • 1 年經驗', hue: '300', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDg7JUYjKA9K9ovq3ENw0FYuyIrRjZrit-LaE8do-dw0eq8RgyCg2-5U5UXoyOOAxoRL8-Gg8wMUt4vjmdpvlIoGG_jYe4bjVkiD-_2UsO27j2Jeok2q2DNtCvBXkPsUouy-A3XZQt-aMUCb5JMpeJ0Xta5yjhlN3Ip6RuhoV6Yc39l-jLjAOLrMIyVex7nDFWqOSYNBHl3pnYg4q8JNfV6CxK7r1i5mWjdnePVcXbVUeweVaW-UT6PRbOVOIbHgNE5oweAwOpns2kB' },
-    { id: '2', name: '安娜 (Anna)', style: '火辣低胸禮服風', desc: '星級荷官 • 5 年經驗', hue: '0', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDg7JUYjKA9K9ovq3ENw0FYuyIrRjZrit-LaE8do-dw0eq8RgyCg2-5U5UXoyOOAxoRL8-Gg8wMUt4vjmdpvlIoGG_jYe4bjVkiD-_2UsO27j2Jeok2q2DNtCvBXkPsUouy-A3XZQt-aMUCb5JMpeJ0Xta5yjhlN3Ip6RuhoV6Yc39l-jLjAOLrMIyVex7nDFWqOSYNBHl3pnYg4q8JNfV6CxK7r1i5mWjdnePVcXbVUeweVaW-UT6PRbOVOIbHgNE5oweAwOpns2kB' },
-    { id: '3', name: '雪倫 (Sharon)', style: '優雅OL風', desc: '高級荷官 • 3 年經驗', hue: '150', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDg7JUYjKA9K9ovq3ENw0FYuyIrRjZrit-LaE8do-dw0eq8RgyCg2-5U5UXoyOOAxoRL8-Gg8wMUt4vjmdpvlIoGG_jYe4bjVkiD-_2UsO27j2Jeok2q2DNtCvBXkPsUouy-A3XZQt-aMUCb5JMpeJ0Xta5yjhlN3Ip6RuhoV6Yc39l-jLjAOLrMIyVex7nDFWqOSYNBHl3pnYg4q8JNfV6CxK7r1i5mWjdnePVcXbVUeweVaW-UT6PRbOVOIbHgNE5oweAwOpns2kB' },
-    { id: '4', name: '大衛 (David)', style: '專業風', desc: '賭場經理 • 10 年經驗', hue: '210', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDg7JUYjKA9K9ovq3ENw0FYuyIrRjZrit-LaE8do-dw0eq8RgyCg2-5U5UXoyOOAxoRL8-Gg8wMUt4vjmdpvlIoGG_jYe4bjVkiD-_2UsO27j2Jeok2q2DNtCvBXkPsUouy-A3XZQt-aMUCb5JMpeJ0Xta5yjhlN3Ip6RuhoV6Yc39l-jLjAOLrMIyVex7nDFWqOSYNBHl3pnYg4q8JNfV6CxK7r1i5mWjdnePVcXbVUeweVaW-UT6PRbOVOIbHgNE5oweAwOpns2kB' },
-    { id: '5', name: '美玲 (Mei Ling)', style: '傳統旗袍風', desc: '首席荷官 • 8 年經驗', hue: '330', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDg7JUYjKA9K9ovq3ENw0FYuyIrRjZrit-LaE8do-dw0eq8RgyCg2-5U5UXoyOOAxoRL8-Gg8wMUt4vjmdpvlIoGG_jYe4bjVkiD-_2UsO27j2Jeok2q2DNtCvBXkPsUouy-A3XZQt-aMUCb5JMpeJ0Xta5yjhlN3Ip6RuhoV6Yc39l-jLjAOLrMIyVex7nDFWqOSYNBHl3pnYg4q8JNfV6CxK7r1i5mWjdnePVcXbVUeweVaW-UT6PRbOVOIbHgNE5oweAwOpns2kB' }
+    { id: '1', name: 'Lucia', style: '巴西風情', desc: '首席荷官 • 熱情活力', hue: '0',
+      image: '/dealers/dealer-1.png' },
+    { id: '2', name: 'Natasha', style: '俄式優雅', desc: '明星荷官 • 冷艷高貴', hue: '0',
+      image: '/dealers/dealer-2.png' },
+    { id: '3', name: 'Camille', style: '法式魅力', desc: '王牌荷官 • 人氣最高', hue: '0',
+      image: '/dealers/dealer-3.png' },
+    { id: '4', name: 'Ploy', style: '泰式風華', desc: '專業荷官 • 傳統融合', hue: '0',
+      image: '/dealers/dealer-4.png' },
 ];
 
 const SMALL_BLIND = 50;
@@ -72,6 +76,8 @@ const WIN_ANIM_TARGETS: Record<number, { x: string; y: string }> = {
 };
 
 export default function GameTablePage() {
+    const { signOut } = useClerk();
+    const { user: clerkUser } = useUser();
     const [isRewardModalOpen, setIsRewardModalOpen] = useState(false);
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
     const [isComingSoonModalOpen, setIsComingSoonModalOpen] = useState(false);
@@ -109,6 +115,7 @@ export default function GameTablePage() {
     const [turnTimeLeft, setTurnTimeLeft] = useState(-1);
     const turnTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const actionClearTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
+    const actedThisRound = useRef<Set<number>>(new Set());
 
     // Refs for latest state in async callbacks
     const playersRef = useRef(players);
@@ -156,6 +163,16 @@ export default function GameTablePage() {
         };
         fetchBalance();
     }, []);
+
+    // Sync Clerk user avatar & name to player state
+    useEffect(() => {
+        if (!clerkUser) return;
+        const avatarUrl = clerkUser.imageUrl;
+        const displayName = clerkUser.firstName || clerkUser.username || '我';
+        setPlayers(prev => prev.map(p =>
+            p.isRealUser ? { ...p, avatar: avatarUrl, name: displayName } : p
+        ));
+    }, [clerkUser]);
 
     // AI Player Dynamic Joining/Leaving Logic (only between hands)
     useEffect(() => {
@@ -462,6 +479,7 @@ export default function GameTablePage() {
         setPotSize(newPot);
         setCurrentBet(0);
         setLastRaiserIndex(-1);
+        actedThisRound.current = new Set();
 
         const stage = gameStageRef.current;
         let newCC = [...currentCC];
@@ -517,7 +535,12 @@ export default function GameTablePage() {
             p.status === 'folded' || p.status === 'all-in' || p.bet >= bet
         );
 
-        if (allMatched && nextIdx === raiserIdx) {
+        // Check if all active ('playing') players have acted this round
+        const allPlayingActed = currentPlayers.every((p, i) =>
+            p.status !== 'playing' || actedThisRound.current.has(i)
+        );
+
+        if (allMatched && allPlayingActed) {
             endBettingRound(currentPlayers, communityCardsRef.current, potSizeRef.current);
             return;
         }
@@ -593,6 +616,13 @@ export default function GameTablePage() {
                     playSound('allIn');
                     break;
                 }
+            }
+
+            // Track who has acted this round
+            actedThisRound.current.add(cpIdx);
+            // Raise/all-in that increases bet resets the round — only raiser counts as having acted
+            if ((action === 'raise' || action === 'all-in') && newBet > bet) {
+                actedThisRound.current = new Set([cpIdx]);
             }
 
             // Clear action badge after delay
@@ -773,6 +803,7 @@ export default function GameTablePage() {
         const utgIndex = (bbIndex + 1) % updatedPlayers.length;
         setLastRaiserIndex(utgIndex);
         setCurrentPlayerIndex(utgIndex);
+        actedThisRound.current = new Set();
 
         addToLog(`--- 新一局開始 ---`);
         addToLog(`莊家: ${updatedPlayers[newDealerIndex].name} | 小盲: $${SMALL_BLIND} | 大盲: $${BIG_BLIND}`);
@@ -885,7 +916,14 @@ export default function GameTablePage() {
                                 <span className="material-symbols-outlined text-[20px]">notifications</span>
                                 <span className="absolute top-2 right-2 size-2 bg-accent-gold rounded-full shadow-[0_0_8px_rgba(197,160,89,0.6)]"></span>
                             </button>
-                            <div className="bg-center bg-no-repeat bg-cover rounded size-10 border border-accent-gold/50 cursor-pointer shadow-lg" data-alt="User profile avatar" style={{ backgroundImage: `url('https://ui-avatars.com/api/?name=You&background=random')` }}></div>
+                            <div className="bg-center bg-no-repeat bg-cover rounded-full size-10 border-2 border-accent-gold/50 cursor-pointer shadow-lg" data-alt="User profile avatar" style={{ backgroundImage: `url('${clerkUser?.imageUrl || 'https://ui-avatars.com/api/?name=You&background=random'}')` }}></div>
+                            <button
+                                onClick={() => signOut({ redirectUrl: '/sign-in' })}
+                                className="flex items-center justify-center gap-1.5 rounded-lg h-9 px-3 bg-white/5 hover:bg-red-900/40 border border-white/10 hover:border-red-500/30 text-slate-400 hover:text-red-300 text-xs font-medium transition-all"
+                            >
+                                <span className="material-symbols-outlined text-[16px]">logout</span>
+                                <span className="hidden lg:inline">登出</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -897,11 +935,12 @@ export default function GameTablePage() {
                         <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black"></div>
                     </div>
                     {/* Dealer Showcase */}
-                    <div className="relative z-10 w-full h-[18vh] lg:h-[20vh] bg-black shadow-2xl overflow-hidden border-b border-accent-gold/20 group shrink-0">
+                    <div className="relative z-10 w-full h-[14vh] lg:h-[16vh] bg-black shadow-2xl overflow-hidden border-b border-accent-gold/20 group shrink-0">
                         <div className="absolute inset-0 bg-cover bg-center opacity-70 blur-[2px]" data-alt="Soft focus luxury casino background" style={{ backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuAJsqf8ld7f8d1XU4UL3JDeujclDuwLT0SwQHyn6vIihMIOJ9OsQcaF6LEiLQ9_2SRbtuwNVG6p8-qgGM12NkG3b7TM5H7Stackc3pAQ8td7UhAM12iwCRJgWmUfowJAmG0JrMMGJSsJQzHCSlMj41A0Fhvml8Ip8NdHnFyItDtfGtzNknKb3fMXjoqKCApUYp_tPnHJUuRo7FoD080f-VbZdq04-lqfcJWeGGKuWY7r-mVXq7sREyKI8nFwV8GjH1Q3pOlIPd-QUhj')` }}></div>
                         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60"></div>
                         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-full flex items-end justify-center z-10 pointer-events-none">
-                            <div className="relative w-[200px] md:w-[260px] lg:w-[320px] h-[110%] bg-contain bg-bottom bg-no-repeat transition-all duration-700" style={{ backgroundImage: `url('${dealer.image}')`, filter: `contrast(1.1) brightness(0.9) hue-rotate(${dealer.hue}deg)` }}>
+                            <div className="relative w-[140px] md:w-[180px] lg:w-[220px] h-[110%] bg-no-repeat transition-all duration-700 rounded-t-xl" style={{ backgroundImage: `url('${dealer.image}')`, backgroundSize: '180%', backgroundPosition: 'center 12%' }}>
+                                <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none"></div>
                                 {dealerMessage && (
                                     <div className="absolute top-[10%] right-[-30%] bg-surface-dark/95 border border-primary/40 text-white px-4 py-2 rounded-2xl rounded-bl-sm font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)] animate-bounce z-50 backdrop-blur text-xs whitespace-nowrap">
                                         {dealerMessage}
@@ -926,7 +965,7 @@ export default function GameTablePage() {
                         </div>
                         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-black/70 to-transparent p-3 pt-6 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-20">
                             <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full border-2 border-accent-gold/50 bg-cover bg-center" style={{ backgroundImage: `url('${dealer.image}')`, filter: `hue-rotate(${dealer.hue}deg)`, backgroundPosition: "center top" }}></div>
+                                <div className="w-8 h-8 rounded-full border-2 border-accent-gold/50 bg-cover bg-center" style={{ backgroundImage: `url('${dealer.image}')`, backgroundPosition: "center top" }}></div>
                                 <div>
                                     <h3 className="text-white font-bold text-sm">{dealer.name} <span className="text-[10px] font-normal text-gray-400">({dealer.style})</span></h3>
                                     <p className="text-accent-gold/80 text-[10px] uppercase tracking-wide">{dealer.desc}</p>
@@ -1042,10 +1081,10 @@ export default function GameTablePage() {
                                                         <div className="absolute -bottom-1 -left-1 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center border border-yellow-300 shadow text-[10px] text-black font-bold">D</div>
                                                     )}
                                                     {player.role === 'small_blind' && (
-                                                        <div className="absolute -bottom-1 -left-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center border border-blue-300 shadow text-[8px] text-white font-bold">SB</div>
+                                                        <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center border-2 border-blue-300 shadow-[0_0_10px_rgba(59,130,246,0.5)] text-[9px] text-white font-bold z-20">小盲</div>
                                                     )}
                                                     {player.role === 'big_blind' && (
-                                                        <div className="absolute -bottom-1 -left-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center border border-red-300 shadow text-[8px] text-white font-bold">BB</div>
+                                                        <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-red-600 rounded-full flex items-center justify-center border-2 border-red-300 shadow-[0_0_10px_rgba(239,68,68,0.5)] text-[9px] text-white font-bold z-20">大盲</div>
                                                     )}
                                                 </div>
                                                 <div className={`bg-surface-dark px-6 py-2 rounded-lg border text-center min-w-[120px] shadow-xl -mt-4 z-20 relative ${player.isWinner ? 'border-yellow-400 animate-[winnerGlow_1.5s_ease-in-out_infinite]' : 'border-accent-gold/50'}`}>
@@ -1086,10 +1125,10 @@ export default function GameTablePage() {
                                                 <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center border border-yellow-300 shadow text-[10px] text-black font-bold">D</div>
                                             )}
                                             {player.role === 'small_blind' && (
-                                                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center border border-blue-300 shadow text-[8px] text-white font-bold">SB</div>
+                                                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center border-2 border-blue-300 shadow-[0_0_10px_rgba(59,130,246,0.5)] text-[9px] text-white font-bold z-20">小盲</div>
                                             )}
                                             {player.role === 'big_blind' && (
-                                                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center border border-red-300 shadow text-[8px] text-white font-bold">BB</div>
+                                                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-red-600 rounded-full flex items-center justify-center border-2 border-red-300 shadow-[0_0_10px_rgba(239,68,68,0.5)] text-[9px] text-white font-bold z-20">大盲</div>
                                             )}
                                             {player.status === 'thinking' && (
                                                 <svg className="absolute inset-[-4px] w-[72px] h-[72px] -rotate-90 pointer-events-none animate-spin" style={{ animationDuration: '2s' }} viewBox="0 0 36 36">

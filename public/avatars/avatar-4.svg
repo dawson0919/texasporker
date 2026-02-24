@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Purple theme - star accessory -->
+  <circle cx="50" cy="50" r="50" fill="#F3E5F5"/>
+  <circle cx="50" cy="55" r="35" fill="#FFE4C4"/>
+  <ellipse cx="50" cy="30" rx="38" ry="25" fill="#9370DB"/>
+  <rect x="15" y="28" width="70" height="20" rx="10" fill="#9370DB"/>
+  <!-- star hair clip -->
+  <polygon points="78,22 80,28 86,28 81,32 83,38 78,34 73,38 75,32 70,28 76,28" fill="#FFD700"/>
+  <!-- eyes -->
+  <circle cx="38" cy="52" r="5" fill="white"/>
+  <circle cx="62" cy="52" r="5" fill="white"/>
+  <circle cx="39" cy="53" r="3" fill="#5B2C8E"/>
+  <circle cx="63" cy="53" r="3" fill="#5B2C8E"/>
+  <circle cx="40" cy="51" r="1.2" fill="white"/>
+  <circle cx="64" cy="51" r="1.2" fill="white"/>
+  <ellipse cx="33" cy="60" rx="6" ry="3" fill="#CE93D8" opacity="0.5"/>
+  <ellipse cx="67" cy="60" rx="6" ry="3" fill="#CE93D8" opacity="0.5"/>
+  <path d="M44,65 Q50,71 56,65" stroke="#e88" stroke-width="1.5" fill="none"/>
+</svg>

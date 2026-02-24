@@ -1,7 +1,15 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+let _supabase: SupabaseClient | null = null;
 
-// A single Supabase instance for use in server components/actions since Clerk handles authentication.
-export const supabase = createClient(supabaseUrl, supabaseKey);
+// Lazy-initialized Supabase client — avoids build-time crash when env vars are missing.
+export const supabase: SupabaseClient = new Proxy({} as SupabaseClient, {
+    get(_target, prop) {
+        if (!_supabase) {
+            const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+            const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+            _supabase = createClient(url, key);
+        }
+        return (_supabase as unknown as Record<string, unknown>)[prop as string];
+    },
+});

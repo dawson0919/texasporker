@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@clerk/nextjs';
 
 // Fixed daily tournament schedule (hours in 24h format)
 const TOURNAMENT_SCHEDULE = [
@@ -59,6 +60,7 @@ function getStatus(nextTime: Date): TournamentStatus {
 }
 
 export default function TournamentsPage() {
+    const { user: clerkUser } = useUser();
     const router = useRouter();
     const [now, setNow] = useState(Date.now());
     const [activeTab, setActiveTab] = useState<'today' | 'leaderboard'>('today');
@@ -119,7 +121,7 @@ export default function TournamentsPage() {
                         <div className="text-xs text-slate-400 bg-black/40 px-3 py-1.5 rounded border border-white/5 font-mono">
                             {new Date(now).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                         </div>
-                        <div className="bg-center bg-no-repeat bg-cover rounded-full size-10 border-2 border-accent-gold/50 shadow-md" style={{ backgroundImage: `url('https://ui-avatars.com/api/?name=You&background=random')` }}></div>
+                        <div className="bg-center bg-no-repeat bg-cover rounded-full size-10 border-2 border-accent-gold/50 shadow-md" style={{ backgroundImage: `url('${clerkUser?.imageUrl || 'https://ui-avatars.com/api/?name=Me&background=random'}')` }}></div>
                     </div>
                 </div>
             </header>

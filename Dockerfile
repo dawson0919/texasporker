@@ -30,7 +30,7 @@ ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 RUN npm run build
 
-# Production
+# Production - cache bust v2
 FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Blue theme - cool expression -->
+  <circle cx="50" cy="50" r="50" fill="#E8F0FE"/>
+  <circle cx="50" cy="55" r="35" fill="#FFE4C4"/>
+  <ellipse cx="50" cy="30" rx="38" ry="25" fill="#4169E1"/>
+  <rect x="15" y="28" width="70" height="20" rx="10" fill="#4169E1"/>
+  <!-- cool half-closed eyes -->
+  <rect x="32" y="51" width="12" height="5" rx="2.5" fill="white"/>
+  <rect x="56" y="51" width="12" height="5" rx="2.5" fill="white"/>
+  <circle cx="40" cy="53" r="2.5" fill="#1a1a66"/>
+  <circle cx="64" cy="53" r="2.5" fill="#1a1a66"/>
+  <circle cx="41" cy="52" r="1" fill="white"/>
+  <circle cx="65" cy="52" r="1" fill="white"/>
+  <!-- eyebrows -->
+  <line x1="31" y1="47" x2="45" y2="48" stroke="#2a2a8a" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="55" y1="48" x2="69" y2="47" stroke="#2a2a8a" stroke-width="1.5" stroke-linecap="round"/>
+  <ellipse cx="33" cy="60" rx="5" ry="2.5" fill="#7B9EE6" opacity="0.3"/>
+  <ellipse cx="67" cy="60" rx="5" ry="2.5" fill="#7B9EE6" opacity="0.3"/>
+  <path d="M44,64 Q50,68 56,64" stroke="#c77" stroke-width="1.5" fill="none"/>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Pink theme - heart eyes -->
+  <circle cx="50" cy="50" r="50" fill="#FFE4F0"/>
+  <circle cx="50" cy="55" r="35" fill="#FFE4C4"/>
+  <ellipse cx="50" cy="30" rx="38" ry="25" fill="#FF69B4"/>
+  <rect x="15" y="28" width="70" height="20" rx="10" fill="#FF69B4"/>
+  <!-- heart left eye -->
+  <path d="M34,49 C34,46 37,44 38,47 C39,44 42,46 42,49 C42,52 38,55 38,55 C38,55 34,52 34,49Z" fill="#FF1493"/>
+  <!-- heart right eye -->
+  <path d="M58,49 C58,46 61,44 62,47 C63,44 66,46 66,49 C66,52 62,55 62,55 C62,55 58,52 58,49Z" fill="#FF1493"/>
+  <circle cx="39" cy="48" r="1" fill="white"/>
+  <circle cx="63" cy="48" r="1" fill="white"/>
+  <ellipse cx="33" cy="60" rx="6" ry="3" fill="#FF69B4" opacity="0.5"/>
+  <ellipse cx="67" cy="60" rx="6" ry="3" fill="#FF69B4" opacity="0.5"/>
+  <path d="M44,65 Q50,73 56,65" stroke="#e88" stroke-width="2" fill="none"/>
+</svg>
