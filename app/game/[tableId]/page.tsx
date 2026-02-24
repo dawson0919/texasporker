@@ -236,16 +236,15 @@ export default function MultiplayerGamePage() {
 
         const startNext = async () => {
             try {
-                const res = await fetch('/api/multiplayer/start-hand', {
+                await fetch('/api/multiplayer/start-hand', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ tableId }),
                 });
-                if (!res.ok) {
-                    // Retry once after 3s if the first attempt fails
-                    setTimeout(startNext, 3000);
-                }
+                // No retry — 400 means business logic rejection (already started, not enough players, etc.)
+                // Realtime updates will trigger the effect again if state changes
             } catch {
+                // Network error only: retry once after 3s
                 setTimeout(startNext, 3000);
             }
         };
