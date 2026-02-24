@@ -25,11 +25,18 @@ export const metadata: Metadata = {
     siteName: '澳門皇家撲克',
     locale: 'zh_TW',
     type: 'website',
+    images: [{
+      url: '/opengraph-image',
+      width: 1200,
+      height: 630,
+      alt: '澳門皇家撲克 - Texas Hold\'em',
+    }],
   },
   twitter: {
     card: 'summary_large_image',
     title: '澳門皇家撲克 | Macau Royal Poker',
     description: '🃏 免費線上德州撲克 — AI智能對戰、每日獎勵、排行榜競技',
+    images: ['/opengraph-image'],
   },
 };
 
