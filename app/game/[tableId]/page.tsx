@@ -34,10 +34,10 @@ const WIN_ANIM_TARGETS: Record<number, { x: string; y: string }> = {
 };
 
 const DEALER_POOL = [
-    { id: '1', name: 'Lucia', style: '\u5df4\u897f\u98a8\u60c5', desc: '\u9996\u5e2d\u8377\u5b98 \u2022 \u71b1\u60c5\u6d3b\u529b', image: '/dealers/dealer-1.png' },
-    { id: '2', name: 'Natasha', style: '\u4fc4\u5f0f\u512a\u96c5', desc: '\u660e\u661f\u8377\u5b98 \u2022 \u51b7\u8c54\u9ad8\u8cb4', image: '/dealers/dealer-2.png' },
-    { id: '3', name: 'Camille', style: '\u6cd5\u5f0f\u9b45\u529b', desc: '\u738b\u724c\u8377\u5b98 \u2022 \u4eba\u6c23\u6700\u9ad8', image: '/dealers/dealer-3.png' },
-    { id: '4', name: 'Ploy', style: '\u6cf0\u5f0f\u98a8\u83ef', desc: '\u5c08\u696d\u8377\u5b98 \u2022 \u50b3\u7d71\u878d\u5408', image: '/dealers/dealer-4.png' },
+    { id: '1', name: 'Lucia', style: '巴西風情', desc: '首席荷官 • 熱情活力', image: '/dealers/dealer-1.png' },
+    { id: '2', name: 'Natasha', style: '俄式優雅', desc: '明星荷官 • 冷豔高貴', image: '/dealers/dealer-2.png' },
+    { id: '3', name: 'Camille', style: '法式魅力', desc: '王牌荷官 • 人氣最高', image: '/dealers/dealer-3.png' },
+    { id: '4', name: 'Ploy', style: '泰式風華', desc: '專業荷官 • 傳統融合', image: '/dealers/dealer-4.png' },
 ];
 
 export default function MultiplayerGamePage() {
@@ -53,7 +53,7 @@ export default function MultiplayerGamePage() {
     const [mySeatIndex, setMySeatIndex] = useState<number>(-1);
     const [playerBalance, setPlayerBalance] = useState(10000);
     const [betAmount, setBetAmount] = useState(BIG_BLIND * 2);
-    const [dealerMessage, setDealerMessage] = useState<string | null>('\u6b61\u8fce\u5165\u5ea7\uff0c\u5373\u5c07\u958b\u5c40...');
+    const [dealerMessage, setDealerMessage] = useState<string | null>('歡迎入座，即將開局...');
     const [soundEnabled, setSoundEnabled] = useState(true);
     const soundEnabledRef = useRef(true);
     const [turnTimeLeft, setTurnTimeLeft] = useState(-1);
@@ -65,7 +65,7 @@ export default function MultiplayerGamePage() {
     const prevStateRef = useRef<PublicGameState | null>(null);
     const hasStartedFirstHand = useRef(false);
 
-    const dealer = DEALER_POOL[Math.floor(Math.random() * DEALER_POOL.length)];
+    const [dealer] = useState(() => DEALER_POOL[Math.floor(Math.random() * DEALER_POOL.length)]);
 
     useEffect(() => { soundEnabledRef.current = soundEnabled; }, [soundEnabled]);
 
@@ -324,7 +324,7 @@ export default function MultiplayerGamePage() {
     if (!gameState) {
         return (
             <div className="bg-[#1a160a] h-screen flex items-center justify-center text-accent-gold">
-                <div className="animate-pulse text-xl font-bold">\u8f09\u5165\u4e2d...</div>
+                <div className="animate-pulse text-xl font-bold">載入中...</div>
             </div>
         );
     }
@@ -338,8 +338,8 @@ export default function MultiplayerGamePage() {
                         <span className="material-symbols-outlined !text-[20px] md:!text-[24px] text-white drop-shadow-md">arrow_back</span>
                     </Link>
                     <div>
-                        <h2 className="text-accent-gold-light text-base md:text-xl font-serif font-bold leading-tight tracking-wide">\u591a\u4eba\u5fb7\u5dde\u64b2\u514b</h2>
-                        <div className="text-[8px] md:text-[10px] text-gray-400 uppercase tracking-widest hidden sm:block">\u724c\u684c #{gameState.handCount}</div>
+                        <h2 className="text-accent-gold-light text-base md:text-xl font-serif font-bold leading-tight tracking-wide">多人德州撲克</h2>
+                        <div className="text-[8px] md:text-[10px] text-gray-400 uppercase tracking-widest hidden sm:block">牌桌 #{gameState.handCount}</div>
                     </div>
                 </div>
                 <div className="flex gap-2 md:gap-4 items-center">
@@ -352,7 +352,7 @@ export default function MultiplayerGamePage() {
                     </button>
                     <button onClick={handleLeave} className="flex items-center justify-center gap-1 rounded-lg h-8 md:h-9 px-2 md:px-3 bg-white/5 hover:bg-red-900/40 border border-white/10 hover:border-red-500/30 text-slate-400 hover:text-red-300 text-xs font-medium transition-all">
                         <span className="material-symbols-outlined text-[16px]">logout</span>
-                        <span className="hidden md:inline">\u96e2\u958b</span>
+                        <span className="hidden md:inline">離開</span>
                     </button>
                 </div>
             </header>
@@ -378,8 +378,8 @@ export default function MultiplayerGamePage() {
                         </div>
                         <div className="absolute top-2 right-3 flex flex-col items-end gap-1 z-20">
                             <div className="bg-black/60 backdrop-blur-md px-3 py-1 rounded border-l-2 border-accent-gold">
-                                <span className="text-white font-serif font-bold text-xs md:text-sm block leading-none">\u591a\u4eba\u724c\u684c</span>
-                                <span className="text-accent-gold text-[9px] md:text-[10px] font-mono uppercase tracking-wider">{SMALL_BLIND}/{BIG_BLIND} \u2022 {gameState.seats.filter(s => s !== null).length}\u4eba</span>
+                                <span className="text-white font-serif font-bold text-xs md:text-sm block leading-none">多人牌桌</span>
+                                <span className="text-accent-gold text-[9px] md:text-[10px] font-mono uppercase tracking-wider">{SMALL_BLIND}/{BIG_BLIND} • {gameState.seats.filter(s => s !== null).length}人</span>
                             </div>
                         </div>
                     </div>
@@ -397,9 +397,9 @@ export default function MultiplayerGamePage() {
                             <div className="flex gap-1 md:gap-2.5 items-center justify-center mb-6 md:mb-10 z-20 h-14 md:h-22">
                                 {communityCards.map((card, idx) => (
                                     <div key={idx} className="w-9 h-14 md:w-14 md:h-22 bg-white rounded shadow-card flex flex-col justify-between p-0.5 md:p-1.5 border border-gray-300 animate-fade-in-up">
-                                        <div className={`${card.suit === '\u2660' || card.suit === '\u2663' ? 'text-black' : 'text-red-600'} font-card font-bold text-[10px] md:text-base leading-none`}>{card.rank}</div>
-                                        <div className={`self-center text-xl md:text-3xl ${card.suit === '\u2660' || card.suit === '\u2663' ? 'text-black' : 'text-red-600'} leading-none`}>{card.suit}</div>
-                                        <div className={`${card.suit === '\u2660' || card.suit === '\u2663' ? 'text-black' : 'text-red-600'} font-card font-bold text-[10px] md:text-base leading-none self-end rotate-180`}>{card.rank}</div>
+                                        <div className={`${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} font-card font-bold text-[10px] md:text-base leading-none`}>{card.rank}</div>
+                                        <div className={`self-center text-xl md:text-3xl ${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} leading-none`}>{card.suit}</div>
+                                        <div className={`${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} font-card font-bold text-[10px] md:text-base leading-none self-end rotate-180`}>{card.rank}</div>
                                     </div>
                                 ))}
                                 {Array(5 - communityCards.length).fill(0).map((_, idx) => (
@@ -424,7 +424,7 @@ export default function MultiplayerGamePage() {
                                 <div className={`bg-black/60 px-3 md:px-5 py-1 md:py-1.5 rounded-full text-accent-gold font-mono text-sm md:text-lg font-bold border border-accent-gold/30 shadow-lg backdrop-blur-sm mb-1 transition-all duration-500 ${winAnimation?.active ? 'scale-125 text-yellow-300 shadow-[0_0_30px_rgba(250,204,21,0.6)]' : ''}`}>
                                     ${displayPot.toLocaleString()}
                                 </div>
-                                <div className="text-white/40 text-[7px] md:text-[10px] uppercase tracking-widest font-bold">\u7e3d\u5e95\u6c60</div>
+                                <div className="text-white/40 text-[7px] md:text-[10px] uppercase tracking-widest font-bold">總底池</div>
                             </div>
 
                             {/* Player Seats */}
@@ -453,9 +453,9 @@ export default function MultiplayerGamePage() {
                                             <div className="flex gap-1 md:gap-1.5 -mb-4 md:-mb-6 z-10">
                                                 {myHoleCards.length > 0 && gameState.isHandInProgress ? myHoleCards.map((card, ci) => (
                                                     <div key={ci} className={`w-12 h-18 md:w-18 md:h-26 bg-white rounded-md shadow-[0_5px_15px_rgba(0,0,0,0.4)] flex flex-col justify-between p-1 md:p-1.5 border border-gray-300 ${ci === 0 ? '-rotate-6' : 'rotate-6'} transition-transform`}>
-                                                        <div className={`${card.suit === '\u2660' || card.suit === '\u2663' ? 'text-black' : 'text-red-600'} font-card font-bold text-sm md:text-lg leading-none`}>{card.rank}</div>
-                                                        <div className={`self-center text-2xl md:text-4xl ${card.suit === '\u2660' || card.suit === '\u2663' ? 'text-black' : 'text-red-600'} leading-none`}>{card.suit}</div>
-                                                        <div className={`${card.suit === '\u2660' || card.suit === '\u2663' ? 'text-black' : 'text-red-600'} font-card font-bold text-sm md:text-lg leading-none self-end rotate-180`}>{card.rank}</div>
+                                                        <div className={`${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} font-card font-bold text-sm md:text-lg leading-none`}>{card.rank}</div>
+                                                        <div className={`self-center text-2xl md:text-4xl ${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} leading-none`}>{card.suit}</div>
+                                                        <div className={`${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} font-card font-bold text-sm md:text-lg leading-none self-end rotate-180`}>{card.rank}</div>
                                                     </div>
                                                 )) : seat.status === 'sitting-out' ? null : (
                                                     <div className="flex gap-1">
@@ -487,7 +487,7 @@ export default function MultiplayerGamePage() {
                                                     )}
                                                     <div className={`text-xs font-bold ${seat.isWinner ? 'text-yellow-300' : 'text-white'}`}>{seat.displayName}</div>
                                                     <div className="text-[10px] text-accent-gold font-mono font-bold">
-                                                        {seat.isWinner ? <span className="text-yellow-400">\ud83c\udfc6 \u52dd\u51fa\uff01</span> : seat.status === 'all-in' ? <span className="text-red-400">ALL-IN</span> : `$${seat.chipBalance.toLocaleString()}`}
+                                                        {seat.isWinner ? <span className="text-yellow-400">�� 勝出！</span> : seat.status === 'all-in' ? <span className="text-red-400">ALL-IN</span> : `$${seat.chipBalance.toLocaleString()}`}
                                                     </div>
                                                 </div>
                                                 {seat.bet > 0 && (
@@ -519,10 +519,10 @@ export default function MultiplayerGamePage() {
                                             <div className="text-[10px] text-accent-gold font-mono">
                                                 {seat.isWinner ? (
                                                     <div className="flex flex-col items-center">
-                                                        <span className="text-yellow-400 font-bold">\ud83c\udfc6</span>
+                                                        <span className="text-yellow-400 font-bold">��</span>
                                                         {seat.handName && <span className="text-yellow-300/80 text-[8px]">{seat.handName}</span>}
                                                     </div>
-                                                ) : seat.status === 'folded' ? <span className="text-gray-400 text-[9px]">\u5df2\u68c4\u724c</span>
+                                                ) : seat.status === 'folded' ? <span className="text-gray-400 text-[9px]">已棄牌</span>
                                                     : seat.status === 'all-in' ? <span className="text-red-400 font-bold text-[9px]">ALL-IN</span>
                                                         : `$${seat.chipBalance.toLocaleString()}`}
                                             </div>
@@ -532,8 +532,8 @@ export default function MultiplayerGamePage() {
                                             <div className="flex gap-0.5 mt-0.5">
                                                 {seat.revealedCards.map((card, ci) => (
                                                     <div key={ci} className="w-7 h-10 bg-white rounded-sm shadow-md flex flex-col justify-between p-0.5 border border-gray-300">
-                                                        <div className={`${card.suit === '\u2660' || card.suit === '\u2663' ? 'text-black' : 'text-red-600'} font-card font-bold text-[8px] leading-none`}>{card.rank}</div>
-                                                        <div className={`self-center text-sm ${card.suit === '\u2660' || card.suit === '\u2663' ? 'text-black' : 'text-red-600'} leading-none`}>{card.suit}</div>
+                                                        <div className={`${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} font-card font-bold text-[8px] leading-none`}>{card.rank}</div>
+                                                        <div className={`self-center text-sm ${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} leading-none`}>{card.suit}</div>
                                                     </div>
                                                 ))}
                                             </div>
@@ -563,29 +563,29 @@ export default function MultiplayerGamePage() {
                         {turnTimeLeft > 0 && turnTimeLeft <= 10 && isMyTurn && (
                             <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-red-600/95 text-white font-bold text-sm px-5 py-1 rounded-t-lg shadow-[0_0_20px_rgba(239,68,68,0.5)] animate-pulse z-50 flex items-center gap-2">
                                 <span className="material-symbols-outlined text-base">timer</span>
-                                <span>{turnTimeLeft}\u79d2</span>
+                                <span>{turnTimeLeft}秒</span>
                             </div>
                         )}
 
                         {/* Not my turn overlay */}
                         {gameState.isHandInProgress && !isMyTurn && gameState.stage !== 'SHOWDOWN' && (
                             <div className="absolute inset-0 bg-black/40 z-50 flex items-center justify-center backdrop-blur-[1px]">
-                                <div className="text-gray-400 text-sm font-bold uppercase tracking-widest animate-pulse">\u7b49\u5f85\u5176\u4ed6\u73a9\u5bb6...</div>
+                                <div className="text-gray-400 text-sm font-bold uppercase tracking-widest animate-pulse">等待其他玩家...</div>
                             </div>
                         )}
 
                         {isWaiting ? (
                             <div className="flex items-center justify-center py-2">
-                                <span className="text-accent-gold/70 text-sm font-bold animate-pulse">\u6e96\u5099\u958b\u59cb...</span>
+                                <span className="text-accent-gold/70 text-sm font-bold animate-pulse">準備開始...</span>
                             </div>
                         ) : (
                             <div className="flex flex-col items-center gap-1.5 max-w-2xl mx-auto">
                                 {/* Bet controls */}
                                 <div className="flex items-center gap-3 w-full">
                                     <div className="flex gap-1.5 shrink-0">
-                                        <button onClick={() => setBetAmount(Math.max(minRaise, Math.floor(potSize / 2)))} className="h-6 px-2 rounded bg-[#2a2a2a] hover:bg-[#3a3a3a] border border-white/10 text-gray-400 text-[10px] font-bold transition-colors">\u00bd</button>
-                                        <button onClick={() => setBetAmount(Math.max(minRaise, Math.floor(potSize * 0.75)))} className="h-6 px-2 rounded bg-[#2a2a2a] hover:bg-[#3a3a3a] border border-white/10 text-gray-400 text-[10px] font-bold transition-colors">\u00be</button>
-                                        <button onClick={() => setBetAmount(Math.max(minRaise, potSize))} className="h-6 px-2 rounded bg-[#2a2a2a] hover:bg-[#3a3a3a] border border-white/10 text-gray-400 text-[10px] font-bold transition-colors">\u5e95\u6c60</button>
+                                        <button onClick={() => setBetAmount(Math.max(minRaise, Math.floor(potSize / 2)))} className="h-6 px-2 rounded bg-[#2a2a2a] hover:bg-[#3a3a3a] border border-white/10 text-gray-400 text-[10px] font-bold transition-colors">½</button>
+                                        <button onClick={() => setBetAmount(Math.max(minRaise, Math.floor(potSize * 0.75)))} className="h-6 px-2 rounded bg-[#2a2a2a] hover:bg-[#3a3a3a] border border-white/10 text-gray-400 text-[10px] font-bold transition-colors">¾</button>
+                                        <button onClick={() => setBetAmount(Math.max(minRaise, potSize))} className="h-6 px-2 rounded bg-[#2a2a2a] hover:bg-[#3a3a3a] border border-white/10 text-gray-400 text-[10px] font-bold transition-colors">底池</button>
                                         <button onClick={() => setBetAmount(playerBalance + (mySeat?.bet ?? 0))} className="h-6 px-2 rounded bg-[#2a2a2a] hover:bg-[#3a3a3a] border border-accent-gold/30 text-accent-gold text-[10px] font-bold transition-colors">MAX</button>
                                     </div>
                                     <input className="flex-1 h-1.5 bg-gray-700 rounded-full appearance-none cursor-pointer accent-accent-gold" max={playerBalance + (mySeat?.bet ?? 0)} min={minRaise} type="range" value={betAmount} onChange={(e) => setBetAmount(Number(e.target.value))} />
@@ -594,18 +594,18 @@ export default function MultiplayerGamePage() {
                                 {/* Action buttons */}
                                 <div className="flex gap-2 w-full">
                                     <button onClick={() => handleAction('fold')} disabled={!isMyTurn || isActionPending} className="flex-1 h-10 rounded-lg bg-gradient-to-b from-gray-600 to-gray-800 hover:from-gray-500 hover:to-gray-700 text-white font-bold text-sm border-b-2 border-gray-900 active:border-b-0 active:translate-y-0.5 transition-all shadow-lg disabled:opacity-30 disabled:cursor-not-allowed">
-                                        \u68c4\u724c
+                                        棄牌
                                     </button>
                                     <button onClick={() => handleAction(canCheck ? 'check' : 'call')} disabled={!isMyTurn || isActionPending} className="flex-1 h-10 rounded-lg bg-gradient-to-b from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700 text-white font-bold text-sm border-b-2 border-blue-950 active:border-b-0 active:translate-y-0.5 transition-all shadow-lg flex flex-col items-center justify-center leading-tight disabled:opacity-30 disabled:cursor-not-allowed">
-                                        <span>{canCheck ? '\u904e\u724c' : '\u8ddf\u6ce8'}</span>
+                                        <span>{canCheck ? '過牌' : '跟注'}</span>
                                         {!canCheck && callAmount > 0 && <span className="text-[9px] font-normal text-blue-200">${callAmount.toLocaleString()}</span>}
                                     </button>
                                     <button onClick={() => handleAction('raise', betAmount)} disabled={!isMyTurn || isActionPending || playerBalance <= 0} className="flex-[1.3] h-10 rounded-lg bg-gradient-to-b from-emerald-500 to-emerald-700 hover:from-emerald-400 hover:to-emerald-600 text-white font-bold text-sm border-b-2 border-emerald-900 active:border-b-0 active:translate-y-0.5 transition-all flex items-center justify-center gap-1.5 shadow-[0_0_12px_rgba(16,185,129,0.3)] disabled:opacity-30 disabled:cursor-not-allowed">
-                                        <span>\u52a0\u6ce8</span>
+                                        <span>加注</span>
                                         <span className="text-[10px] font-normal text-emerald-200">${betAmount.toLocaleString()}</span>
                                     </button>
                                     <button onClick={() => handleAction('all-in')} disabled={!isMyTurn || isActionPending || playerBalance <= 0} className="flex-1 h-10 rounded-lg bg-gradient-to-b from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-bold text-sm border-b-2 border-red-950 active:border-b-0 active:translate-y-0.5 transition-all shadow-[0_0_12px_rgba(220,38,38,0.3)] disabled:opacity-30 disabled:cursor-not-allowed uppercase tracking-wider">
-                                        \u5168\u4e0b
+                                        全下
                                     </button>
                                 </div>
                             </div>
