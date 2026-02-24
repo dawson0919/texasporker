@@ -10,27 +10,21 @@ import type { PublicGameState, PublicSeat, PlayerAction } from '@/types/multipla
 import type { Card } from '@/utils/poker';
 import { SMALL_BLIND, BIG_BLIND, MAX_SEATS } from '@/types/multiplayer';
 
-// 8-seat positions around the oval table
+// 5-seat positions around the oval table
 const SEAT_POSITIONS: Record<number, string> = {
-    0: "absolute -bottom-10 md:-bottom-14 left-[30%] -translate-x-1/2 flex flex-col items-center gap-1 md:gap-2 z-30",
+    0: "absolute -bottom-10 md:-bottom-14 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 md:gap-2 z-30",
     1: "absolute top-1/2 -left-4 md:-left-10 -translate-y-1/2 flex flex-col items-center gap-1 md:gap-2 z-20",
-    2: "absolute -top-6 md:-top-10 left-[12%] md:left-[15%] flex flex-col items-center gap-1 md:gap-2 z-20",
-    3: "absolute -top-6 md:-top-10 left-[38%] flex flex-col items-center gap-1 md:gap-2 z-20",
-    4: "absolute -top-6 md:-top-10 right-[38%] flex flex-col items-center gap-1 md:gap-2 z-20",
-    5: "absolute -top-6 md:-top-10 right-[12%] md:right-[15%] flex flex-col items-center gap-1 md:gap-2 z-20",
-    6: "absolute top-1/2 -right-4 md:-right-10 -translate-y-1/2 flex flex-col items-center gap-1 md:gap-2 z-20",
-    7: "absolute -bottom-10 md:-bottom-14 right-[30%] translate-x-1/2 flex flex-col items-center gap-1 md:gap-2 z-30",
+    2: "absolute -top-6 md:-top-10 left-[25%] -translate-x-1/2 flex flex-col items-center gap-1 md:gap-2 z-20",
+    3: "absolute -top-6 md:-top-10 right-[25%] translate-x-1/2 flex flex-col items-center gap-1 md:gap-2 z-20",
+    4: "absolute top-1/2 -right-4 md:-right-10 -translate-y-1/2 flex flex-col items-center gap-1 md:gap-2 z-20",
 };
 
 const WIN_ANIM_TARGETS: Record<number, { x: string; y: string }> = {
-    0: { x: '-40%', y: '120%' },
+    0: { x: '0%', y: '120%' },
     1: { x: '-140%', y: '0%' },
-    2: { x: '-80%', y: '-120%' },
-    3: { x: '-20%', y: '-120%' },
-    4: { x: '20%', y: '-120%' },
-    5: { x: '80%', y: '-120%' },
-    6: { x: '140%', y: '0%' },
-    7: { x: '40%', y: '120%' },
+    2: { x: '-60%', y: '-120%' },
+    3: { x: '60%', y: '-120%' },
+    4: { x: '140%', y: '0%' },
 };
 
 const DEALER_POOL = [

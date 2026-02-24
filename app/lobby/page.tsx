@@ -316,7 +316,7 @@ export default function LobbyPage() {
                   <span className="text-4xl drop-shadow-lg">🐎</span>
                   <h2 className="text-3xl md:text-4xl font-bold leading-tight drop-shadow-lg gold-gradient-text">馬上有錢桌</h2>
                 </div>
-                <p className="text-slate-200 text-sm md:text-base max-w-md drop-shadow-md mb-2">真人玩家+AI混合對戰，最多8人同桌！馬年行大運。</p>
+                <p className="text-slate-200 text-sm md:text-base max-w-md drop-shadow-md mb-2">真人玩家+AI混合對戰，最多5人同桌！馬年行大運。</p>
                 <div className="flex items-center gap-4 w-full">
                   <div className="flex-1 bg-gradient-to-r from-accent-gold to-[#AA823C] text-surface-darker hover:brightness-110 font-bold py-3 px-6 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2">
                     <span className="material-symbols-outlined">groups</span> {isJoining ? '加入中...' : '立即加入'}
