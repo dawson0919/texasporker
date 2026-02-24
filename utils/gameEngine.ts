@@ -6,7 +6,7 @@
 import { Deck, Card, evaluateHand, determineWinners } from './poker';
 import {
     PublicGameState, PublicSeat, GameStage, PlayerAction, ActionEntry,
-    SeatStatus, SMALL_BLIND, BIG_BLIND, MAX_SEATS, TURN_TIMER_MS,
+    SeatStatus, SMALL_BLIND, BIG_BLIND, MAX_SEATS, TURN_TIMER_MS, AI_TURN_TIMER_MS,
 } from '../types/multiplayer';
 
 // ========== HELPERS ==========
@@ -207,7 +207,7 @@ export function dealNewHand(
         actionLog: [],
         actionDeadline: newSeats[utgSeat]?.playerType === 'real'
             ? new Date(Date.now() + TURN_TIMER_MS).toISOString()
-            : undefined,
+            : new Date(Date.now() + AI_TURN_TIMER_MS).toISOString(),
     };
 
     return { newState, holeCardsBySeat, deck };
@@ -400,7 +400,7 @@ export function advanceStage(
         actedThisRound: [],
         actionDeadline: newSeats[firstAct]?.playerType === 'real'
             ? new Date(Date.now() + TURN_TIMER_MS).toISOString()
-            : undefined,
+            : new Date(Date.now() + AI_TURN_TIMER_MS).toISOString(),
     };
 }
 
