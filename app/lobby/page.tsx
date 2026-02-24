@@ -329,22 +329,6 @@ export default function LobbyPage() {
               </div>
             </button>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Link href="/" className="relative h-48 rounded-xl overflow-hidden group cursor-pointer border border-white/5 bg-surface-dark shadow-lg block">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-900/60 via-indigo-900/40 to-black/60 transition-transform duration-500 group-hover:scale-105"></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-surface-darker via-surface-darker/60 to-transparent"></div>
-                <div className="absolute top-4 right-4">
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 text-[10px] font-bold border border-blue-500/30">
-                    隨時可玩
-                  </span>
-                </div>
-                <div className="absolute bottom-0 left-0 p-5 w-full">
-                  <div className="flex justify-between items-end mb-1">
-                    <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">快速開始廳</h3>
-                    <span className="material-symbols-outlined text-blue-400">smart_toy</span>
-                  </div>
-                  <p className="text-slate-400 text-xs line-clamp-2">單人 VS AI，隨時開局，不用等人。</p>
-                </div>
-              </Link>
               <Link href="/tournaments" className="relative h-48 rounded-xl overflow-hidden group cursor-pointer border border-white/5 bg-surface-dark shadow-lg block">
                 <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110 opacity-60" data-alt="Luxurious private poker room interior" style={{ backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuCr6IeNZA0yueH5DBcNKUfJJaxcClyQ_pZyGFLWnzPAUrVvB-zqGwgceNOUBSH9YbP_hZ0jGuoxA_eCwm33cCHhxJxK1y9Z0ITdSFeE14eGsxwjAHA-wov51L37ts7iEvUU87whD5VW5853zqJA5icE5alm2iZuEFQPLZurYmOeECDnM7aXacWikwqQoKT_HaDZpLreGPsItDNAb6s20ksQrUs5_SrCbST3eezRCpgMoBd0DNFMxMO7vWgxxv7SZFEHh3KhFiXzJtwe')` }}></div>
                 <div className="absolute inset-0 bg-gradient-to-t from-surface-darker via-surface-darker/60 to-transparent"></div>
@@ -354,6 +338,22 @@ export default function LobbyPage() {
                     <span className="material-symbols-outlined text-accent-gold">local_atm</span>
                   </div>
                   <p className="text-slate-400 text-xs line-clamp-2">專為大師打造。無限的潛力。</p>
+                </div>
+              </Link>
+              <Link href="/" className="relative h-48 rounded-xl overflow-hidden group cursor-pointer border border-white/5 bg-surface-dark shadow-lg block">
+                <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110 opacity-60" data-alt="Fast paced poker chips flying" style={{ backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuCwgFDjkyFXyMjpNRQxAAtooNrxau21ZZ1z1pAEwLsVyom0x17HWl1ylKYRtT7J7JcMPholGJRrE0ckY-EwU-GUfcG39VTHcpP12onH8sbzs74F7UvPYLZa4dbYedFUvnkPZB8zwGgCufmBPzoxiwg-p7bMfZO_TMBmY8p_MZ2mI5SISi7_s6kAzHD-XtLd-93OSrpJkNYTHrym-8Jjco9Q0IzGSC8L2OqntpyEiWAAw-cM0dZjfc7ZEN7kgqAztyGJ4OjsxJZf32WX')` }}></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-surface-darker via-surface-darker/60 to-transparent"></div>
+                <div className="absolute top-4 right-4">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 text-[10px] font-bold border border-blue-500/30">
+                    隨時可玩
+                  </span>
+                </div>
+                <div className="absolute bottom-0 left-0 p-5 w-full">
+                  <div className="flex justify-between items-end mb-1">
+                    <h3 className="text-xl font-bold text-white group-hover:text-primary transition-colors">快速開始廳</h3>
+                    <span className="material-symbols-outlined text-primary">smart_toy</span>
+                  </div>
+                  <p className="text-slate-400 text-xs line-clamp-2">單人 VS AI，隨時開局，不用等人。</p>
                 </div>
               </Link>
             </div>
@@ -425,12 +425,80 @@ export default function LobbyPage() {
                   </div>
                 </Link>
               )) : (
-                <div className="text-center py-8">
-                  <p className="text-slate-500 text-sm mb-3">目前沒有活躍牌桌</p>
-                  <button onClick={handleJoinMultiplayer} disabled={isJoining} className="bg-primary hover:bg-red-600 text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors">
-                    {isJoining ? '建立中...' : '開設新桌'}
+                <>
+                  <button onClick={handleJoinMultiplayer} disabled={isJoining} className="p-3 rounded-xl bg-surface-dark hover:bg-surface-dark/80 border border-white/5 transition-colors cursor-pointer group text-left w-full">
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="size-2 rounded-full bg-green-500 animate-pulse"></span>
+                        <h4 className="text-white font-semibold text-sm">澳門套房 #1</h4>
+                      </div>
+                      <span className="text-xs font-bold text-accent-gold bg-accent-gold/10 px-2 py-0.5 rounded border border-accent-gold/20">無限注德州撲克</span>
+                    </div>
+                    <div className="flex justify-between items-end">
+                      <div className="text-xs text-slate-400">
+                        <p>盲注: <span className="text-slate-200">$50/$100</span></p>
+                        <p className="mt-1 flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">group</span> {isJoining ? '加入中...' : '點擊加入'}</p>
+                      </div>
+                      <div className="bg-primary hover:bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                        加入
+                      </div>
+                    </div>
                   </button>
-                </div>
+                  <Link href="/" className="p-3 rounded-xl bg-surface-dark hover:bg-surface-dark/80 border border-white/5 transition-colors cursor-pointer group block">
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="size-2 rounded-full bg-green-500"></span>
+                        <h4 className="text-white font-semibold text-sm">金龍廳</h4>
+                      </div>
+                      <span className="text-xs font-bold text-accent-gold bg-accent-gold/10 px-2 py-0.5 rounded border border-accent-gold/20">單人 VS AI</span>
+                    </div>
+                    <div className="flex justify-between items-end">
+                      <div className="text-xs text-slate-400">
+                        <p>盲注: <span className="text-slate-200">$50/$100</span></p>
+                        <p className="mt-1 flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">group</span> 隨時開局</p>
+                      </div>
+                      <div className="bg-primary hover:bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                        加入
+                      </div>
+                    </div>
+                  </Link>
+                  <Link href="/tournaments" className="p-3 rounded-xl bg-surface-dark hover:bg-surface-dark/80 border border-white/5 transition-colors cursor-pointer group block">
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="size-2 rounded-full bg-yellow-500"></span>
+                        <h4 className="text-white font-semibold text-sm">皇家同花順廳</h4>
+                      </div>
+                      <span className="text-xs font-bold text-accent-gold bg-accent-gold/10 px-2 py-0.5 rounded border border-accent-gold/20">錦標賽</span>
+                    </div>
+                    <div className="flex justify-between items-end">
+                      <div className="text-xs text-slate-400">
+                        <p>盲注: <span className="text-slate-200">$500/$1k</span></p>
+                        <p className="mt-1 flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">group</span> 查看賽程</p>
+                      </div>
+                      <div className="bg-primary hover:bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                        查看
+                      </div>
+                    </div>
+                  </Link>
+                  <div className="p-3 rounded-xl bg-surface-dark border border-white/5 opacity-75">
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="size-2 rounded-full bg-slate-500"></span>
+                        <h4 className="text-slate-300 font-semibold text-sm">新手運氣廳</h4>
+                      </div>
+                      <span className="text-xs font-bold text-slate-500 bg-slate-500/10 px-2 py-0.5 rounded border border-slate-500/20">無限注德州撲克</span>
+                    </div>
+                    <div className="flex justify-between items-end">
+                      <div className="text-xs text-slate-500">
+                        <p>盲注: <span className="text-slate-400">$1/$2</span></p>
+                        <p className="mt-1 flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">group</span> 9/9 滿員</p>
+                      </div>
+                      <span className="bg-slate-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg">
+                        滿員
+                      </span>
+                    </div>
+                  </div>
+                </>
               )}
             </div>
           </aside>
