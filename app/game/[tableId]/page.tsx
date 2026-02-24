@@ -179,13 +179,15 @@ export default function MultiplayerGamePage() {
     useEffect(() => {
         if (!gameState || hasStartedFirstHand.current) return;
         if (gameState.isHandInProgress) { hasStartedFirstHand.current = true; setStartCountdown(-1); return; }
-        if (gameState.stage !== 'WAITING') return;
+        // Accept both WAITING and SHOWDOWN (stuck table recovery)
+        if (gameState.stage !== 'WAITING' && gameState.stage !== 'SHOWDOWN') return;
 
         const activeSeats = gameState.seats.filter(s => s && s.chipBalance > 0);
         if (activeSeats.length < 2) return;
 
         hasStartedFirstHand.current = true;
-        setStartCountdown(5);
+        const countdownSec = gameState.stage === 'SHOWDOWN' ? 3 : 5;
+        setStartCountdown(countdownSec);
 
         countdownIntervalRef.current = setInterval(() => {
             setStartCountdown(prev => {
@@ -199,13 +201,21 @@ export default function MultiplayerGamePage() {
 
         autoStartTimerRef.current = setTimeout(async () => {
             setStartCountdown(-1);
-            await fetch('/api/multiplayer/start-hand', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tableId }),
-            });
-        }, 5000);
-        // No cleanup - hasStartedFirstHand prevents re-entry, refs cleaned on unmount
+            try {
+                const res = await fetch('/api/multiplayer/start-hand', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tableId }),
+                });
+                if (!res.ok) {
+                    // Allow retry on failure
+                    hasStartedFirstHand.current = false;
+                }
+            } catch {
+                // Allow retry on network error
+                hasStartedFirstHand.current = false;
+            }
+        }, countdownSec * 1000);
     }, [gameState, tableId]);
 
     // Cleanup timers on unmount
@@ -289,31 +299,38 @@ export default function MultiplayerGamePage() {
     }, [gameState?.currentSeatIndex, gameState?.actionDeadline, mySeatIndex]);
 
     // Opponent timeout watcher: if another player's deadline expires, force-fold them via API
+    const timeoutCalledRef = useRef(false);
+    useEffect(() => {
+        // Reset ref when the current player or hand changes
+        timeoutCalledRef.current = false;
+    }, [gameState?.currentSeatIndex, gameState?.isHandInProgress]);
+
     useEffect(() => {
         if (!gameState || !gameState.isHandInProgress) return;
+        if (gameState.stage === 'SHOWDOWN' || gameState.stage === 'WAITING') return;
         if (gameState.currentSeatIndex === mySeatIndex) return; // Own turn handled above
+        if (gameState.currentSeatIndex < 0) return;
         if (!gameState.actionDeadline) return;
+
+        const callTimeout = () => {
+            if (timeoutCalledRef.current) return; // Prevent duplicate calls
+            timeoutCalledRef.current = true;
+            fetch('/api/multiplayer/timeout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tableId }),
+            }).catch(() => { });
+        };
 
         const deadline = new Date(gameState.actionDeadline).getTime();
         const delay = deadline - Date.now() + 5000; // 5s after deadline
         if (delay <= 0) {
-            // Already expired, trigger timeout now
-            fetch('/api/multiplayer/timeout', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tableId }),
-            }).catch(() => {});
+            callTimeout();
             return;
         }
-        const timer = setTimeout(() => {
-            fetch('/api/multiplayer/timeout', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tableId }),
-            }).catch(() => {});
-        }, delay);
+        const timer = setTimeout(callTimeout, delay);
         return () => clearTimeout(timer);
-    }, [gameState?.currentSeatIndex, gameState?.actionDeadline, gameState?.isHandInProgress, mySeatIndex, tableId]);
+    }, [gameState?.currentSeatIndex, gameState?.actionDeadline, gameState?.isHandInProgress, gameState?.stage, mySeatIndex, tableId]);
 
     // Auto-fold when away: immediately fold when it's our turn
     useEffect(() => {
