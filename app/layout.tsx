@@ -13,9 +13,24 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITE_URL = 'https://texasporker-production.up.railway.app';
+
 export const metadata: Metadata = {
-  title: "Texas Hold'em Game",
-  description: "A premium Texas Hold'em experience",
+  title: '澳門皇家撲克 | Macau Royal Poker',
+  description: '免費線上德州撲克遊戲 — AI對戰、每日獎勵、排行榜競技。立即加入澳門皇家撲克！',
+  metadataBase: new URL(SITE_URL),
+  openGraph: {
+    title: '澳門皇家撲克 | Macau Royal Poker',
+    description: '🃏 免費線上德州撲克 — AI智能對戰、每日獎勵、連續登入禮金、全球排行榜。立即加入！',
+    siteName: '澳門皇家撲克',
+    locale: 'zh_TW',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '澳門皇家撲克 | Macau Royal Poker',
+    description: '🃏 免費線上德州撲克 — AI智能對戰、每日獎勵、排行榜競技',
+  },
 };
 
 export default function RootLayout({
@@ -25,7 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="zh-TW">
         <head>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
