@@ -61,6 +61,7 @@ export default function MultiplayerGamePage() {
     const [winAnimation, setWinAnimation] = useState<{ active: boolean; winnerSeatIndex: number; winnerName: string; potAmount: number } | null>(null);
     const [fillDeadline, setFillDeadline] = useState<string | null>(null);
     const [isActionPending, setIsActionPending] = useState(false);
+    const [autoFold, setAutoFold] = useState(false);
     const [startCountdown, setStartCountdown] = useState(-1);
     const prevStateRef = useRef<PublicGameState | null>(null);
     const hasStartedFirstHand = useRef(false);
@@ -310,6 +311,14 @@ export default function MultiplayerGamePage() {
         }, delay);
         return () => clearTimeout(timer);
     }, [gameState?.currentSeatIndex, gameState?.actionDeadline, gameState?.isHandInProgress, mySeatIndex, tableId]);
+
+    // Auto-fold when away: immediately fold when it's our turn
+    useEffect(() => {
+        if (!autoFold || !gameState?.isHandInProgress) return;
+        if (gameState.currentSeatIndex !== mySeatIndex) return;
+        const timer = setTimeout(() => { handleAction('fold'); }, 500);
+        return () => clearTimeout(timer);
+    }, [autoFold, gameState?.currentSeatIndex, mySeatIndex, gameState?.isHandInProgress]);
 
     // Handle player action
     const handleAction = useCallback(async (action: PlayerAction, raiseAmount?: number) => {
@@ -597,9 +606,22 @@ export default function MultiplayerGamePage() {
                         {/* Not my turn overlay */}
                         {gameState.isHandInProgress && !isMyTurn && gameState.stage !== 'SHOWDOWN' && (
                             <div className="absolute inset-0 bg-black/40 z-50 flex items-center justify-center backdrop-blur-[1px]">
-                                <div className="text-gray-400 text-sm font-bold uppercase tracking-widest animate-pulse">等待其他玩家...</div>
+                                <div className="text-gray-400 text-sm font-bold uppercase tracking-widest animate-pulse">
+                                    {autoFold ? '暫離中 — 自動棄牌' : '等待其他玩家...'}
+                                </div>
                             </div>
                         )}
+
+                        {/* Auto-fold toggle */}
+                        <div className="flex justify-end mb-1">
+                            <button
+                                onClick={() => setAutoFold(f => !f)}
+                                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold transition-all ${autoFold ? 'bg-red-600/90 text-white shadow-[0_0_10px_rgba(220,38,38,0.4)]' : 'bg-[#2a2a2a] text-gray-400 hover:bg-[#3a3a3a] border border-white/10'}`}
+                            >
+                                <span className="material-symbols-outlined text-sm">{autoFold ? 'toggle_on' : 'toggle_off'}</span>
+                                {autoFold ? '暫離中' : '暫離'}
+                            </button>
+                        </div>
 
                         {isWaiting ? (
                             <div className="flex items-center justify-center py-2">
