@@ -1,8 +1,9 @@
 "use client";
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useClerk, useUser } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 import { Modal } from '../components/Modal';
 
 export default function LobbyPage() {
@@ -18,8 +19,11 @@ export default function LobbyPage() {
   const [profileAvatar, setProfileAvatar] = useState('');
   const [profileSaving, setProfileSaving] = useState(false);
   const [profileMsg, setProfileMsg] = useState('');
+  const [liveTables, setLiveTables] = useState<Array<{ id: string; tableNumber: number; status: string; realPlayers: number; totalPlayers: number; stage: string; handCount: number }>>([]);
+  const [isJoining, setIsJoining] = useState(false);
   const { signOut } = useClerk();
   const { user: clerkUser } = useUser();
+  const router = useRouter();
 
   const PRESET_AVATARS = [
     '/avatars/avatar-1.svg', '/avatars/avatar-2.svg', '/avatars/avatar-3.svg',
@@ -31,7 +35,25 @@ export default function LobbyPage() {
   useEffect(() => {
     fetch('/api/user/balance').then(r => r.json()).then(d => setChipBalance(d.balance)).catch(() => {});
     fetch('/api/user/stats').then(r => r.json()).then(d => { if (d.title) setStats(d); }).catch(() => {});
+    fetch('/api/multiplayer/tables').then(r => r.json()).then(d => { if (d.tables) setLiveTables(d.tables); }).catch(() => {});
   }, []);
+
+  const handleJoinMultiplayer = useCallback(async () => {
+    if (isJoining) return;
+    setIsJoining(true);
+    try {
+      const res = await fetch('/api/multiplayer/join', { method: 'POST' });
+      const data = await res.json();
+      if (res.ok && data.tableId) {
+        router.push(`/game/${data.tableId}`);
+      } else {
+        alert(data.error || '無法加入牌桌');
+      }
+    } catch {
+      alert('網路錯誤，請稍後再試');
+    }
+    setIsJoining(false);
+  }, [isJoining, router]);
 
   const claimDailyReward = async () => {
     try {
@@ -213,7 +235,7 @@ export default function LobbyPage() {
             </div>
           </aside>
           <div className="lg:col-span-6 flex flex-col gap-6">
-            <Link href="/" className="group relative overflow-hidden rounded-2xl aspect-video lg:aspect-[16/9] shadow-2xl cursor-pointer block">
+            <button onClick={handleJoinMultiplayer} disabled={isJoining} className="group relative overflow-hidden rounded-2xl aspect-video lg:aspect-[16/9] shadow-2xl cursor-pointer block w-full text-left">
               {/* Horse-year themed gradient background */}
               <div className="absolute inset-0 bg-gradient-to-br from-[#8B0000] via-[#B22222] to-[#DAA520] transition-transform duration-700 group-hover:scale-105"></div>
               {/* Decorative horse-year SVG elements */}
@@ -244,8 +266,8 @@ export default function LobbyPage() {
                 </span>
               </div>
               <div className="absolute top-4 right-4">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary text-white text-xs font-bold animate-pulse">
-                  <span className="size-2 rounded-full bg-white"></span> 熱門
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/80 text-white text-xs font-bold animate-pulse">
+                  <span className="size-2 rounded-full bg-white"></span> 真人+AI混戰
                 </span>
               </div>
               <div className="absolute bottom-0 left-0 w-full p-6 flex flex-col items-start gap-2">
@@ -253,20 +275,36 @@ export default function LobbyPage() {
                   <span className="text-4xl drop-shadow-lg">🐎</span>
                   <h2 className="text-3xl md:text-4xl font-bold leading-tight drop-shadow-lg gold-gradient-text">馬上有錢桌</h2>
                 </div>
-                <p className="text-slate-200 text-sm md:text-base max-w-md drop-shadow-md mb-2">馬年行大運，一馬當先贏大錢！無限注德州撲克。</p>
+                <p className="text-slate-200 text-sm md:text-base max-w-md drop-shadow-md mb-2">真人玩家+AI混合對戰，最多8人同桌！馬年行大運。</p>
                 <div className="flex items-center gap-4 w-full">
                   <div className="flex-1 bg-gradient-to-r from-accent-gold to-[#AA823C] text-surface-darker hover:brightness-110 font-bold py-3 px-6 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2">
-                    <span className="material-symbols-outlined">play_circle</span> 立即遊玩
+                    <span className="material-symbols-outlined">groups</span> {isJoining ? '加入中...' : '立即加入'}
                   </div>
                   <div className="flex flex-col text-right">
-                    <span className="text-xs text-slate-400 uppercase">最低買入</span>
-                    <span className="text-white font-bold text-lg">$500</span>
+                    <span className="text-xs text-slate-400 uppercase">盲注</span>
+                    <span className="text-white font-bold text-lg">$50/$100</span>
                   </div>
                 </div>
               </div>
-            </Link>
+            </button>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Link href="/" className="relative h-48 rounded-xl overflow-hidden group cursor-pointer border border-white/5 bg-surface-dark shadow-lg block">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-900/60 via-indigo-900/40 to-black/60 transition-transform duration-500 group-hover:scale-105"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-surface-darker via-surface-darker/60 to-transparent"></div>
+                <div className="absolute top-4 right-4">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 text-[10px] font-bold border border-blue-500/30">
+                    隨時可玩
+                  </span>
+                </div>
+                <div className="absolute bottom-0 left-0 p-5 w-full">
+                  <div className="flex justify-between items-end mb-1">
+                    <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">快速開始廳</h3>
+                    <span className="material-symbols-outlined text-blue-400">smart_toy</span>
+                  </div>
+                  <p className="text-slate-400 text-xs line-clamp-2">單人 VS AI，隨時開局，不用等人。</p>
+                </div>
+              </Link>
+              <Link href="/tournaments" className="relative h-48 rounded-xl overflow-hidden group cursor-pointer border border-white/5 bg-surface-dark shadow-lg block">
                 <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110 opacity-60" data-alt="Luxurious private poker room interior" style={{ backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuCr6IeNZA0yueH5DBcNKUfJJaxcClyQ_pZyGFLWnzPAUrVvB-zqGwgceNOUBSH9YbP_hZ0jGuoxA_eCwm33cCHhxJxK1y9Z0ITdSFeE14eGsxwjAHA-wov51L37ts7iEvUU87whD5VW5853zqJA5icE5alm2iZuEFQPLZurYmOeECDnM7aXacWikwqQoKT_HaDZpLreGPsItDNAb6s20ksQrUs5_SrCbST3eezRCpgMoBd0DNFMxMO7vWgxxv7SZFEHh3KhFiXzJtwe')` }}></div>
                 <div className="absolute inset-0 bg-gradient-to-t from-surface-darker via-surface-darker/60 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-5 w-full">
@@ -275,17 +313,6 @@ export default function LobbyPage() {
                     <span className="material-symbols-outlined text-accent-gold">local_atm</span>
                   </div>
                   <p className="text-slate-400 text-xs line-clamp-2">專為大師打造。無限的潛力。</p>
-                </div>
-              </Link>
-              <Link href="/multi-table" className="relative h-48 rounded-xl overflow-hidden group cursor-pointer border border-white/5 bg-surface-dark shadow-lg block">
-                <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110 opacity-60" data-alt="Fast paced poker chips flying" style={{ backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuCwgFDjkyFXyMjpNRQxAAtooNrxau21ZZ1z1pAEwLsVyom0x17HWl1ylKYRtT7J7JcMPholGJRrE0ckY-EwU-GUfcG39VTHcpP12onH8sbzs74F7UvPYLZa4dbYedFUvnkPZB8zwGgCufmBPzoxiwg-p7bMfZO_TMBmY8p_MZ2mI5SISi7_s6kAzHD-XtLd-93OSrpJkNYTHrym-8Jjco9Q0IzGSC8L2OqntpyEiWAAw-cM0dZjfc7ZEN7kgqAztyGJ4OjsxJZf32WX')` }}></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-surface-darker via-surface-darker/60 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-5 w-full">
-                  <div className="flex justify-between items-end mb-1">
-                    <h3 className="text-xl font-bold text-white group-hover:text-primary transition-colors">快速開始</h3>
-                    <span className="material-symbols-outlined text-primary">speed</span>
-                  </div>
-                  <p className="text-slate-400 text-xs line-clamp-2">立即加入行動。快速盲注。</p>
                 </div>
               </Link>
             </div>
@@ -312,78 +339,38 @@ export default function LobbyPage() {
               </button>
             </div>
             <div className="flex flex-col gap-3 overflow-y-auto max-h-[600px] pr-1 custom-scrollbar">
-              <Link href="/" className="p-3 rounded-xl bg-surface-dark hover:bg-surface-dark/80 border border-white/5 transition-colors cursor-pointer group block">
-                <div className="flex justify-between items-start mb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="size-2 rounded-full bg-green-500 animate-pulse"></span>
-                    <h4 className="text-white font-semibold text-sm">澳門套房 #1</h4>
+              {liveTables.length > 0 ? liveTables.map(table => (
+                <Link key={table.id} href={`/game/${table.id}`} className="p-3 rounded-xl bg-surface-dark hover:bg-surface-dark/80 border border-white/5 transition-colors cursor-pointer group block">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className={`size-2 rounded-full ${table.status === 'playing' ? 'bg-green-500 animate-pulse' : 'bg-yellow-500'}`}></span>
+                      <h4 className="text-white font-semibold text-sm">牌桌 #{table.tableNumber}</h4>
+                    </div>
+                    <span className="text-xs font-bold text-accent-gold bg-accent-gold/10 px-2 py-0.5 rounded border border-accent-gold/20">
+                      {table.stage === 'WAITING' ? '等待中' : table.stage === 'SHOWDOWN' ? '結算中' : '進行中'}
+                    </span>
                   </div>
-                  <span className="text-xs font-bold text-accent-gold bg-accent-gold/10 px-2 py-0.5 rounded border border-accent-gold/20">無限注德州撲克</span>
-                </div>
-                <div className="flex justify-between items-end">
-                  <div className="text-xs text-slate-400">
-                    <p>盲注: <span className="text-slate-200">$50/$100</span></p>
-                    <p className="mt-1 flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">group</span> 5/9 玩家</p>
+                  <div className="flex justify-between items-end">
+                    <div className="text-xs text-slate-400">
+                      <p>盲注: <span className="text-slate-200">$50/$100</span></p>
+                      <p className="mt-1 flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[14px]">group</span>
+                        <span className="text-green-400">{table.realPlayers}真人</span> + {table.totalPlayers - table.realPlayers}AI / 8
+                      </p>
+                    </div>
+                    <div className="bg-primary hover:bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                      加入
+                    </div>
                   </div>
-                  <div className="bg-primary hover:bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                    加入
-                  </div>
-                </div>
-              </Link>
-              <Link href="/" className="p-3 rounded-xl bg-surface-dark hover:bg-surface-dark/80 border border-white/5 transition-colors cursor-pointer group block">
-                <div className="flex justify-between items-start mb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="size-2 rounded-full bg-green-500"></span>
-                    <h4 className="text-white font-semibold text-sm">金龍廳</h4>
-                  </div>
-                  <span className="text-xs font-bold text-accent-gold bg-accent-gold/10 px-2 py-0.5 rounded border border-accent-gold/20">奧馬哈</span>
-                </div>
-                <div className="flex justify-between items-end">
-                  <div className="text-xs text-slate-400">
-                    <p>盲注: <span className="text-slate-200">$100/$200</span></p>
-                    <p className="mt-1 flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">group</span> 8/9 玩家</p>
-                  </div>
-                  <div className="bg-primary hover:bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                    加入
-                  </div>
-                </div>
-              </Link>
-              <Link href="/" className="p-3 rounded-xl bg-surface-dark hover:bg-surface-dark/80 border border-white/5 transition-colors cursor-pointer group block">
-                <div className="flex justify-between items-start mb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="size-2 rounded-full bg-yellow-500"></span>
-                    <h4 className="text-white font-semibold text-sm">皇家同花順廳</h4>
-                  </div>
-                  <span className="text-xs font-bold text-accent-gold bg-accent-gold/10 px-2 py-0.5 rounded border border-accent-gold/20">無限注德州撲克</span>
-                </div>
-                <div className="flex justify-between items-end">
-                  <div className="text-xs text-slate-400">
-                    <p>盲注: <span className="text-slate-200">$500/$1k</span></p>
-                    <p className="mt-1 flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">group</span> 2/6 玩家</p>
-                  </div>
-                  <div className="bg-primary hover:bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                    加入
-                  </div>
-                </div>
-              </Link>
-              <div className="p-3 rounded-xl bg-surface-dark hover:bg-surface-dark/80 border border-white/5 transition-colors cursor-pointer group opacity-75 hover:opacity-100">
-                <div className="flex justify-between items-start mb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="size-2 rounded-full bg-slate-500"></span>
-                    <h4 className="text-slate-300 font-semibold text-sm">新手運氣廳</h4>
-                  </div>
-                  <span className="text-xs font-bold text-slate-500 bg-slate-500/10 px-2 py-0.5 rounded border border-slate-500/20">無限注德州撲克</span>
-                </div>
-                <div className="flex justify-between items-end">
-                  <div className="text-xs text-slate-500">
-                    <p>盲注: <span className="text-slate-400">$1/$2</span></p>
-                    <p className="mt-1 flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">group</span> 9/9 滿員</p>
-                  </div>
-                  <button className="bg-slate-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-not-allowed">
-                    滿員
+                </Link>
+              )) : (
+                <div className="text-center py-8">
+                  <p className="text-slate-500 text-sm mb-3">目前沒有活躍牌桌</p>
+                  <button onClick={handleJoinMultiplayer} disabled={isJoining} className="bg-primary hover:bg-red-600 text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors">
+                    {isJoining ? '建立中...' : '開設新桌'}
                   </button>
                 </div>
-              </div>
+              )}
             </div>
           </aside>
         </main>
@@ -401,8 +388,8 @@ export default function LobbyPage() {
               <span className="material-symbols-outlined group-hover:-translate-y-1 transition-transform">assignment</span>
               <span className="text-[10px] font-medium uppercase tracking-wide">任務</span>
             </Link>
-            <button onClick={() => setIsComingSoonModalOpen(true)} className="md:hidden -mt-8 size-14 rounded-full bg-gradient-to-br from-primary to-red-800 text-white shadow-lg shadow-red-900/50 flex items-center justify-center border-4 border-surface-darker">
-              <span className="material-symbols-outlined text-3xl">play_arrow</span>
+            <button onClick={handleJoinMultiplayer} disabled={isJoining} className="md:hidden -mt-8 size-14 rounded-full bg-gradient-to-br from-primary to-red-800 text-white shadow-lg shadow-red-900/50 flex items-center justify-center border-4 border-surface-darker">
+              <span className="material-symbols-outlined text-3xl">{isJoining ? 'hourglass_empty' : 'play_arrow'}</span>
             </button>
             <Link className="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors group" href="/leaderboard">
               <span className="material-symbols-outlined group-hover:-translate-y-1 transition-transform">leaderboard</span>

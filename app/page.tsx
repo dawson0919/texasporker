@@ -92,7 +92,7 @@ export default function GameTablePage() {
     const [playerBalance, setPlayerBalance] = useState(10000);
 
     const [dealer, setDealer] = useState(DEALER_POOL[0]);
-    const [dealerMessage, setDealerMessage] = useState<string | null>(null);
+    const [dealerMessage, setDealerMessage] = useState<string | null>('歡迎入座，即將開局...');
     const [players, setPlayers] = useState<PlayerState[]>([
         { id: '1', name: '撲克王', avatar: 'https://ui-avatars.com/api/?name=P1&background=random', balance: 2400, positionIndex: 2, status: 'waiting', bet: 0, cards: [], totalInvested: 0 },
         { id: '2', name: '莎拉', avatar: 'https://ui-avatars.com/api/?name=P2&background=random', balance: 5000, positionIndex: 3, status: 'waiting', bet: 0, cards: [], totalInvested: 0 },
@@ -136,6 +136,9 @@ export default function GameTablePage() {
     useEffect(() => { lastRaiserIndexRef.current = lastRaiserIndex; }, [lastRaiserIndex]);
     useEffect(() => { isHandInProgressRef.current = isHandInProgress; }, [isHandInProgress]);
     useEffect(() => { soundEnabledRef.current = soundEnabled; }, [soundEnabled]);
+
+    // Auto-start first hand on page load
+    const hasAutoStarted = useRef(false);
 
     const addToLog = useCallback((msg: string) => {
         setActionLog(prev => [...prev.slice(-20), msg]);
@@ -836,6 +839,20 @@ export default function GameTablePage() {
         }
     }, [gameStage, isHandInProgress, startNewHand]);
 
+    // Auto-start first hand on page load
+    useEffect(() => {
+        if (hasAutoStarted.current) return;
+        if (gameStage !== 'WAITING' || isHandInProgress) return;
+        const activePlayers = players.filter(p => p.balance > 0);
+        if (activePlayers.length < 2) return;
+
+        hasAutoStarted.current = true;
+        const timer = setTimeout(() => {
+            startNewHand();
+        }, 1500);
+        return () => clearTimeout(timer);
+    }, [gameStage, isHandInProgress, players, startNewHand]);
+
     // ========== UI COMPUTED VALUES ==========
     const userPlayer = players.find(p => p.isRealUser);
     const isUserTurn = currentPlayerIndex >= 0 && players[currentPlayerIndex]?.isRealUser === true;
@@ -1215,12 +1232,7 @@ export default function GameTablePage() {
                                 {autoStartCountdown > 0 ? (
                                     <span className="text-accent-gold text-sm font-bold animate-pulse">{autoStartCountdown} 秒後自動開始...</span>
                                 ) : (
-                                    <button
-                                        onClick={startNewHand}
-                                        className="h-11 px-10 rounded-lg bg-gradient-to-b from-accent-gold to-yellow-700 hover:from-yellow-500 hover:to-yellow-800 text-black font-bold text-base border-b-3 border-yellow-900 active:border-b-0 active:translate-y-1 transition-all uppercase tracking-wider shadow-[0_0_20px_rgba(212,175,55,0.4)]"
-                                    >
-                                        開始新一局
-                                    </button>
+                                    <span className="text-accent-gold/70 text-sm font-bold animate-pulse">準備開始...</span>
                                 )}
                             </div>
                         ) : (
