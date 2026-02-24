@@ -14,6 +14,20 @@ type UserRecord = {
     created_at: string;
 };
 
+type Tournament = {
+    id: string;
+    name: string;
+    status: string;
+    max_players: number;
+    buy_in: number;
+    prize_1st: string | null;
+    prize_2nd: string | null;
+    prize_3rd: string | null;
+    start_time: string;
+    entry_count: number;
+    created_at: string;
+};
+
 export default function AdminPage() {
     const [users, setUsers] = useState<UserRecord[]>([]);
     const [loading, setLoading] = useState(true);
@@ -21,6 +35,15 @@ export default function AdminPage() {
     const [editingUser, setEditingUser] = useState<string | null>(null);
     const [addAmount, setAddAmount] = useState(10000);
     const [actionMsg, setActionMsg] = useState<string | null>(null);
+
+    // Tournament state
+    const [tournaments, setTournaments] = useState<Tournament[]>([]);
+    const [showCreateForm, setShowCreateForm] = useState(false);
+    const [newT, setNewT] = useState({ name: '', start_time: '', max_players: 100, buy_in: 500, prize_1st: '', prize_2nd: '', prize_3rd: '' });
+    const [creatingT, setCreatingT] = useState(false);
+    const [completingId, setCompletingId] = useState<string | null>(null);
+    const [entryUsers, setEntryUsers] = useState<Array<{ user_id: string; display_name: string }>>([]);
+    const [winners, setWinners] = useState<{ first: string; second: string; third: string }>({ first: '', second: '', third: '' });
 
     const fetchUsers = async () => {
         try {
@@ -83,6 +106,88 @@ export default function AdminPage() {
         setTimeout(() => setActionMsg(null), 3000);
     };
 
+    const fetchTournaments = async () => {
+        try {
+            const res = await fetch('/api/admin/tournaments');
+            if (res.ok) {
+                const data = await res.json();
+                setTournaments(data.tournaments || []);
+            }
+        } catch { /* ignore */ }
+    };
+
+    const createTournament = async () => {
+        if (!newT.name || !newT.start_time) { setActionMsg('請填寫名稱和開始時間'); setTimeout(() => setActionMsg(null), 3000); return; }
+        setCreatingT(true);
+        try {
+            const res = await fetch('/api/admin/tournaments', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newT),
+            });
+            if (res.ok) {
+                setActionMsg('錦標賽已建立！');
+                setShowCreateForm(false);
+                setNewT({ name: '', start_time: '', max_players: 100, buy_in: 500, prize_1st: '', prize_2nd: '', prize_3rd: '' });
+                fetchTournaments();
+            } else {
+                const d = await res.json();
+                setActionMsg(`錯誤: ${d.error}`);
+            }
+        } catch { setActionMsg('建立失敗'); }
+        setCreatingT(false);
+        setTimeout(() => setActionMsg(null), 3000);
+    };
+
+    const cancelTournament = async (id: string) => {
+        try {
+            const res = await fetch('/api/admin/tournaments/complete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tournamentId: id }),
+            });
+            if (res.ok) { setActionMsg('已取消'); fetchTournaments(); }
+        } catch { setActionMsg('操作失敗'); }
+        setTimeout(() => setActionMsg(null), 3000);
+    };
+
+    const openComplete = async (t: Tournament) => {
+        setCompletingId(t.id);
+        setWinners({ first: '', second: '', third: '' });
+        // Fetch entry users for this tournament
+        try {
+            const res = await fetch(`/api/admin/tournaments?entries=${t.id}`);
+            // We'll use the users list to match - for simplicity, map from users state
+            setEntryUsers(users.map(u => ({ user_id: u.id, display_name: u.name || u.email })));
+        } catch { /* ignore */ }
+    };
+
+    const completeTournament = async () => {
+        if (!completingId) return;
+        const tournament = tournaments.find(t => t.id === completingId);
+        const winnersList: Array<{ userId: string; placement: number; prize: string }> = [];
+        if (winners.first) winnersList.push({ userId: winners.first, placement: 1, prize: tournament?.prize_1st || '冠軍' });
+        if (winners.second) winnersList.push({ userId: winners.second, placement: 2, prize: tournament?.prize_2nd || '亞軍' });
+        if (winners.third) winnersList.push({ userId: winners.third, placement: 3, prize: tournament?.prize_3rd || '季軍' });
+
+        try {
+            const res = await fetch('/api/admin/tournaments/complete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tournamentId: completingId, winners: winnersList }),
+            });
+            if (res.ok) {
+                setActionMsg('錦標賽已完成！');
+                setCompletingId(null);
+                fetchTournaments();
+            } else { setActionMsg('操作失敗'); }
+        } catch { setActionMsg('操作失敗'); }
+        setTimeout(() => setActionMsg(null), 3000);
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => { fetchTournaments(); }, []);
+
     if (loading) {
         return (
             <div className="bg-[#1a160a] h-screen flex items-center justify-center text-white font-['Noto_Sans_TC']">
@@ -108,7 +213,7 @@ export default function AdminPage() {
     }
 
     return (
-        <div className="bg-[#1a160a] h-screen text-slate-100 flex flex-col font-['Noto_Sans_TC'] overflow-hidden">
+        <div className="bg-[#1a160a] min-h-screen text-slate-100 flex flex-col font-['Noto_Sans_TC']">
             {/* Header */}
             <header className="flex items-center justify-between border-b border-red-500/30 bg-[#1a0505]/95 backdrop-blur-md px-6 py-3 shrink-0 z-50">
                 <div className="flex items-center gap-4">
@@ -138,7 +243,7 @@ export default function AdminPage() {
             )}
 
             {/* Main content */}
-            <main className="flex-1 overflow-hidden p-4 flex flex-col gap-4">
+            <main className="flex-1 p-4 flex flex-col gap-4">
                 {/* Stats Row */}
                 <div className="grid grid-cols-4 gap-3 shrink-0">
                     <div className="rounded-xl p-3 bg-surface-dark/60 border border-white/5">
@@ -239,6 +344,166 @@ export default function AdminPage() {
                                 {users.length === 0 && (
                                     <tr>
                                         <td colSpan={5} className="px-4 py-12 text-center text-slate-500">暫無用戶紀錄</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                {/* Tournament Management */}
+                <div className="rounded-xl bg-surface-dark/40 border border-white/5 overflow-hidden flex flex-col">
+                    <div className="px-4 py-3 border-b border-white/5 flex justify-between items-center shrink-0 bg-surface-dark/50">
+                        <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                            <span className="material-symbols-outlined text-base text-accent-gold">emoji_events</span>
+                            錦標賽管理
+                        </h3>
+                        <div className="flex gap-2">
+                            <button onClick={fetchTournaments} className="text-[10px] text-slate-400 hover:text-white bg-black/30 px-3 py-1 rounded border border-white/5 transition-colors flex items-center gap-1">
+                                <span className="material-symbols-outlined text-xs">refresh</span> 刷新
+                            </button>
+                            <button onClick={() => setShowCreateForm(!showCreateForm)} className="text-[10px] text-accent-gold hover:text-yellow-300 bg-accent-gold/10 px-3 py-1 rounded border border-accent-gold/30 transition-colors flex items-center gap-1">
+                                <span className="material-symbols-outlined text-xs">add</span> 新增錦標賽
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Create form */}
+                    {showCreateForm && (
+                        <div className="px-4 py-4 border-b border-white/5 bg-black/20">
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+                                <div>
+                                    <label className="text-[10px] text-slate-500 uppercase font-bold block mb-1">名稱 *</label>
+                                    <input type="text" value={newT.name} onChange={e => setNewT(p => ({ ...p, name: e.target.value }))} placeholder="例: 龍之盃錦標賽" className="w-full bg-black/50 border border-white/10 text-white text-xs px-3 py-2 rounded focus:outline-none focus:border-accent-gold" />
+                                </div>
+                                <div>
+                                    <label className="text-[10px] text-slate-500 uppercase font-bold block mb-1">開始時間 *</label>
+                                    <input type="datetime-local" value={newT.start_time} onChange={e => setNewT(p => ({ ...p, start_time: e.target.value }))} className="w-full bg-black/50 border border-white/10 text-white text-xs px-3 py-2 rounded focus:outline-none focus:border-accent-gold" />
+                                </div>
+                                <div>
+                                    <label className="text-[10px] text-slate-500 uppercase font-bold block mb-1">報名上限</label>
+                                    <input type="number" value={newT.max_players} onChange={e => setNewT(p => ({ ...p, max_players: Number(e.target.value) }))} className="w-full bg-black/50 border border-white/10 text-white text-xs px-3 py-2 rounded focus:outline-none focus:border-accent-gold" />
+                                </div>
+                                <div>
+                                    <label className="text-[10px] text-slate-500 uppercase font-bold block mb-1">報名費 (籌碼)</label>
+                                    <input type="number" value={newT.buy_in} onChange={e => setNewT(p => ({ ...p, buy_in: Number(e.target.value) }))} className="w-full bg-black/50 border border-white/10 text-white text-xs px-3 py-2 rounded focus:outline-none focus:border-accent-gold" />
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-3 gap-3 mb-3">
+                                <div>
+                                    <label className="text-[10px] text-slate-500 uppercase font-bold block mb-1">冠軍獎品</label>
+                                    <input type="text" value={newT.prize_1st} onChange={e => setNewT(p => ({ ...p, prize_1st: e.target.value }))} placeholder="例: $50,000 籌碼" className="w-full bg-black/50 border border-white/10 text-white text-xs px-3 py-2 rounded focus:outline-none focus:border-accent-gold" />
+                                </div>
+                                <div>
+                                    <label className="text-[10px] text-slate-500 uppercase font-bold block mb-1">亞軍獎品</label>
+                                    <input type="text" value={newT.prize_2nd} onChange={e => setNewT(p => ({ ...p, prize_2nd: e.target.value }))} placeholder="例: $20,000 籌碼" className="w-full bg-black/50 border border-white/10 text-white text-xs px-3 py-2 rounded focus:outline-none focus:border-accent-gold" />
+                                </div>
+                                <div>
+                                    <label className="text-[10px] text-slate-500 uppercase font-bold block mb-1">季軍獎品</label>
+                                    <input type="text" value={newT.prize_3rd} onChange={e => setNewT(p => ({ ...p, prize_3rd: e.target.value }))} placeholder="例: $10,000 籌碼" className="w-full bg-black/50 border border-white/10 text-white text-xs px-3 py-2 rounded focus:outline-none focus:border-accent-gold" />
+                                </div>
+                            </div>
+                            <div className="flex gap-2">
+                                <button onClick={createTournament} disabled={creatingT} className="bg-accent-gold hover:bg-yellow-500 text-black text-xs font-bold px-4 py-2 rounded transition-colors disabled:opacity-50">
+                                    {creatingT ? '建立中...' : '建立錦標賽'}
+                                </button>
+                                <button onClick={() => setShowCreateForm(false)} className="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded transition-colors">
+                                    取消
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Complete tournament modal */}
+                    {completingId && (
+                        <div className="px-4 py-4 border-b border-white/5 bg-emerald-900/20">
+                            <h4 className="text-xs font-bold text-emerald-400 mb-3">選擇前三名得獎者</h4>
+                            <div className="grid grid-cols-3 gap-3 mb-3">
+                                <div>
+                                    <label className="text-[10px] text-slate-500 uppercase font-bold block mb-1">冠軍</label>
+                                    <select value={winners.first} onChange={e => setWinners(p => ({ ...p, first: e.target.value }))} className="w-full bg-black/50 border border-white/10 text-white text-xs px-3 py-2 rounded focus:outline-none focus:border-accent-gold">
+                                        <option value="">-- 選擇 --</option>
+                                        {entryUsers.map(u => <option key={u.user_id} value={u.user_id}>{u.display_name}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="text-[10px] text-slate-500 uppercase font-bold block mb-1">亞軍</label>
+                                    <select value={winners.second} onChange={e => setWinners(p => ({ ...p, second: e.target.value }))} className="w-full bg-black/50 border border-white/10 text-white text-xs px-3 py-2 rounded focus:outline-none focus:border-accent-gold">
+                                        <option value="">-- 選擇 --</option>
+                                        {entryUsers.map(u => <option key={u.user_id} value={u.user_id}>{u.display_name}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="text-[10px] text-slate-500 uppercase font-bold block mb-1">季軍</label>
+                                    <select value={winners.third} onChange={e => setWinners(p => ({ ...p, third: e.target.value }))} className="w-full bg-black/50 border border-white/10 text-white text-xs px-3 py-2 rounded focus:outline-none focus:border-accent-gold">
+                                        <option value="">-- 選擇 --</option>
+                                        {entryUsers.map(u => <option key={u.user_id} value={u.user_id}>{u.display_name}</option>)}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="flex gap-2">
+                                <button onClick={completeTournament} className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded transition-colors">
+                                    確認完成
+                                </button>
+                                <button onClick={() => setCompletingId(null)} className="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded transition-colors">
+                                    取消
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Tournament list */}
+                    <div className="overflow-y-auto max-h-[400px]">
+                        <table className="w-full text-sm">
+                            <thead className="text-[10px] text-slate-500 uppercase bg-black/30 sticky top-0 z-10">
+                                <tr>
+                                    <th className="px-4 py-2 font-bold text-left">名稱</th>
+                                    <th className="px-4 py-2 font-bold text-center">狀態</th>
+                                    <th className="px-4 py-2 font-bold text-left">開始時間</th>
+                                    <th className="px-4 py-2 font-bold text-right">報名費</th>
+                                    <th className="px-4 py-2 font-bold text-center">報名人數</th>
+                                    <th className="px-4 py-2 font-bold text-left">獎品</th>
+                                    <th className="px-4 py-2 font-bold text-center">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-white/5">
+                                {tournaments.map(t => (
+                                    <tr key={t.id} className="hover:bg-white/5 transition-colors">
+                                        <td className="px-4 py-3 font-medium text-white">{t.name}</td>
+                                        <td className="px-4 py-3 text-center">
+                                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                                                t.status === 'upcoming' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
+                                                t.status === 'registering' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
+                                                t.status === 'in_progress' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' :
+                                                t.status === 'completed' ? 'bg-slate-500/20 text-slate-400 border border-slate-500/30' :
+                                                'bg-red-500/20 text-red-400 border border-red-500/30'
+                                            }`}>
+                                                {t.status === 'upcoming' ? '即將開始' : t.status === 'registering' ? '報名中' : t.status === 'in_progress' ? '進行中' : t.status === 'completed' ? '已完成' : '已取消'}
+                                            </span>
+                                        </td>
+                                        <td className="px-4 py-3 text-xs text-slate-400">{new Date(t.start_time).toLocaleString('zh-TW')}</td>
+                                        <td className="px-4 py-3 text-right font-mono text-accent-gold text-xs">${t.buy_in.toLocaleString()}</td>
+                                        <td className="px-4 py-3 text-center text-xs">{t.entry_count}/{t.max_players}</td>
+                                        <td className="px-4 py-3 text-xs text-slate-400 max-w-[200px] truncate">{[t.prize_1st, t.prize_2nd, t.prize_3rd].filter(Boolean).join(' / ') || '-'}</td>
+                                        <td className="px-4 py-3 text-center">
+                                            {(t.status === 'upcoming' || t.status === 'registering' || t.status === 'in_progress') && (
+                                                <div className="flex gap-1 justify-center">
+                                                    <button onClick={() => openComplete(t)} className="bg-emerald-600/80 hover:bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded transition-colors">
+                                                        完成
+                                                    </button>
+                                                    <button onClick={() => cancelTournament(t.id)} className="bg-red-600/80 hover:bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded transition-colors">
+                                                        取消
+                                                    </button>
+                                                </div>
+                                            )}
+                                            {t.status === 'completed' && <span className="text-slate-500 text-[10px]">已結束</span>}
+                                            {t.status === 'cancelled' && <span className="text-slate-500 text-[10px]">已取消</span>}
+                                        </td>
+                                    </tr>
+                                ))}
+                                {tournaments.length === 0 && (
+                                    <tr>
+                                        <td colSpan={7} className="px-4 py-12 text-center text-slate-500">尚未建立錦標賽</td>
                                     </tr>
                                 )}
                             </tbody>

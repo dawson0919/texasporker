@@ -61,6 +61,7 @@ export default function MultiplayerGamePage() {
     const [winAnimation, setWinAnimation] = useState<{ active: boolean; winnerSeatIndex: number; winnerName: string; potAmount: number } | null>(null);
     const [fillDeadline, setFillDeadline] = useState<string | null>(null);
     const [isActionPending, setIsActionPending] = useState(false);
+    const [startCountdown, setStartCountdown] = useState(-1);
     const prevStateRef = useRef<PublicGameState | null>(null);
     const hasStartedFirstHand = useRef(false);
 
@@ -167,24 +168,38 @@ export default function MultiplayerGamePage() {
         }
     }, [mySeatIndex, playSound, tableId]);
 
-    // Auto-start first hand
+    // Auto-start first hand with visible countdown
     useEffect(() => {
         if (!gameState || hasStartedFirstHand.current) return;
-        if (gameState.isHandInProgress) { hasStartedFirstHand.current = true; return; }
+        if (gameState.isHandInProgress) { hasStartedFirstHand.current = true; setStartCountdown(-1); return; }
         if (gameState.stage !== 'WAITING') return;
 
         const activeSeats = gameState.seats.filter(s => s && s.chipBalance > 0);
         if (activeSeats.length < 2) return;
 
         hasStartedFirstHand.current = true;
+        setStartCountdown(5);
+
+        const countdownInterval = setInterval(() => {
+            setStartCountdown(prev => {
+                if (prev <= 1) {
+                    clearInterval(countdownInterval);
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
         const timer = setTimeout(async () => {
+            setStartCountdown(-1);
             await fetch('/api/multiplayer/start-hand', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ tableId }),
             });
-        }, 1500);
-        return () => clearTimeout(timer);
+        }, 5000);
+
+        return () => { clearInterval(countdownInterval); clearTimeout(timer); };
     }, [gameState, tableId]);
 
     // Auto-start next hand after showdown
@@ -383,6 +398,16 @@ export default function MultiplayerGamePage() {
                                     </div>
                                 ))}
                             </div>
+
+                            {/* Start Countdown Overlay */}
+                            {startCountdown > 0 && (
+                                <div className="absolute inset-0 flex items-center justify-center z-40 pointer-events-none">
+                                    <div className="flex flex-col items-center gap-2 animate-pulse">
+                                        <div className="text-6xl md:text-8xl font-bold text-accent-gold drop-shadow-[0_0_30px_rgba(212,175,55,0.8)] font-mono">{startCountdown}</div>
+                                        <div className="text-sm md:text-lg text-white/80 font-bold tracking-widest uppercase">開局倒數</div>
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Pot Display */}
                             <div className="absolute top-[58%] left-1/2 -translate-x-1/2 flex flex-col items-center z-10">

@@ -21,6 +21,10 @@ export default function LobbyPage() {
   const [profileMsg, setProfileMsg] = useState('');
   const [liveTables, setLiveTables] = useState<Array<{ id: string; tableNumber: number; status: string; realPlayers: number; totalPlayers: number; stage: string; handCount: number }>>([]);
   const [isJoining, setIsJoining] = useState(false);
+  const [nextTournament, setNextTournament] = useState<{ id: string; name: string; start_time: string; buy_in: number; entry_count: number; max_players: number } | null>(null);
+  const [tCountdown, setTCountdown] = useState('');
+  const [tRegistering, setTRegistering] = useState(false);
+  const [tRegistered, setTRegistered] = useState(false);
   const { signOut } = useClerk();
   const { user: clerkUser } = useUser();
   const router = useRouter();
@@ -36,7 +40,44 @@ export default function LobbyPage() {
     fetch('/api/user/balance').then(r => r.json()).then(d => setChipBalance(d.balance)).catch(() => {});
     fetch('/api/user/stats').then(r => r.json()).then(d => { if (d.title) setStats(d); }).catch(() => {});
     fetch('/api/multiplayer/tables').then(r => r.json()).then(d => { if (d.tables) setLiveTables(d.tables); }).catch(() => {});
+    fetch('/api/tournaments').then(r => r.json()).then(d => { if (d.tournaments?.length > 0) setNextTournament(d.tournaments[0]); }).catch(() => {});
   }, []);
+
+  // Tournament countdown
+  useEffect(() => {
+    if (!nextTournament) return;
+    const tick = () => {
+      const diff = new Date(nextTournament.start_time).getTime() - Date.now();
+      if (diff <= 0) { setTCountdown('即將開始'); return; }
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      setTCountdown(h > 0 ? `${h}小時${m}分${s}秒後開始` : `${m}分${s}秒後開始`);
+    };
+    tick();
+    const interval = setInterval(tick, 1000);
+    return () => clearInterval(interval);
+  }, [nextTournament]);
+
+  const handleTournamentRegister = useCallback(async () => {
+    if (!nextTournament || tRegistering || tRegistered) return;
+    setTRegistering(true);
+    try {
+      const res = await fetch('/api/tournaments/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tournamentId: nextTournament.id }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setTRegistered(true);
+        if (data.newBalance !== undefined) setChipBalance(data.newBalance);
+      } else {
+        alert(data.error || '報名失敗');
+      }
+    } catch { alert('網路錯誤'); }
+    setTRegistering(false);
+  }, [nextTournament, tRegistering, tRegistered]);
 
   const handleJoinMultiplayer = useCallback(async () => {
     if (isJoining) return;
@@ -316,20 +357,40 @@ export default function LobbyPage() {
                 </div>
               </Link>
             </div>
-            <div className="rounded-xl p-4 bg-gradient-to-r from-primary/10 to-transparent border border-primary/20 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="size-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
-                  <span className="material-symbols-outlined text-2xl">emoji_events</span>
+            {nextTournament ? (
+              <div className="rounded-xl p-4 bg-gradient-to-r from-primary/10 to-transparent border border-primary/20 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="size-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
+                    <span className="material-symbols-outlined text-2xl">emoji_events</span>
+                  </div>
+                  <div>
+                    <h4 className="text-white font-bold">{nextTournament.name}</h4>
+                    <p className="text-primary text-xs font-medium">{tCountdown}</p>
+                    {nextTournament.buy_in > 0 && <p className="text-slate-400 text-[10px]">報名費: ${nextTournament.buy_in.toLocaleString()} | {nextTournament.entry_count}/{nextTournament.max_players}人</p>}
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-white font-bold">龍之盃錦標賽</h4>
-                  <p className="text-primary text-xs font-medium">2小時15分後開始</p>
-                </div>
+                <button
+                  onClick={handleTournamentRegister}
+                  disabled={tRegistering || tRegistered}
+                  className="px-4 py-2 bg-surface-darker hover:bg-black text-white text-sm font-medium rounded-lg border border-white/10 transition-colors disabled:opacity-50"
+                >
+                  {tRegistered ? '已報名' : tRegistering ? '報名中...' : '報名'}
+                </button>
               </div>
-              <Link href="/tournaments" className="px-4 py-2 bg-surface-darker hover:bg-black text-white text-sm font-medium rounded-lg border border-white/10 transition-colors">
-                報名
+            ) : (
+              <Link href="/tournaments" className="rounded-xl p-4 bg-gradient-to-r from-primary/10 to-transparent border border-primary/20 flex items-center justify-between group block">
+                <div className="flex items-center gap-4">
+                  <div className="size-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
+                    <span className="material-symbols-outlined text-2xl">emoji_events</span>
+                  </div>
+                  <div>
+                    <h4 className="text-white font-bold">錦標賽</h4>
+                    <p className="text-slate-400 text-xs">查看即將舉行的錦標賽</p>
+                  </div>
+                </div>
+                <span className="text-slate-400 group-hover:text-white material-symbols-outlined transition-colors">arrow_forward</span>
               </Link>
-            </div>
+            )}
           </div>
           <aside className="lg:col-span-3 flex flex-col gap-4">
             <div className="flex items-center justify-between pb-2">

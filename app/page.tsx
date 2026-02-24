@@ -28,11 +28,14 @@ export type PlayerState = {
 };
 
 export const SEAT_POSITIONS: Record<number, string> = {
-    0: "absolute -bottom-12 md:-bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 md:gap-3 z-30",
+    0: "absolute -bottom-12 md:-bottom-16 left-[30%] -translate-x-1/2 flex flex-col items-center gap-1 md:gap-3 z-30",
     1: "absolute top-1/2 -left-4 md:-left-10 -translate-y-1/2 flex flex-col items-center gap-1 md:gap-2 z-20",
-    2: "absolute -top-6 md:-top-10 left-[15%] md:left-[20%] flex flex-col items-center gap-1 md:gap-2 group z-20",
-    3: "absolute -top-6 md:-top-10 right-[15%] md:right-[20%] flex flex-col items-center gap-1 md:gap-2 z-20",
-    4: "absolute top-1/2 -right-4 md:-right-10 -translate-y-1/2 flex flex-col items-center gap-1 md:gap-2 z-20"
+    2: "absolute -top-6 md:-top-10 left-[12%] md:left-[15%] flex flex-col items-center gap-1 md:gap-2 z-20",
+    3: "absolute -top-6 md:-top-10 left-[38%] flex flex-col items-center gap-1 md:gap-2 z-20",
+    4: "absolute -top-6 md:-top-10 right-[38%] flex flex-col items-center gap-1 md:gap-2 z-20",
+    5: "absolute -top-6 md:-top-10 right-[12%] md:right-[15%] flex flex-col items-center gap-1 md:gap-2 z-20",
+    6: "absolute top-1/2 -right-4 md:-right-10 -translate-y-1/2 flex flex-col items-center gap-1 md:gap-2 z-20",
+    7: "absolute -bottom-12 md:-bottom-16 right-[30%] translate-x-1/2 flex flex-col items-center gap-1 md:gap-3 z-30",
 };
 
 const DEALER_POOL = [
@@ -94,10 +97,13 @@ export default function GameTablePage() {
     const [dealer, setDealer] = useState(DEALER_POOL[0]);
     const [dealerMessage, setDealerMessage] = useState<string | null>('歡迎入座，即將開局...');
     const [players, setPlayers] = useState<PlayerState[]>([
-        { id: '1', name: '撲克王', avatar: 'https://ui-avatars.com/api/?name=P1&background=random', balance: 2400, positionIndex: 2, status: 'waiting', bet: 0, cards: [], totalInvested: 0 },
-        { id: '2', name: '莎拉', avatar: 'https://ui-avatars.com/api/?name=P2&background=random', balance: 5000, positionIndex: 3, status: 'waiting', bet: 0, cards: [], totalInvested: 0 },
-        { id: '3', name: '麥克', avatar: 'https://ui-avatars.com/api/?name=P3&background=random', balance: 3200, positionIndex: 1, status: 'waiting', bet: 0, cards: [], totalInvested: 0 },
-        { id: '4', name: '幸運星', avatar: 'https://ui-avatars.com/api/?name=P4&background=random', balance: 8900, positionIndex: 4, status: 'waiting', bet: 0, cards: [], totalInvested: 0 },
+        { id: '1', name: '賭神', avatar: 'https://ui-avatars.com/api/?name=%E8%B3%AD%E7%A5%9E&background=8B0000&color=fff', balance: 5934, positionIndex: 3, status: 'waiting', bet: 0, cards: [], totalInvested: 0 },
+        { id: '2', name: '阿星', avatar: 'https://ui-avatars.com/api/?name=%E9%98%BF%E6%98%9F&background=9B870C&color=fff', balance: 8176, positionIndex: 5, status: 'waiting', bet: 0, cards: [], totalInvested: 0 },
+        { id: '3', name: '小刀', avatar: 'https://ui-avatars.com/api/?name=%E5%B0%8F%E5%88%80&background=4169E1&color=fff', balance: 2599, positionIndex: 1, status: 'waiting', bet: 0, cards: [], totalInvested: 0 },
+        { id: '4', name: '幸運星', avatar: 'https://ui-avatars.com/api/?name=%E5%B9%B8%E9%81%8B&background=9ACD32&color=fff', balance: 8900, positionIndex: 6, status: 'waiting', bet: 0, cards: [], totalInvested: 0 },
+        { id: '5', name: '龍王', avatar: 'https://ui-avatars.com/api/?name=%E9%BE%8D%E7%8E%8B&background=FF6347&color=fff', balance: 6200, positionIndex: 2, status: 'waiting', bet: 0, cards: [], totalInvested: 0 },
+        { id: '6', name: '撲克女王', avatar: 'https://ui-avatars.com/api/?name=%E5%A5%B3%E7%8E%8B&background=DA70D6&color=fff', balance: 4500, positionIndex: 4, status: 'waiting', bet: 0, cards: [], totalInvested: 0 },
+        { id: '7', name: '全下王', avatar: 'https://ui-avatars.com/api/?name=%E5%85%A8%E4%B8%8B&background=FF4500&color=fff', balance: 7300, positionIndex: 7, status: 'waiting', bet: 0, cards: [], totalInvested: 0 },
         { id: 'user', name: '我', avatar: 'https://ui-avatars.com/api/?name=You&background=random', balance: 10000, positionIndex: 0, status: 'waiting', isRealUser: true, bet: 0, cards: [], totalInvested: 0 }
     ]);
 
@@ -108,6 +114,7 @@ export default function GameTablePage() {
     const [lastRaiserIndex, setLastRaiserIndex] = useState(-1);
     const [isHandInProgress, setIsHandInProgress] = useState(false);
     const [actionLog, setActionLog] = useState<string[]>([]);
+    const [chatMessages, setChatMessages] = useState<Array<{ name: string; text: string; isUser: boolean }>>([]);
     const [soundEnabled, setSoundEnabled] = useState(true);
     const soundEnabledRef = useRef(true);
     const [autoStartCountdown, setAutoStartCountdown] = useState(-1);
@@ -1344,22 +1351,41 @@ export default function GameTablePage() {
                             </>
                         )}
                     </div>
-                    <div className="p-4 border-t border-white/5 bg-[#1a1a1a]">
-                        <div className="relative">
-                            <input className="w-full bg-[#0f0f0f] text-gray-300 text-sm rounded pl-4 pr-10 py-3 border border-white/10 focus:outline-none focus:border-accent-gold/50 focus:ring-1 focus:ring-accent-gold/50 placeholder-gray-600 transition-all shadow-inner" placeholder="輸入訊息..." type="text" />
-                            <button className="absolute right-2 top-2 p-1 text-accent-gold hover:text-white rounded hover:bg-white/10 transition-colors">
-                                <span className="material-symbols-outlined text-[20px]">send</span>
-                            </button>
-                        </div>
-                        <div className="flex justify-between mt-3 px-1 items-center">
-                            <div className="flex gap-3 text-gray-500">
-                                <button className="hover:text-accent-gold transition-colors"><span className="material-symbols-outlined text-[20px]">sentiment_satisfied</span></button>
-                                <button className="hover:text-accent-gold transition-colors"><span className="material-symbols-outlined text-[20px]">gif</span></button>
+                    <div className="p-3 border-t border-white/5 bg-[#1a1a1a]">
+                        {chatMessages.length > 0 && (
+                            <div className="mb-2 max-h-24 overflow-y-auto space-y-1">
+                                {chatMessages.slice(-5).map((msg, idx) => (
+                                    <div key={idx} className="text-xs">
+                                        <span className={`font-bold ${msg.isUser ? 'text-accent-gold' : 'text-blue-400'}`}>{msg.name}:</span>
+                                        <span className="text-gray-300 ml-1">{msg.text}</span>
+                                    </div>
+                                ))}
                             </div>
-                            <div className="flex gap-2">
-                                <button className="text-[10px] font-bold uppercase text-gray-500 hover:text-white hover:border-white/20 border border-transparent px-2 py-1 rounded bg-white/5 transition-all">打得好</button>
-                                <button className="text-[10px] font-bold uppercase text-gray-500 hover:text-white hover:border-white/20 border border-transparent px-2 py-1 rounded bg-white/5 transition-all">好牌</button>
-                            </div>
+                        )}
+                        <div className="flex flex-wrap gap-1.5">
+                            {['打得好 👍', '好牌！', '太厲害了', '加油！', '好運 🍀', '哈哈 😂', '嚇死我了', '再來一局', 'GG', 'All in!'].map(text => (
+                                <button
+                                    key={text}
+                                    onClick={() => {
+                                        const userName = players.find(p => p.isRealUser)?.name || '我';
+                                        setChatMessages(prev => [...prev, { name: userName, text, isUser: true }]);
+                                        // AI auto-reply after 1-3s
+                                        const aiReplies = ['謝謝！', '你也打得不錯', '哈哈', '加油加油', '下一把見', '厲害👏', '運氣好而已'];
+                                        const aiPlayers = players.filter(p => !p.isRealUser && p.balance > 0);
+                                        if (aiPlayers.length > 0) {
+                                            const delay = 1000 + Math.random() * 2000;
+                                            setTimeout(() => {
+                                                const ai = aiPlayers[Math.floor(Math.random() * aiPlayers.length)];
+                                                const reply = aiReplies[Math.floor(Math.random() * aiReplies.length)];
+                                                setChatMessages(prev => [...prev, { name: ai.name, text: reply, isUser: false }]);
+                                            }, delay);
+                                        }
+                                    }}
+                                    className="text-[10px] font-bold text-gray-400 hover:text-white hover:bg-white/10 border border-white/10 px-2.5 py-1.5 rounded-lg bg-white/5 transition-all active:scale-95"
+                                >
+                                    {text}
+                                </button>
+                            ))}
                         </div>
                     </div>
                 </div>

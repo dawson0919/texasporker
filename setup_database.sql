@@ -68,6 +68,43 @@ CREATE INDEX IF NOT EXISTS idx_table_players_user ON public.table_players (user_
   WHERE player_type = 'real';
 
 -- ============================================================
+-- TOURNAMENT TABLES
+-- ============================================================
+
+-- Tournaments (admin-created events)
+CREATE TABLE IF NOT EXISTS public.tournaments (
+  id          UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name        TEXT NOT NULL,
+  status      TEXT NOT NULL DEFAULT 'upcoming'
+              CHECK (status IN ('upcoming','registering','in_progress','completed','cancelled')),
+  max_players INT NOT NULL DEFAULT 100,
+  buy_in      BIGINT NOT NULL DEFAULT 0,
+  prize_1st   TEXT,
+  prize_2nd   TEXT,
+  prize_3rd   TEXT,
+  start_time  TIMESTAMPTZ NOT NULL,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  created_by  UUID REFERENCES public.users(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_tournaments_status_start
+  ON public.tournaments (status, start_time);
+
+-- Tournament Entries (player registrations)
+CREATE TABLE IF NOT EXISTS public.tournament_entries (
+  id            UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  tournament_id UUID NOT NULL REFERENCES public.tournaments(id) ON DELETE CASCADE,
+  user_id       UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  registered_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  placement     INT,
+  prize_won     TEXT,
+  UNIQUE (tournament_id, user_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_entries_tournament ON public.tournament_entries (tournament_id);
+CREATE INDEX IF NOT EXISTS idx_entries_user ON public.tournament_entries (user_id);
+
+-- ============================================================
 -- Disable Row Level Security (RLS) so the Next.js API can read/write without complex policies
 -- ============================================================
 ALTER TABLE public.users DISABLE ROW LEVEL SECURITY;
@@ -75,6 +112,8 @@ ALTER TABLE public.balances DISABLE ROW LEVEL SECURITY;
 ALTER TABLE public.game_history DISABLE ROW LEVEL SECURITY;
 ALTER TABLE public.poker_tables DISABLE ROW LEVEL SECURITY;
 ALTER TABLE public.table_players DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.tournaments DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.tournament_entries DISABLE ROW LEVEL SECURITY;
 
 -- ============================================================
 -- Enable Supabase Realtime on poker_tables for live state updates

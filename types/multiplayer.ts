@@ -97,7 +97,7 @@ export const SMALL_BLIND = 50;
 export const BIG_BLIND = 100;
 export const MAX_SEATS = 8;
 export const MAX_TABLES = 5;
-export const FILL_DEADLINE_MS = 10 * 60 * 1000; // 10 minutes
+export const FILL_DEADLINE_MS = 5 * 60 * 1000; // 5 minutes
 export const TURN_TIMER_MS = 30 * 1000;         // 30 seconds
 
 export const AI_NAMES = [
