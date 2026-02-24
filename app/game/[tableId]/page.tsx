@@ -437,7 +437,7 @@ export default function MultiplayerGamePage() {
                         <div className="absolute top-2 right-3 flex flex-col items-end gap-1 z-20">
                             <div className="bg-black/60 backdrop-blur-md px-3 py-1 rounded border-l-2 border-accent-gold">
                                 <span className="text-white font-serif font-bold text-xs md:text-sm block leading-none">多人牌桌</span>
-                                <span className="text-accent-gold text-[9px] md:text-[10px] font-mono uppercase tracking-wider">{SMALL_BLIND}/{BIG_BLIND} • {gameState.seats.filter(s => s !== null).length}人</span>
+                                <span className="text-accent-gold text-[9px] md:text-[10px] font-mono uppercase tracking-wider">{SMALL_BLIND}/{BIG_BLIND} • {gameState.seats.slice(0, MAX_SEATS).filter(s => s !== null).length}人</span>
                             </div>
                         </div>
                     </div>
@@ -486,7 +486,7 @@ export default function MultiplayerGamePage() {
                             </div>
 
                             {/* Player Seats */}
-                            {gameState.seats.map((seat, idx) => {
+                            {gameState.seats.slice(0, MAX_SEATS).map((seat, idx) => {
                                 if (!seat) {
                                     // Empty seat
                                     return (

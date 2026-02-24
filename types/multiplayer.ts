@@ -39,7 +39,7 @@ export interface PublicGameState {
     dealerSeatIndex: number;       // -1 = unset
     lastRaiserSeatIndex: number;
     isHandInProgress: boolean;
-    seats: (PublicSeat | null)[];   // Always 8 slots; null = empty seat
+    seats: (PublicSeat | null)[];   // MAX_SEATS slots; null = empty seat
     actedThisRound: number[];      // seatIndex values who acted this betting round
     handCount: number;
     actionLog: ActionEntry[];      // Actions since last broadcast (for client animation)

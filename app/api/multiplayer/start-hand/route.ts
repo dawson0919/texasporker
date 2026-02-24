@@ -3,7 +3,7 @@ import { currentUser } from '@clerk/nextjs/server';
 import { supabase } from '@/utils/supabase/server';
 import { dealNewHand, processFullAction, findNextActiveSeat, makeAiDecision, applyAction, isBettingRoundComplete, advanceStage } from '@/utils/gameEngine';
 import type { PublicGameState } from '@/types/multiplayer';
-import { TURN_TIMER_MS } from '@/types/multiplayer';
+import { TURN_TIMER_MS, MAX_SEATS } from '@/types/multiplayer';
 import type { Card } from '@/utils/poker';
 
 export async function POST(req: Request) {
@@ -37,9 +37,12 @@ export async function POST(req: Request) {
 
     const playerMap = new Map((dbPlayers || []).map(p => [p.seat_index, p]));
 
+    // Truncate seats to MAX_SEATS (handles old 8-seat tables)
+    const truncatedSeats = state.seats.slice(0, MAX_SEATS);
+
     const syncedState: PublicGameState = {
         ...state,
-        seats: state.seats.map((seat, idx) => {
+        seats: truncatedSeats.map((seat, idx) => {
             const dbPlayer = playerMap.get(idx);
             if (!seat && dbPlayer) {
                 // Player exists in DB but not in state (joined between hands)
