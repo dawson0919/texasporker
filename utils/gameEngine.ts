@@ -6,7 +6,7 @@
 import { Deck, Card, evaluateHand, determineWinners } from './poker';
 import {
     PublicGameState, PublicSeat, GameStage, PlayerAction, ActionEntry,
-    SeatStatus, SMALL_BLIND, BIG_BLIND, MAX_SEATS,
+    SeatStatus, SMALL_BLIND, BIG_BLIND, MAX_SEATS, TURN_TIMER_MS,
 } from '../types/multiplayer';
 
 // ========== HELPERS ==========
@@ -206,7 +206,7 @@ export function dealNewHand(
         handCount: prevState.handCount + 1,
         actionLog: [],
         actionDeadline: newSeats[utgSeat]?.playerType === 'real'
-            ? new Date(Date.now() + 30000).toISOString()
+            ? new Date(Date.now() + TURN_TIMER_MS).toISOString()
             : undefined,
     };
 
@@ -399,7 +399,7 @@ export function advanceStage(
         stage: newStage,
         actedThisRound: [],
         actionDeadline: newSeats[firstAct]?.playerType === 'real'
-            ? new Date(Date.now() + 30000).toISOString()
+            ? new Date(Date.now() + TURN_TIMER_MS).toISOString()
             : undefined,
     };
 }
@@ -560,7 +560,7 @@ export function processFullAction(
                 ...currentState,
                 currentSeatIndex: nextSeat,
                 actionDeadline: currentState.seats[nextSeat]?.playerType === 'real'
-                    ? new Date(Date.now() + 30000).toISOString()
+                    ? new Date(Date.now() + TURN_TIMER_MS).toISOString()
                     : undefined,
             };
         }
@@ -596,7 +596,7 @@ export function processFullAction(
                     ...currentState,
                     currentSeatIndex: nextSeat,
                     actionDeadline: currentState.seats[nextSeat]?.playerType === 'real'
-                        ? new Date(Date.now() + 30000).toISOString()
+                        ? new Date(Date.now() + TURN_TIMER_MS).toISOString()
                         : undefined,
                 };
             } else {

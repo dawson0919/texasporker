@@ -3,6 +3,7 @@ import { currentUser } from '@clerk/nextjs/server';
 import { supabase } from '@/utils/supabase/server';
 import { dealNewHand, processFullAction, findNextActiveSeat, makeAiDecision, applyAction, isBettingRoundComplete, advanceStage } from '@/utils/gameEngine';
 import type { PublicGameState } from '@/types/multiplayer';
+import { TURN_TIMER_MS } from '@/types/multiplayer';
 import type { Card } from '@/utils/poker';
 
 export async function POST(req: Request) {
@@ -128,7 +129,7 @@ export async function POST(req: Request) {
                     ...currentState,
                     currentSeatIndex: nextSeat,
                     actionDeadline: currentState.seats[nextSeat]?.playerType === 'real'
-                        ? new Date(Date.now() + 30000).toISOString()
+                        ? new Date(Date.now() + TURN_TIMER_MS).toISOString()
                         : undefined,
                 };
             } else {
