@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600">
+  <defs>
+    <linearGradient id="skin1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F5D0B0"/>
+      <stop offset="100%" stop-color="#E8B896"/>
+    </linearGradient>
+    <linearGradient id="skinShade1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#E8B896"/>
+      <stop offset="100%" stop-color="#D4A07A"/>
+    </linearGradient>
+    <linearGradient id="hair1a" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1A1008"/>
+      <stop offset="40%" stop-color="#2C1A0E"/>
+      <stop offset="100%" stop-color="#0E0804"/>
+    </linearGradient>
+    <linearGradient id="vest1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8B0000"/>
+      <stop offset="50%" stop-color="#6B0000"/>
+      <stop offset="100%" stop-color="#4A0000"/>
+    </linearGradient>
+    <linearGradient id="shirt1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E8E8E8"/>
+    </linearGradient>
+    <radialGradient id="iris1" cx="45%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#6B4423"/>
+      <stop offset="60%" stop-color="#3E2712"/>
+      <stop offset="100%" stop-color="#1A1008"/>
+    </radialGradient>
+    <linearGradient id="lip1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C4606A"/>
+      <stop offset="100%" stop-color="#A04550"/>
+    </linearGradient>
+    <filter id="shadow1">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#00000040"/>
+    </filter>
+  </defs>
+
+  <!-- Shirt -->
+  <path d="M135,355 Q120,380 105,600 L295,600 Q280,380 265,355 Q245,345 200,348 Q155,345 135,355Z" fill="url(#shirt1)"/>
+  <!-- Shirt collar -->
+  <path d="M160,352 L190,380 L200,374 L210,380 L240,352" fill="white" stroke="#DDD" stroke-width="0.5"/>
+  <!-- Vest -->
+  <path d="M140,358 Q125,400 112,600 L188,600 L188,380Z" fill="url(#vest1)"/>
+  <path d="M260,358 Q275,400 288,600 L212,600 L212,380Z" fill="url(#vest1)"/>
+  <!-- Vest lapel highlights -->
+  <path d="M142,360 Q130,400 118,520" stroke="#9B1111" stroke-width="1" fill="none" opacity="0.5"/>
+  <path d="M258,360 Q270,400 282,520" stroke="#9B1111" stroke-width="1" fill="none" opacity="0.5"/>
+  <!-- Bowtie -->
+  <path d="M188,358 L200,365 L212,358 L200,362Z" fill="#1A1A1A"/>
+  <path d="M192,356 L200,362 L208,356 L200,360Z" fill="#2A2A2A"/>
+  <circle cx="200" cy="360" r="3" fill="#333"/>
+  <!-- Vest buttons -->
+  <circle cx="200" cy="400" r="2.5" fill="#FFD700" opacity="0.8"/>
+  <circle cx="200" cy="430" r="2.5" fill="#FFD700" opacity="0.8"/>
+  <circle cx="200" cy="460" r="2.5" fill="#FFD700" opacity="0.8"/>
+
+  <!-- Neck -->
+  <path d="M178,320 Q180,350 200,355 Q220,350 222,320 Z" fill="url(#skin1)"/>
+  <!-- Neck shadow -->
+  <path d="M182,340 Q200,352 218,340" fill="#D4A07A" opacity="0.4"/>
+
+  <!-- Hair back -->
+  <ellipse cx="200" cy="195" rx="100" ry="120" fill="url(#hair1a)"/>
+  <!-- Long hair behind shoulders -->
+  <path d="M100,195 Q92,300 88,440 Q96,445 105,440 Q108,320 112,220Z" fill="url(#hair1a)" opacity="0.95"/>
+  <path d="M300,195 Q308,300 312,440 Q304,445 295,440 Q292,320 288,220Z" fill="url(#hair1a)" opacity="0.95"/>
+  <path d="M108,210 Q102,300 98,400 Q106,404 112,400 Q114,310 118,225Z" fill="#1E1210" opacity="0.6"/>
+  <path d="M292,210 Q298,300 302,400 Q294,404 288,400 Q286,310 282,225Z" fill="#1E1210" opacity="0.6"/>
+
+  <!-- Face -->
+  <ellipse cx="200" cy="218" rx="76" ry="92" fill="url(#skin1)"/>
+  <!-- Jaw definition -->
+  <path d="M134,240 Q150,310 200,320 Q250,310 266,240" fill="url(#skinShade1)" opacity="0.2"/>
+  <!-- Cheek contour -->
+  <ellipse cx="148" cy="250" rx="20" ry="25" fill="#E8B896" opacity="0.3"/>
+  <ellipse cx="252" cy="250" rx="20" ry="25" fill="#E8B896" opacity="0.3"/>
+
+  <!-- Hair bangs -->
+  <path d="M124,195 Q140,130 200,118 Q260,130 276,195 Q260,165 235,155 Q218,168 200,155 Q182,168 165,155 Q140,165 124,195Z" fill="url(#hair1a)"/>
+  <!-- Hair part highlight -->
+  <path d="M195,120 Q200,118 205,120 Q202,140 200,155 Q198,140 195,120Z" fill="#3A2418" opacity="0.4"/>
+  <!-- Side hair framing face -->
+  <path d="M112,195 Q108,240 106,280 Q113,282 118,278 Q118,245 124,200Z" fill="url(#hair1a)" opacity="0.9"/>
+  <path d="M288,195 Q292,240 294,280 Q287,282 282,278 Q282,245 276,200Z" fill="url(#hair1a)" opacity="0.9"/>
+
+  <!-- Eyebrows (natural arch) -->
+  <path d="M152,195 Q165,186 180,190" stroke="#3E2712" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M220,190 Q235,186 248,195" stroke="#3E2712" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- Brow bone shadow -->
+  <path d="M150,198 Q166,192 182,196" stroke="#D4A07A" stroke-width="1.5" fill="none" opacity="0.3"/>
+  <path d="M218,196 Q234,192 250,198" stroke="#D4A07A" stroke-width="1.5" fill="none" opacity="0.3"/>
+
+  <!-- Eyes - Left -->
+  <ellipse cx="166" cy="218" rx="17" ry="12" fill="white"/>
+  <ellipse cx="166" cy="218" rx="17" ry="12" stroke="#8B7355" stroke-width="0.5" fill="white"/>
+  <ellipse cx="168" cy="219" rx="10" ry="10" fill="url(#iris1)"/>
+  <ellipse cx="169" cy="218" rx="5.5" ry="5.5" fill="#0A0604"/>
+  <ellipse cx="172" cy="215" rx="2.5" ry="2" fill="white" opacity="0.85"/>
+  <ellipse cx="165" cy="221" rx="1.5" ry="1.2" fill="white" opacity="0.3"/>
+  <!-- Upper eyelid crease -->
+  <path d="M149,210 Q158,204 168,206 Q176,204 183,210" stroke="#B8956E" stroke-width="1.2" fill="none" opacity="0.5"/>
+  <!-- Eyelid line -->
+  <path d="M149,214 Q158,208 168,210 Q176,208 183,214" stroke="#5A3A20" stroke-width="1.8" fill="none"/>
+  <!-- Lower lash line -->
+  <path d="M152,225 Q166,228 180,225" stroke="#8B7355" stroke-width="0.8" fill="none" opacity="0.4"/>
+  <!-- Eyelashes -->
+  <path d="M149,214 Q147,211 146,208" stroke="#2A1808" stroke-width="1.2" fill="none"/>
+  <path d="M183,214 Q185,211 186,209" stroke="#2A1808" stroke-width="1" fill="none"/>
+
+  <!-- Eyes - Right -->
+  <ellipse cx="234" cy="218" rx="17" ry="12" fill="white"/>
+  <ellipse cx="234" cy="218" rx="17" ry="12" stroke="#8B7355" stroke-width="0.5" fill="white"/>
+  <ellipse cx="232" cy="219" rx="10" ry="10" fill="url(#iris1)"/>
+  <ellipse cx="231" cy="218" rx="5.5" ry="5.5" fill="#0A0604"/>
+  <ellipse cx="228" cy="215" rx="2.5" ry="2" fill="white" opacity="0.85"/>
+  <ellipse cx="235" cy="221" rx="1.5" ry="1.2" fill="white" opacity="0.3"/>
+  <path d="M217,210 Q226,204 234,206 Q242,204 251,210" stroke="#B8956E" stroke-width="1.2" fill="none" opacity="0.5"/>
+  <path d="M217,214 Q226,208 234,210 Q242,208 251,214" stroke="#5A3A20" stroke-width="1.8" fill="none"/>
+  <path d="M220,225 Q234,228 248,225" stroke="#8B7355" stroke-width="0.8" fill="none" opacity="0.4"/>
+  <path d="M217,214 Q215,211 214,208" stroke="#2A1808" stroke-width="1.2" fill="none"/>
+  <path d="M251,214 Q253,211 254,209" stroke="#2A1808" stroke-width="1" fill="none"/>
+
+  <!-- Nose -->
+  <path d="M198,232 Q196,248 192,258 Q196,262 200,263 Q204,262 208,258 Q204,248 202,232" fill="#E0A880" opacity="0.25"/>
+  <path d="M192,258 Q196,262 200,263 Q204,262 208,258" stroke="#C49070" stroke-width="1.2" fill="none"/>
+  <!-- Nose bridge highlight -->
+  <line x1="199" y1="230" x2="200" y2="250" stroke="white" stroke-width="1.5" opacity="0.15"/>
+  <!-- Nostrils -->
+  <ellipse cx="195" cy="259" rx="3" ry="2" fill="#C49070" opacity="0.3"/>
+  <ellipse cx="205" cy="259" rx="3" ry="2" fill="#C49070" opacity="0.3"/>
+
+  <!-- Cheek blush (subtle) -->
+  <ellipse cx="148" cy="248" rx="16" ry="10" fill="#E8A090" opacity="0.15"/>
+  <ellipse cx="252" cy="248" rx="16" ry="10" fill="#E8A090" opacity="0.15"/>
+
+  <!-- Mouth -->
+  <path d="M184,278 Q192,272 200,274 Q208,272 216,278" fill="url(#lip1)"/>
+  <path d="M184,278 Q192,286 200,287 Q208,286 216,278" fill="url(#lip1)" opacity="0.85"/>
+  <!-- Lip line -->
+  <path d="M184,278 Q192,276 200,278 Q208,276 216,278" stroke="#A04550" stroke-width="0.5" fill="none"/>
+  <!-- Lower lip highlight -->
+  <ellipse cx="200" cy="283" rx="8" ry="3" fill="white" opacity="0.1"/>
+  <!-- Lip corner shadow -->
+  <circle cx="183" cy="278" r="1" fill="#A04550" opacity="0.3"/>
+  <circle cx="217" cy="278" r="1" fill="#A04550" opacity="0.3"/>
+
+  <!-- Earrings -->
+  <circle cx="118" cy="230" r="4" fill="#FFD700" filter="url(#shadow1)"/>
+  <circle cx="118" cy="230" r="2" fill="#FFE44D"/>
+  <circle cx="282" cy="230" r="4" fill="#FFD700" filter="url(#shadow1)"/>
+  <circle cx="282" cy="230" r="2" fill="#FFE44D"/>
+
+  <!-- Name tag -->
+  <rect x="170" y="490" width="60" height="18" rx="3" fill="#FFD700" opacity="0.9"/>
+  <text x="200" y="503" text-anchor="middle" font-size="10" font-family="sans-serif" font-weight="bold" fill="#4A0000">DEALER</text>
+</svg>

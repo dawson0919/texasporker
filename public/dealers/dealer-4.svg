@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600">
+  <defs>
+    <linearGradient id="skin4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D4A574"/>
+      <stop offset="100%" stop-color="#C08A58"/>
+    </linearGradient>
+    <linearGradient id="skinShade4" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#C08A58"/>
+      <stop offset="100%" stop-color="#A87040"/>
+    </linearGradient>
+    <linearGradient id="hair4a" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0A0A0A"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </linearGradient>
+    <linearGradient id="suit4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1C1C2E"/>
+      <stop offset="50%" stop-color="#141422"/>
+      <stop offset="100%" stop-color="#0A0A16"/>
+    </linearGradient>
+    <radialGradient id="iris4" cx="45%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#4A3520"/>
+      <stop offset="60%" stop-color="#2E1E10"/>
+      <stop offset="100%" stop-color="#1A0E05"/>
+    </radialGradient>
+    <linearGradient id="lip4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A06060"/>
+      <stop offset="100%" stop-color="#885050"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Suit jacket -->
+  <path d="M128,348 Q110,395 95,600 L305,600 Q290,395 272,348 Q248,336 200,340 Q152,336 128,348Z" fill="url(#suit4)"/>
+  <!-- Lapels -->
+  <path d="M152,348 L185,398 L200,385 L215,398 L248,348" stroke="#2A2A3E" stroke-width="1.5" fill="none"/>
+  <!-- White shirt -->
+  <path d="M175,348 L195,392 L200,388 L205,392 L225,348" fill="white" opacity="0.95"/>
+  <!-- Tie -->
+  <rect x="196" y="350" width="8" height="50" rx="2" fill="#8B0000"/>
+  <path d="M196,350 L200,346 L204,350" fill="#6B0000"/>
+  <path d="M196,400 L200,408 L204,400" fill="#6B0000"/>
+  <!-- Suit pocket square -->
+  <path d="M150,375 Q155,368 162,372 Q158,378 150,375Z" fill="white" opacity="0.7"/>
+  <!-- Suit buttons -->
+  <circle cx="188" cy="415" r="2.5" fill="#333" opacity="0.6"/>
+  <circle cx="212" cy="415" r="2.5" fill="#333" opacity="0.6"/>
+
+  <!-- Neck (thicker, masculine) -->
+  <path d="M175,312 Q178,342 200,346 Q222,342 225,312Z" fill="url(#skin4)"/>
+  <path d="M180,334 Q200,344 220,334" fill="#A87040" opacity="0.3"/>
+
+  <!-- Hair back (short, well-groomed) -->
+  <ellipse cx="200" cy="190" rx="92" ry="110" fill="url(#hair4a)"/>
+
+  <!-- Face (slightly more angular/masculine) -->
+  <path d="M128,218 Q128,140 200,128 Q272,140 272,218 Q268,290 240,310 Q220,320 200,322 Q180,320 160,310 Q132,290 128,218Z" fill="url(#skin4)"/>
+  <!-- Jaw shadow -->
+  <path d="M140,260 Q160,310 200,322 Q240,310 260,260" fill="url(#skinShade4)" opacity="0.2"/>
+  <!-- Jawline definition -->
+  <path d="M138,250 Q155,305 200,316" stroke="#A87040" stroke-width="0.8" fill="none" opacity="0.2"/>
+  <path d="M262,250 Q245,305 200,316" stroke="#A87040" stroke-width="0.8" fill="none" opacity="0.2"/>
+
+  <!-- Hair (short textured top, faded sides) -->
+  <path d="M128,195 Q138,130 200,115 Q262,130 272,195 Q262,165 240,152 Q220,162 200,152 Q180,162 160,152 Q138,165 128,195Z" fill="url(#hair4a)"/>
+  <!-- Short sides -->
+  <path d="M118,195 Q116,215 118,238 Q124,240 128,236 Q127,218 130,198Z" fill="url(#hair4a)" opacity="0.7"/>
+  <path d="M282,195 Q284,215 282,238 Q276,240 272,236 Q273,218 270,198Z" fill="url(#hair4a)" opacity="0.7"/>
+  <!-- Hair texture on top -->
+  <path d="M160,155 Q170,125 195,120 Q178,130 165,150Z" fill="#1A1A1A" opacity="0.5"/>
+  <path d="M195,145 Q210,118 230,125 Q215,128 200,142Z" fill="#1A1A1A" opacity="0.4"/>
+
+  <!-- Eyebrows (thick, strong) -->
+  <path d="M148,196 Q164,186 182,190" stroke="#1A0E05" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <path d="M218,190 Q236,186 252,196" stroke="#1A0E05" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+
+  <!-- Eyes - Left -->
+  <ellipse cx="166" cy="218" rx="16" ry="11" fill="white"/>
+  <ellipse cx="168" cy="219" rx="10" ry="9.5" fill="url(#iris4)"/>
+  <ellipse cx="169" cy="218" rx="5.5" ry="5.5" fill="#0A0604"/>
+  <ellipse cx="172" cy="215" rx="2.5" ry="2" fill="white" opacity="0.85"/>
+  <path d="M150,214 Q158,208 168,210 Q176,208 183,214" stroke="#2A1808" stroke-width="2" fill="none"/>
+  <path d="M152,225 Q166,227 180,225" stroke="#8B7355" stroke-width="0.7" fill="none" opacity="0.3"/>
+
+  <!-- Eyes - Right -->
+  <ellipse cx="234" cy="218" rx="16" ry="11" fill="white"/>
+  <ellipse cx="232" cy="219" rx="10" ry="9.5" fill="url(#iris4)"/>
+  <ellipse cx="231" cy="218" rx="5.5" ry="5.5" fill="#0A0604"/>
+  <ellipse cx="228" cy="215" rx="2.5" ry="2" fill="white" opacity="0.85"/>
+  <path d="M217,214 Q226,208 234,210 Q242,208 250,214" stroke="#2A1808" stroke-width="2" fill="none"/>
+  <path d="M220,225 Q234,227 248,225" stroke="#8B7355" stroke-width="0.7" fill="none" opacity="0.3"/>
+
+  <!-- Nose (slightly broader) -->
+  <path d="M197,232 Q195,248 190,258 Q195,263 200,264 Q205,263 210,258 Q205,248 203,232" fill="#B87848" opacity="0.2"/>
+  <path d="M190,258 Q195,263 200,264 Q205,263 210,258" stroke="#A87040" stroke-width="1.2" fill="none"/>
+  <line x1="199" y1="232" x2="200" y2="250" stroke="white" stroke-width="1.5" opacity="0.1"/>
+
+  <!-- Light stubble shadow -->
+  <ellipse cx="200" cy="295" rx="42" ry="25" fill="#1A0E05" opacity="0.04"/>
+
+  <!-- Mouth -->
+  <path d="M184,280 Q192,275 200,276 Q208,275 216,280" fill="url(#lip4)"/>
+  <path d="M184,280 Q192,287 200,288 Q208,287 216,280" fill="url(#lip4)" opacity="0.75"/>
+  <path d="M184,280 Q192,278 200,280 Q208,278 216,280" stroke="#885050" stroke-width="0.5" fill="none"/>
+
+  <!-- Watch (on wrist area, subtle) -->
+  <rect x="102" y="440" width="16" height="12" rx="2" fill="#C0C0C0" opacity="0.4"/>
+  <rect x="104" y="442" width="12" height="8" rx="1" fill="#1A1A2E" opacity="0.5"/>
+
+  <!-- Name tag -->
+  <rect x="170" y="490" width="60" height="18" rx="3" fill="#FFD700" opacity="0.9"/>
+  <text x="200" y="503" text-anchor="middle" font-size="10" font-family="sans-serif" font-weight="bold" fill="#0A0A16">DEALER</text>
+</svg>

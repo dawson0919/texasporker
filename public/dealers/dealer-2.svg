@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600">
+  <defs>
+    <linearGradient id="skin2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F8D8B8"/>
+      <stop offset="100%" stop-color="#EABC98"/>
+    </linearGradient>
+    <linearGradient id="skinShade2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#EABC98"/>
+      <stop offset="100%" stop-color="#D8A680"/>
+    </linearGradient>
+    <linearGradient id="hair2a" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D4A050"/>
+      <stop offset="50%" stop-color="#B88838"/>
+      <stop offset="100%" stop-color="#8A6428"/>
+    </linearGradient>
+    <linearGradient id="dress2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1A1A2E"/>
+      <stop offset="50%" stop-color="#0F0F1E"/>
+      <stop offset="100%" stop-color="#080812"/>
+    </linearGradient>
+    <radialGradient id="iris2" cx="45%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#5B8DB8"/>
+      <stop offset="60%" stop-color="#3A6890"/>
+      <stop offset="100%" stop-color="#1E3A5A"/>
+    </radialGradient>
+    <linearGradient id="lip2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D06878"/>
+      <stop offset="100%" stop-color="#B05060"/>
+    </linearGradient>
+    <filter id="shadow2">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#00000030"/>
+    </filter>
+  </defs>
+
+  <!-- Dealer dress / uniform -->
+  <path d="M132,352 Q115,395 100,600 L300,600 Q285,395 268,352 Q248,340 200,345 Q152,340 132,352Z" fill="url(#dress2)"/>
+  <!-- Sequin details -->
+  <g opacity="0.08" fill="white">
+    <circle cx="155" cy="400" r="1.5"/><circle cx="170" cy="420" r="1"/><circle cx="145" cy="440" r="1.5"/>
+    <circle cx="250" cy="410" r="1"/><circle cx="235" cy="435" r="1.5"/><circle cx="258" cy="455" r="1"/>
+    <circle cx="180" cy="470" r="1"/><circle cx="220" cy="480" r="1.5"/><circle cx="200" cy="500" r="1"/>
+  </g>
+  <!-- V-neck neckline -->
+  <path d="M155,352 Q178,365 200,370 Q222,365 245,352" stroke="#333" stroke-width="0.5" fill="none"/>
+  <!-- Skin showing at neckline -->
+  <path d="M155,352 Q178,365 200,370 Q222,365 245,352 Q230,345 200,345 Q170,345 155,352Z" fill="url(#skin2)"/>
+  <!-- Necklace -->
+  <path d="M160,350 Q180,360 200,364 Q220,360 240,350" stroke="#FFD700" stroke-width="1.5" fill="none"/>
+  <path d="M196,364 L200,376 L204,364" fill="#FFD700"/>
+  <circle cx="200" cy="377" r="4" fill="#4169E1" opacity="0.8"/>
+  <circle cx="200" cy="377" r="2" fill="#6495ED"/>
+
+  <!-- Neck -->
+  <path d="M180,318 Q182,345 200,350 Q218,345 220,318 Z" fill="url(#skin2)"/>
+  <path d="M184,338 Q200,348 216,338" fill="#D8A680" opacity="0.3"/>
+
+  <!-- Hair back (blonde updo) -->
+  <ellipse cx="200" cy="190" rx="96" ry="115" fill="url(#hair2a)"/>
+  <!-- Updo bun -->
+  <ellipse cx="200" cy="118" rx="42" ry="35" fill="url(#hair2a)"/>
+  <ellipse cx="200" cy="112" rx="32" ry="25" fill="#C89840" opacity="0.4"/>
+  <!-- Loose strands by ears -->
+  <path d="M108,200 Q105,250 107,300 Q114,303 118,298 Q117,255 120,208Z" fill="url(#hair2a)" opacity="0.85"/>
+  <path d="M292,200 Q295,250 293,300 Q286,303 282,298 Q283,255 280,208Z" fill="url(#hair2a)" opacity="0.85"/>
+
+  <!-- Face -->
+  <ellipse cx="200" cy="218" rx="74" ry="90" fill="url(#skin2)"/>
+  <!-- Jaw -->
+  <path d="M136,242 Q152,308 200,318 Q248,308 264,242" fill="url(#skinShade2)" opacity="0.15"/>
+  <!-- Cheek contour -->
+  <ellipse cx="150" cy="248" rx="18" ry="22" fill="#EABC98" opacity="0.25"/>
+  <ellipse cx="250" cy="248" rx="18" ry="22" fill="#EABC98" opacity="0.25"/>
+
+  <!-- Hair front -->
+  <path d="M126,198 Q142,135 200,120 Q258,135 274,198 Q258,170 238,158 Q220,170 200,160 Q180,170 162,158 Q142,170 126,198Z" fill="url(#hair2a)"/>
+  <!-- Side-swept bangs -->
+  <path d="M126,198 Q128,178 142,158 Q135,175 130,195Z" fill="#C89840" opacity="0.3"/>
+  <path d="M274,198 Q272,178 258,158 Q265,175 270,195Z" fill="#C89840" opacity="0.3"/>
+
+  <!-- Eyebrows (blonde, soft) -->
+  <path d="M152,196 Q165,189 180,192" stroke="#8A6428" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M220,192 Q235,189 248,196" stroke="#8A6428" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+  <!-- Eyes - Left (blue) -->
+  <ellipse cx="166" cy="218" rx="16" ry="12" fill="white"/>
+  <ellipse cx="166" cy="218" rx="16" ry="12" stroke="#8B9BAA" stroke-width="0.5" fill="white"/>
+  <ellipse cx="168" cy="219" rx="10" ry="10" fill="url(#iris2)"/>
+  <ellipse cx="169" cy="218" rx="5" ry="5.5" fill="#0E1E2E"/>
+  <ellipse cx="172" cy="215" rx="2.5" ry="2" fill="white" opacity="0.85"/>
+  <ellipse cx="165" cy="221" rx="1.5" ry="1.2" fill="white" opacity="0.3"/>
+  <path d="M150,210 Q158,205 168,207 Q176,205 182,210" stroke="#8A6428" stroke-width="1" fill="none" opacity="0.5"/>
+  <path d="M150,214 Q158,208 168,210 Q176,208 182,214" stroke="#5A4020" stroke-width="1.6" fill="none"/>
+  <path d="M152,225 Q166,228 180,225" stroke="#8B9BAA" stroke-width="0.7" fill="none" opacity="0.35"/>
+
+  <!-- Eyes - Right -->
+  <ellipse cx="234" cy="218" rx="16" ry="12" fill="white"/>
+  <ellipse cx="234" cy="218" rx="16" ry="12" stroke="#8B9BAA" stroke-width="0.5" fill="white"/>
+  <ellipse cx="232" cy="219" rx="10" ry="10" fill="url(#iris2)"/>
+  <ellipse cx="231" cy="218" rx="5" ry="5.5" fill="#0E1E2E"/>
+  <ellipse cx="228" cy="215" rx="2.5" ry="2" fill="white" opacity="0.85"/>
+  <ellipse cx="235" cy="221" rx="1.5" ry="1.2" fill="white" opacity="0.3"/>
+  <path d="M218,210 Q226,205 234,207 Q242,205 250,210" stroke="#8A6428" stroke-width="1" fill="none" opacity="0.5"/>
+  <path d="M218,214 Q226,208 234,210 Q242,208 250,214" stroke="#5A4020" stroke-width="1.6" fill="none"/>
+  <path d="M220,225 Q234,228 248,225" stroke="#8B9BAA" stroke-width="0.7" fill="none" opacity="0.35"/>
+
+  <!-- Nose -->
+  <path d="M198,232 Q196,248 193,256 Q197,260 200,261 Q203,260 207,256 Q204,248 202,232" fill="#DCA878" opacity="0.2"/>
+  <path d="M193,256 Q197,260 200,261 Q203,260 207,256" stroke="#C49070" stroke-width="1.1" fill="none"/>
+  <line x1="199" y1="232" x2="200" y2="250" stroke="white" stroke-width="1.5" opacity="0.12"/>
+
+  <!-- Cheek blush -->
+  <ellipse cx="148" cy="246" rx="14" ry="8" fill="#E8A090" opacity="0.12"/>
+  <ellipse cx="252" cy="246" rx="14" ry="8" fill="#E8A090" opacity="0.12"/>
+
+  <!-- Mouth (warm smile) -->
+  <path d="M182,276 Q190,270 200,272 Q210,270 218,276" fill="url(#lip2)"/>
+  <path d="M182,276 Q190,285 200,286 Q210,285 218,276" fill="url(#lip2)" opacity="0.8"/>
+  <path d="M182,276 Q190,274 200,276 Q210,274 218,276" stroke="#B05060" stroke-width="0.5" fill="none"/>
+  <ellipse cx="200" cy="282" rx="7" ry="3" fill="white" opacity="0.08"/>
+  <!-- Teeth hint -->
+  <path d="M190,276 Q200,278 210,276 Q200,280 190,276Z" fill="white" opacity="0.5"/>
+
+  <!-- Earrings (pearl drop) -->
+  <circle cx="120" cy="228" r="3" fill="#FFF8F0" filter="url(#shadow2)"/>
+  <circle cx="120" cy="228" r="1.5" fill="white" opacity="0.6"/>
+  <line x1="120" y1="231" x2="120" y2="242" stroke="#FFD700" stroke-width="0.8"/>
+  <circle cx="120" cy="245" r="4" fill="#FFF8F0" filter="url(#shadow2)"/>
+  <circle cx="280" cy="228" r="3" fill="#FFF8F0" filter="url(#shadow2)"/>
+  <circle cx="280" cy="228" r="1.5" fill="white" opacity="0.6"/>
+  <line x1="280" y1="231" x2="280" y2="242" stroke="#FFD700" stroke-width="0.8"/>
+  <circle cx="280" cy="245" r="4" fill="#FFF8F0" filter="url(#shadow2)"/>
+
+  <!-- Name tag -->
+  <rect x="170" y="490" width="60" height="18" rx="3" fill="#FFD700" opacity="0.9"/>
+  <text x="200" y="503" text-anchor="middle" font-size="10" font-family="sans-serif" font-weight="bold" fill="#1A1A2E">DEALER</text>
+</svg>
