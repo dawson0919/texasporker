@@ -847,6 +847,7 @@ export default function GameTablePage() {
     }, [gameStage, isHandInProgress, startNewHand]);
 
     // Auto-start first hand on page load
+    const autoStartRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     useEffect(() => {
         if (hasAutoStarted.current) return;
         if (gameStage !== 'WAITING' || isHandInProgress) return;
@@ -854,11 +855,12 @@ export default function GameTablePage() {
         if (activePlayers.length < 2) return;
 
         hasAutoStarted.current = true;
-        const timer = setTimeout(() => {
+        autoStartRef.current = setTimeout(() => {
             startNewHand();
         }, 1500);
-        return () => clearTimeout(timer);
+        // No cleanup - hasAutoStarted prevents re-entry, ref cleaned on unmount
     }, [gameStage, isHandInProgress, players, startNewHand]);
+    useEffect(() => { return () => { if (autoStartRef.current) clearTimeout(autoStartRef.current); }; }, []);
 
     // ========== UI COMPUTED VALUES ==========
     const userPlayer = players.find(p => p.isRealUser);

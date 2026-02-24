@@ -169,6 +169,9 @@ export default function MultiplayerGamePage() {
     }, [mySeatIndex, playSound, tableId]);
 
     // Auto-start first hand with visible countdown
+    const autoStartTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const countdownIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
     useEffect(() => {
         if (!gameState || hasStartedFirstHand.current) return;
         if (gameState.isHandInProgress) { hasStartedFirstHand.current = true; setStartCountdown(-1); return; }
@@ -180,17 +183,17 @@ export default function MultiplayerGamePage() {
         hasStartedFirstHand.current = true;
         setStartCountdown(5);
 
-        const countdownInterval = setInterval(() => {
+        countdownIntervalRef.current = setInterval(() => {
             setStartCountdown(prev => {
                 if (prev <= 1) {
-                    clearInterval(countdownInterval);
+                    if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
                     return 0;
                 }
                 return prev - 1;
             });
         }, 1000);
 
-        const timer = setTimeout(async () => {
+        autoStartTimerRef.current = setTimeout(async () => {
             setStartCountdown(-1);
             await fetch('/api/multiplayer/start-hand', {
                 method: 'POST',
@@ -198,9 +201,16 @@ export default function MultiplayerGamePage() {
                 body: JSON.stringify({ tableId }),
             });
         }, 5000);
-
-        return () => { clearInterval(countdownInterval); clearTimeout(timer); };
+        // No cleanup - hasStartedFirstHand prevents re-entry, refs cleaned on unmount
     }, [gameState, tableId]);
+
+    // Cleanup timers on unmount
+    useEffect(() => {
+        return () => {
+            if (autoStartTimerRef.current) clearTimeout(autoStartTimerRef.current);
+            if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
+        };
+    }, []);
 
     // Auto-start next hand after showdown
     useEffect(() => {
