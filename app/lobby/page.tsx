@@ -276,7 +276,7 @@ export default function LobbyPage() {
             </div>
           </aside>
           <div className="lg:col-span-6 flex flex-col gap-6">
-            <button onClick={handleJoinMultiplayer} disabled={isJoining} className="group relative overflow-hidden rounded-2xl aspect-video lg:aspect-[16/9] shadow-2xl cursor-pointer block w-full text-left">
+            <div onClick={() => !isJoining && handleJoinMultiplayer()} role="button" tabIndex={0} className="group relative overflow-hidden rounded-2xl aspect-video lg:aspect-[16/9] shadow-2xl cursor-pointer block w-full text-left">
               {/* Horse-year themed gradient background */}
               <div className="absolute inset-0 bg-gradient-to-br from-[#8B0000] via-[#B22222] to-[#DAA520] transition-transform duration-700 group-hover:scale-105"></div>
               {/* Decorative horse-year SVG elements */}
@@ -327,7 +327,7 @@ export default function LobbyPage() {
                   </div>
                 </div>
               </div>
-            </button>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Link href="/tournaments" className="relative h-48 rounded-xl overflow-hidden group cursor-pointer border border-white/5 bg-surface-dark shadow-lg block">
                 <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110 opacity-60" data-alt="Luxurious private poker room interior" style={{ backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuCr6IeNZA0yueH5DBcNKUfJJaxcClyQ_pZyGFLWnzPAUrVvB-zqGwgceNOUBSH9YbP_hZ0jGuoxA_eCwm33cCHhxJxK1y9Z0ITdSFeE14eGsxwjAHA-wov51L37ts7iEvUU87whD5VW5853zqJA5icE5alm2iZuEFQPLZurYmOeECDnM7aXacWikwqQoKT_HaDZpLreGPsItDNAb6s20ksQrUs5_SrCbST3eezRCpgMoBd0DNFMxMO7vWgxxv7SZFEHh3KhFiXzJtwe')` }}></div>
