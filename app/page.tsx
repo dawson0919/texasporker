@@ -300,9 +300,10 @@ export default function GameTablePage() {
     const saveGameResult = useCallback(async (finalPlayers: PlayerState[], totalPot: number, stage: string) => {
         const user = finalPlayers.find(p => p.isRealUser);
         if (!user) return;
+        const winnerCount = finalPlayers.filter(p => p.isWinner).length;
         const profitLoss = user.isWinner
-            ? Math.floor(totalPot / finalPlayers.filter(p => p.isWinner).length)
-            : -user.bet;
+            ? Math.floor(totalPot / winnerCount) - user.totalInvested
+            : -user.totalInvested;
         try {
             await fetch('/api/game/history', {
                 method: 'POST',
