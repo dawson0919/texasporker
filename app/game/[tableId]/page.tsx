@@ -284,6 +284,33 @@ export default function MultiplayerGamePage() {
         };
     }, [gameState?.currentSeatIndex, gameState?.actionDeadline, mySeatIndex]);
 
+    // Opponent timeout watcher: if another player's deadline expires, force-fold them via API
+    useEffect(() => {
+        if (!gameState || !gameState.isHandInProgress) return;
+        if (gameState.currentSeatIndex === mySeatIndex) return; // Own turn handled above
+        if (!gameState.actionDeadline) return;
+
+        const deadline = new Date(gameState.actionDeadline).getTime();
+        const delay = deadline - Date.now() + 5000; // 5s after deadline
+        if (delay <= 0) {
+            // Already expired, trigger timeout now
+            fetch('/api/multiplayer/timeout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tableId }),
+            }).catch(() => {});
+            return;
+        }
+        const timer = setTimeout(() => {
+            fetch('/api/multiplayer/timeout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tableId }),
+            }).catch(() => {});
+        }, delay);
+        return () => clearTimeout(timer);
+    }, [gameState?.currentSeatIndex, gameState?.actionDeadline, gameState?.isHandInProgress, mySeatIndex, tableId]);
+
     // Handle player action
     const handleAction = useCallback(async (action: PlayerAction, raiseAmount?: number) => {
         if (isActionPending) return;
