@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Macau Royal Casino - Player Lobby</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ee2b34",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221011",
+                        "accent-gold": "#C9A25D",
+                        "surface-dark": "#33191b",
+                        "surface-darker": "#1a0d0e",
+                    },
+                    fontFamily: {
+                        "display": ["Be Vietnam Pro", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+        }
+        .gold-gradient-text {
+            background: linear-gradient(to bottom, #FCEda4, #C9A25D, #AA823C);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gold-border {
+            border: 1px solid transparent;
+            background: linear-gradient(#33191b, #33191b) padding-box,
+                        linear-gradient(to right, #AA823C, #FCEda4, #AA823C) border-box;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen text-slate-900 dark:text-slate-100 flex flex-col font-display overflow-x-hidden">
+<!-- Background Decoration -->
+<div class="fixed inset-0 z-0 pointer-events-none opacity-20 bg-cover bg-center" data-alt="Luxurious casino hall background with golden lights" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBz2iHltKdzG4NymKEOY7K0hIapoWbh_Xk8jYrVjbJYsMDwdA0rIcPLBgfJ5ZzxxYThCN0KvWPZ_pcw4A3PWlgquNK0KijIug9wFqCSSlClvqevRLJa3ZTeA9w_sLEIcKwbpSzQ6H5iF8iMDYucKlxNrxUZ2Bw9iJu71DxwSBK8EHR9UEf5I3OhndFWboyVAPXM_y8QXYLMqte67dma7ie_QJV7ItSQNYNVK_K0uXdhM05Lw22CAvg3_n5wf33u4Xv9yKEK2i06KEqw');"></div>
+<!-- Main Layout -->
+<div class="relative z-10 flex flex-col min-h-screen w-full">
+<!-- Header -->
+<header class="flex items-center justify-between border-b border-primary/20 bg-surface-darker/90 backdrop-blur-md px-6 py-4 sticky top-0 z-50">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-10 rounded-full bg-gradient-to-br from-primary to-red-900 text-white shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined">casino</span>
+</div>
+<div>
+<h2 class="text-xl font-bold leading-tight gold-gradient-text">Macau Royal</h2>
+<p class="text-xs text-primary/80 uppercase tracking-widest font-semibold">Casino &amp; Resort</p>
+</div>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<nav class="hidden md:flex items-center gap-8 mr-4">
+<a class="text-slate-300 hover:text-accent-gold transition-colors text-sm font-medium flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-lg">diamond</span> VIP Club
+                    </a>
+<a class="text-slate-300 hover:text-accent-gold transition-colors text-sm font-medium flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-lg">local_fire_department</span> Promotions
+                    </a>
+<a class="text-slate-300 hover:text-accent-gold transition-colors text-sm font-medium flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-lg">support_agent</span> Support
+                    </a>
+</nav>
+<div class="flex items-center gap-4 border-l border-white/10 pl-6">
+<button class="flex items-center justify-center gap-2 rounded-xl h-10 px-6 bg-gradient-to-r from-primary to-red-700 hover:from-red-600 hover:to-red-800 text-white text-sm font-bold shadow-lg shadow-primary/30 transition-all transform hover:scale-105">
+<span class="material-symbols-outlined text-lg">payments</span>
+<span>Deposit</span>
+</button>
+<div class="relative cursor-pointer group">
+<div class="size-10 rounded-full bg-cover bg-center border-2 border-accent-gold shadow-md" data-alt="Player avatar close up" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDXFUGmOhxi90H_a_Byz_DC00eJXlJUGmTeMQf_v8-MZeBMJPHLRii2epBST9gWU_LUkJYckN5E1iZ9A3-es9YanaZsZ4NTjR7z35_9NscCDz4BEfUtyAToechDWpV_rymjuXvE-su8ce3gsOrL60JgW-OT4IWSQTXDT5aPc9wsT4dSonC5JtggGqioOQv66dhTOFIlYatCRsbfPTD9BcOQQ99forvO53UMmaGkLdn9h7C36do421Irf87Eqgz-jQrgStI-zSLMeMYz');"></div>
+<div class="absolute bottom-0 right-0 size-3 bg-green-500 border-2 border-surface-darker rounded-full"></div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 w-full max-w-[1440px] mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Left Column: Player Profile (lg: col-span-3) -->
+<aside class="lg:col-span-3 flex flex-col gap-6">
+<!-- Profile Card -->
+<div class="gold-border rounded-2xl p-6 bg-surface-dark/80 backdrop-blur-sm shadow-xl flex flex-col items-center text-center relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-primary/20 to-transparent"></div>
+<div class="relative mb-4">
+<div class="size-24 rounded-full bg-cover bg-center border-4 border-accent-gold shadow-2xl" data-alt="High roller player avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCugZqzCaOeSVZkmZHfeCAtGIv_yglN1LQrgfK5a5RW6_YzewlBuixXu6Ua11nU6iECip9YdNlP1Shh-UVZveh2vbp2_7BsR9gTu6DIq5EqKdwJEBA4VJyibtLHcKvCw1pa11sKLjAkpt-gXsMX3xSajGmEUUbQBR1ee1S-pIky34q8cXIPJH0VWdP-oLkzj3p0b8QoZYSlFopMyLqcgy8ibjgbnBBfJxKh1UbsnMbMu8oLPHiSwF0BizkBID5ba9v9DXlJ7qQB_7VI');"></div>
+<div class="absolute -bottom-2 -right-2 bg-surface-darker rounded-full p-1.5 border border-accent-gold">
+<span class="material-symbols-outlined text-accent-gold text-xl">workspace_premium</span>
+</div>
+</div>
+<h3 class="text-xl font-bold text-white mb-1">High Roller King</h3>
+<div class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-6">
+<span class="text-accent-gold text-xs font-bold uppercase tracking-wide">Diamond Dragon</span>
+</div>
+<div class="w-full bg-surface-darker/50 rounded-xl p-4 border border-white/5">
+<p class="text-slate-400 text-xs uppercase font-medium mb-1">Total Balance</p>
+<div class="flex items-center justify-center gap-2 text-2xl font-bold text-white">
+<span class="text-accent-gold">$</span> 1,250,000
+                        </div>
+</div>
+<div class="mt-6 grid grid-cols-2 gap-3 w-full">
+<button class="bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-2 text-xs text-slate-300 transition-colors flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-lg">history</span> History
+                         </button>
+<button class="bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-2 text-xs text-slate-300 transition-colors flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-lg">account_balance_wallet</span> Cashier
+                         </button>
+</div>
+</div>
+<!-- Quick Stats / Mini Leaderboard -->
+<div class="rounded-2xl p-5 bg-surface-dark/60 backdrop-blur-sm border border-white/5 shadow-lg hidden lg:block">
+<div class="flex items-center justify-between mb-4">
+<h4 class="text-sm font-bold text-white uppercase tracking-wide">Top Winners</h4>
+<span class="text-xs text-primary cursor-pointer hover:underline">View All</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2">
+<span class="text-accent-gold font-bold">1</span>
+<div class="size-6 rounded-full bg-slate-700" data-alt="Winner 1 avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCrOwfkiA9BhIPl6OSWji0HDWdnmScV2z0zoa6iCgkvFaJt5BFX-jxbvzKY3FRiXtTD1_BBXSqcBoj7K_tznq4Djcs1oex6wWZjeurFYoR8XyCt-1Ds-PdI9aVld0etnC0A1pxDIAREAsGr_OHCxPNpCIyJBCaeuv1yUMSGwFaiJAxs7VLPucnaDYvTBuiLN-UmNZL49Fk7RLaliwaZ7rnrO5T3jpbae8xhmwDTAHNCy-s84d5WENtHh5i-uqyx7-FX6nz55EPnhhuR');"></div>
+<span class="text-slate-200">Dragon88</span>
+</div>
+<span class="text-green-400 font-medium">+$450k</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2">
+<span class="text-slate-400 font-bold">2</span>
+<div class="size-6 rounded-full bg-slate-700" data-alt="Winner 2 avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB-Anee9euS49iAzpAI481CstLLWSnTYEj2YKwTuQx35pKypqRELG_4KyZBZajhWlCDpLdp-o7O1-s0E1rQYwbY3_ZnIbR4kFYrsRBXVn9aGfZLO9SuQBZS10g-bfiIg5BPgXYUE-hGQDPAiDMw0SUT6JGRrDtdr9zFSWKSp1vP4rovmnEnr2aFyPhtsUrScIkFuhuXkUVY7gopM3XsMhDnjPCZ_VgoLXRGuIjypozFWPogqHOs9pYMxyc6MHtjonKowuqCVkTdXTnu');"></div>
+<span class="text-slate-200">PokerStar</span>
+</div>
+<span class="text-green-400 font-medium">+$210k</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2">
+<span class="text-amber-700 font-bold">3</span>
+<div class="size-6 rounded-full bg-slate-700" data-alt="Winner 3 avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB9NbyG2Hf4tRPsuUymNMKcpkS2DlmazsfF_MmLfIDaZkFjk6PIZSGjLBgY_7aBGpfS96wmsRJnEhppVOwE2k9UveCVwFgHB8DExVMCgyXI_m3VKm2VSgNF2_61wwaT3hgg2SS0EGTDXJ7__6_JVgEdud5AJA1GRYGRxUXEQqzBmAjK91kw5rYf3WXQwT0-d0c_oZy6IoxxPEL0ZzGNSCcfd2qU7RoXbb8Cz21gM0zWlqZu6C8oV1rlwrqzUnlAU5pkemrb_epPudCX');"></div>
+<span class="text-slate-200">LuckyLady</span>
+</div>
+<span class="text-green-400 font-medium">+$180k</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Center Column: Game Modes (lg: col-span-6) -->
+<div class="lg:col-span-6 flex flex-col gap-6">
+<!-- Hero Card: Live Dealer -->
+<div class="group relative overflow-hidden rounded-2xl aspect-video lg:aspect-[16/9] shadow-2xl cursor-pointer">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="Beautiful Chinese live dealer in red qipao" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBqCOPO7sGBiSWQfVrqJbX5dspt5SucZh-ecc2DOoIP7L6WuZmGK6VMgX4qq5cbYfMUPkSS4DSI5F-eENUazuf61Rcoe6xy-lRAax3fy9efUPNq9rEFQnUxrNgzxCZT3bk6S1sAJTS6jvI_dnO9yQfZgnEwyxZYEQmYLxhcppuAYpRN6I2-PqKD4b3vEdYzg88bVhBwPXE0rIU7JJ6Gzr9V4yllkP5OEgJYo3IzmCxloRb-uIoCly-N3SCUEgVTXeAkayfkKTYywpIZ');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90"></div>
+<div class="absolute top-4 left-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary text-white text-xs font-bold animate-pulse">
+<span class="size-2 rounded-full bg-white"></span> LIVE
+                        </span>
+</div>
+<div class="absolute bottom-0 left-0 w-full p-6 flex flex-col items-start gap-2">
+<h2 class="text-3xl md:text-4xl font-bold text-white leading-tight drop-shadow-lg">Live Dealer Table</h2>
+<p class="text-slate-200 text-sm md:text-base max-w-md drop-shadow-md mb-2">Experience the thrill of Macau with our VIP hosts in real-time.</p>
+<div class="flex items-center gap-4 w-full">
+<button class="flex-1 bg-gradient-to-r from-accent-gold to-[#AA823C] text-surface-darker hover:brightness-110 font-bold py-3 px-6 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">play_circle</span> Play Now
+                            </button>
+<div class="flex flex-col text-right">
+<span class="text-xs text-slate-400 uppercase">Min Buy-in</span>
+<span class="text-white font-bold text-lg">$500</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Secondary Game Modes Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- High Stakes Room -->
+<div class="relative h-48 rounded-xl overflow-hidden group cursor-pointer border border-white/5 bg-surface-dark shadow-lg">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110 opacity-60" data-alt="Luxurious private poker room interior" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCr6IeNZA0yueH5DBcNKUfJJaxcClyQ_pZyGFLWnzPAUrVvB-zqGwgceNOUBSH9YbP_hZ0jGuoxA_eCwm33cCHhxJxK1y9Z0ITdSFeE14eGsxwjAHA-wov51L37ts7iEvUU87whD5VW5853zqJA5icE5alm2iZuEFQPLZurYmOeECDnM7aXacWikwqQoKT_HaDZpLreGPsItDNAb6s20ksQrUs5_SrCbST3eezRCpgMoBd0DNFMxMO7vWgxxv7SZFEHh3KhFiXzJtwe');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-darker via-surface-darker/60 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-5 w-full">
+<div class="flex justify-between items-end mb-1">
+<h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">High Stakes</h3>
+<span class="material-symbols-outlined text-accent-gold">local_atm</span>
+</div>
+<p class="text-slate-400 text-xs line-clamp-2">For the true masters. Unlimited potential.</p>
+</div>
+</div>
+<!-- Quick Play -->
+<div class="relative h-48 rounded-xl overflow-hidden group cursor-pointer border border-white/5 bg-surface-dark shadow-lg">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110 opacity-60" data-alt="Fast paced poker chips flying" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCwgFDjkyFXyMjpNRQxAAtooNrxau21ZZ1z1pAEwLsVyom0x17HWl1ylKYRtT7J7JcMPholGJRrE0ckY-EwU-GUfcG39VTHcpP12onH8sbzs74F7UvPYLZa4dbYedFUvnkPZB8zwGgCufmBPzoxiwg-p7bMfZO_TMBmY8p_MZ2mI5SISi7_s6kAzHD-XtLd-93OSrpJkNYTHrym-8Jjco9Q0IzGSC8L2OqntpyEiWAAw-cM0dZjfc7ZEN7kgqAztyGJ4OjsxJZf32WX');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-darker via-surface-darker/60 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-5 w-full">
+<div class="flex justify-between items-end mb-1">
+<h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Quick Play</h3>
+<span class="material-symbols-outlined text-primary">speed</span>
+</div>
+<p class="text-slate-400 text-xs line-clamp-2">Jump into action instantly. Fast blinds.</p>
+</div>
+</div>
+</div>
+<!-- Featured Tournaments -->
+<div class="rounded-xl p-4 bg-gradient-to-r from-primary/10 to-transparent border border-primary/20 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl">emoji_events</span>
+</div>
+<div>
+<h4 class="text-white font-bold">Dragon's Cup Tournament</h4>
+<p class="text-primary text-xs font-medium">Starts in 2h 15m</p>
+</div>
+</div>
+<button class="px-4 py-2 bg-surface-darker hover:bg-black text-white text-sm font-medium rounded-lg border border-white/10 transition-colors">
+                        Register
+                    </button>
+</div>
+</div>
+<!-- Right Column: Active Tables (lg: col-span-3) -->
+<aside class="lg:col-span-3 flex flex-col gap-4">
+<div class="flex items-center justify-between pb-2">
+<h2 class="text-lg font-bold text-white">Active Tables</h2>
+<button class="size-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-slate-300">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+</button>
+</div>
+<div class="flex flex-col gap-3 overflow-y-auto max-h-[600px] pr-1 custom-scrollbar">
+<!-- Table Item 1 -->
+<div class="p-3 rounded-xl bg-surface-dark hover:bg-surface-dark/80 border border-white/5 transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<span class="size-2 rounded-full bg-green-500 animate-pulse"></span>
+<h4 class="text-white font-semibold text-sm">Macau Suite #1</h4>
+</div>
+<span class="text-xs font-bold text-accent-gold bg-accent-gold/10 px-2 py-0.5 rounded border border-accent-gold/20">NLHE</span>
+</div>
+<div class="flex justify-between items-end">
+<div class="text-xs text-slate-400">
+<p>Stakes: <span class="text-slate-200">$50/$100</span></p>
+<p class="mt-1 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">group</span> 5/9 Players</p>
+</div>
+<button class="bg-primary hover:bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                                Join
+                            </button>
+</div>
+</div>
+<!-- Table Item 2 -->
+<div class="p-3 rounded-xl bg-surface-dark hover:bg-surface-dark/80 border border-white/5 transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<span class="size-2 rounded-full bg-green-500"></span>
+<h4 class="text-white font-semibold text-sm">Golden Dragon</h4>
+</div>
+<span class="text-xs font-bold text-accent-gold bg-accent-gold/10 px-2 py-0.5 rounded border border-accent-gold/20">PLO</span>
+</div>
+<div class="flex justify-between items-end">
+<div class="text-xs text-slate-400">
+<p>Stakes: <span class="text-slate-200">$100/$200</span></p>
+<p class="mt-1 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">group</span> 8/9 Players</p>
+</div>
+<button class="bg-primary hover:bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                                Join
+                            </button>
+</div>
+</div>
+<!-- Table Item 3 -->
+<div class="p-3 rounded-xl bg-surface-dark hover:bg-surface-dark/80 border border-white/5 transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<span class="size-2 rounded-full bg-yellow-500"></span>
+<h4 class="text-white font-semibold text-sm">Royal Flush Room</h4>
+</div>
+<span class="text-xs font-bold text-accent-gold bg-accent-gold/10 px-2 py-0.5 rounded border border-accent-gold/20">NLHE</span>
+</div>
+<div class="flex justify-between items-end">
+<div class="text-xs text-slate-400">
+<p>Stakes: <span class="text-slate-200">$500/$1k</span></p>
+<p class="mt-1 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">group</span> 2/6 Players</p>
+</div>
+<button class="bg-primary hover:bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                                Join
+                            </button>
+</div>
+</div>
+<!-- Table Item 4 -->
+<div class="p-3 rounded-xl bg-surface-dark hover:bg-surface-dark/80 border border-white/5 transition-colors cursor-pointer group opacity-75 hover:opacity-100">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<span class="size-2 rounded-full bg-slate-500"></span>
+<h4 class="text-slate-300 font-semibold text-sm">Beginner's Luck</h4>
+</div>
+<span class="text-xs font-bold text-slate-500 bg-slate-500/10 px-2 py-0.5 rounded border border-slate-500/20">NLHE</span>
+</div>
+<div class="flex justify-between items-end">
+<div class="text-xs text-slate-500">
+<p>Stakes: <span class="text-slate-400">$1/$2</span></p>
+<p class="mt-1 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">group</span> 9/9 Full</p>
+</div>
+<button class="bg-slate-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-not-allowed">
+                                Full
+                            </button>
+</div>
+</div>
+</div>
+</aside>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="sticky bottom-0 z-50 w-full bg-surface-darker/95 backdrop-blur-md border-t border-white/10 px-6 py-3">
+<div class="max-w-[1440px] mx-auto flex items-center justify-between md:justify-center gap-2 md:gap-12">
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:-translate-y-1 transition-transform">storefront</span>
+<span class="text-[10px] font-medium uppercase tracking-wide">Shop</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:-translate-y-1 transition-transform">assignment</span>
+<span class="text-[10px] font-medium uppercase tracking-wide">Tasks</span>
+</a>
+<!-- Floating FAB for Quick Play Mobile -->
+<button class="md:hidden -mt-8 size-14 rounded-full bg-gradient-to-br from-primary to-red-800 text-white shadow-lg shadow-red-900/50 flex items-center justify-center border-4 border-surface-darker">
+<span class="material-symbols-outlined text-3xl">play_arrow</span>
+</button>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:-translate-y-1 transition-transform">leaderboard</span>
+<span class="text-[10px] font-medium uppercase tracking-wide">Rank</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:-translate-y-1 transition-transform">settings</span>
+<span class="text-[10px] font-medium uppercase tracking-wide">Settings</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

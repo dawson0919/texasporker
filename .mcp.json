@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "stitch": {
+      "command": "npx",
+      "args": ["@_davideast/stitch-mcp", "proxy"],
+      "env": {
+        "STITCH_USE_SYSTEM_GCLOUD": "1",
+        "STITCH_PROJECT_ID": "gen-lang-client-0350209672"
+      }
+    }
+  }
+}

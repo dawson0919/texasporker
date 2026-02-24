@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html class="dark" lang="zh-Hant"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>皇家德州撲克 - 真人荷官</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&amp;family=Roboto+Mono:wght@500&amp;family=Noto+Sans+TC:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#b91c1c", // Darker classic red
+                        "primary-dark": "#991b1b",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#1a1a1a",
+                        "surface-dark": "#262626",
+                        "accent-gold": "#c5a059", // Muted luxury gold
+                        "accent-gold-light": "#eecfa1",
+                        "felt-green": "#35654d", // Classic darker felt
+                        "suit-red": "#d32f2f",
+                        "suit-black": "#212121",
+                        "card-blue": "#1e3a8a",
+                    },
+                    fontFamily: {
+                        "display": ["Noto Sans TC", "sans-serif"],
+                        "card": ["Playfair Display", "serif"], // Classic serif for cards
+                        "mono": ["Roboto Mono", "monospace"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        "card": "0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.15)",
+                        "chip": "0 2px 4px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.3), inset 0 -2px 4px rgba(0,0,0,0.3)",
+                        "felt": "inset 0 0 100px rgba(0,0,0,0.7)"
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .wood-texture {
+            background-color: #3e2723;
+            background-image: linear-gradient(315deg, #2d1b18 0%, #4a2c28 74%);
+            border-top: 2px solid #5d4037;
+        }
+        .felt-texture {
+            background-color: #35654d;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%232a523e' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/svg%3E");
+        }
+        .card-pattern {
+            background-color: #1e3a8a;
+            background-image: repeating-linear-gradient(45deg, #172554 25%, transparent 25%, transparent 75%, #172554 75%, #172554), repeating-linear-gradient(45deg, #172554 25%, #1e3a8a 25%, #1e3a8a 75%, #172554 75%, #172554);
+            background-position: 0 0, 4px 4px;
+            background-size: 8px 8px;
+            border: 4px solid white;
+        }
+        .chip-stack {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+        }
+        .poker-chip {
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2) 0%, transparent 20%), 
+                        repeating-conic-gradient(from 0deg, transparent 0deg 30deg, rgba(255,255,255,0.2) 30deg 60deg);
+            box-shadow: 0 3px 0 rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body class="bg-background-dark text-slate-100 font-display min-h-screen flex flex-col overflow-hidden">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-accent-gold/20 bg-[#121212] px-6 py-3 shrink-0 z-50 shadow-lg">
+<div class="flex items-center gap-4 text-white">
+<div class="flex items-center justify-center size-10 rounded bg-gradient-to-br from-primary to-primary-dark shadow-lg border border-white/10">
+<span class="material-symbols-outlined !text-[24px] text-white drop-shadow-md">poker_chip</span>
+</div>
+<div>
+<h2 class="text-accent-gold-light text-xl font-serif font-bold leading-tight tracking-wide">皇家德州撲克</h2>
+<div class="text-[10px] text-gray-400 uppercase tracking-widest">頂級真人娛樂場</div>
+</div>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<div class="hidden md:flex items-center gap-8">
+<a class="text-slate-400 hover:text-accent-gold transition-colors text-sm font-medium tracking-wide uppercase" href="#">大廳</a>
+<a class="text-accent-gold text-sm font-bold tracking-wide uppercase border-b-2 border-accent-gold pb-1" href="#">牌桌</a>
+<a class="text-slate-400 hover:text-accent-gold transition-colors text-sm font-medium tracking-wide uppercase" href="#">錦標賽</a>
+<a class="text-slate-400 hover:text-accent-gold transition-colors text-sm font-medium tracking-wide uppercase" href="#">VIP 俱樂部</a>
+</div>
+<div class="flex gap-4 items-center pl-6 border-l border-white/10">
+<div class="flex items-center gap-3 bg-black/40 rounded px-4 py-2 border border-accent-gold/30 shadow-inner">
+<div class="w-5 h-5 rounded-full bg-accent-gold flex items-center justify-center text-black text-xs font-bold">$</div>
+<span class="text-sm font-mono font-bold text-white tracking-wider">14,250.00</span>
+<button class="ml-2 bg-gradient-to-b from-primary to-primary-dark hover:from-red-600 hover:to-red-800 text-white text-[10px] font-bold px-3 py-1 rounded shadow-md border border-white/10 uppercase tracking-wider transition-all">
+                    存款
+                </button>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center rounded-full size-10 bg-surface-dark hover:bg-neutral-700 text-gray-300 transition-colors relative border border-white/5">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-accent-gold rounded-full shadow-[0_0_8px_rgba(197,160,89,0.6)]"></span>
+</button>
+<div class="bg-center bg-no-repeat bg-cover rounded size-10 border border-accent-gold/50 cursor-pointer shadow-lg" data-alt="User profile avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDkE0sZUfoRz6LIjsvqPJRNTkJKZvPDiAo-LTz6IkZS2CviOUC9dYI2D2GOB053NYpMgPRJhCKkQV7albviavaStaKFdVerdnhg2dkVSJToicshwVB8mU-Ha_7Yc7pOoplRe9MHREzSlWP1_-MgWZ3FbSABctlZ7zwaXI1MPbC3TaRe6m5J-WoWyiL_5whCnIpTMhVThvEpBnBWQwJslQVza5hxt2Q2lepqo39O39xOI0AOcbZEnfGdwsaiV2DNa4Kb-qY_1hMpVS-Z");'></div>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 flex overflow-hidden relative">
+<div class="flex-1 flex flex-col relative bg-[#0f0f0f]">
+<div class="absolute inset-0 bg-black/90 z-0">
+<div class="absolute inset-0 bg-cover bg-center opacity-20 blur-sm" data-alt="Luxury casino background blurred" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAJsqf8ld7f8d1XU4UL3JDeujclDuwLT0SwQHyn6vIihMIOJ9OsQcaF6LEiLQ9_2SRbtuwNVG6p8-qgGM12NkG3b7TM5H7Stackc3pAQ8td7UhAM12iwCRJgWmUfowJAmG0JrMMGJSsJQzHCSlMj41A0Fhvml8Ip8NdHnFyItDtfGtzNknKb3fMXjoqKCApUYp_tPnHJUuRo7FoD080f-VbZdq04-lqfcJWeGGKuWY7r-mVXq7sREyKI8nFwV8GjH1Q3pOlIPd-QUhj');"></div>
+<div class="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black"></div>
+</div>
+<div class="relative z-10 w-full h-[45vh] lg:h-[50vh] bg-black shadow-2xl overflow-hidden border-b border-accent-gold/20 group">
+<div class="absolute inset-0 bg-cover bg-center opacity-70 blur-[2px]" data-alt="Soft focus luxury casino background" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAJsqf8ld7f8d1XU4UL3JDeujclDuwLT0SwQHyn6vIihMIOJ9OsQcaF6LEiLQ9_2SRbtuwNVG6p8-qgGM12NkG3b7TM5H7Stackc3pAQ8td7UhAM12iwCRJgWmUfowJAmG0JrMMGJSsJQzHCSlMj41A0Fhvml8Ip8NdHnFyItDtfGtzNknKb3fMXjoqKCApUYp_tPnHJUuRo7FoD080f-VbZdq04-lqfcJWeGGKuWY7r-mVXq7sREyKI8nFwV8GjH1Q3pOlIPd-QUhj');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60"></div>
+<div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-full flex items-end justify-center z-10 pointer-events-none">
+<div class="relative w-[400px] md:w-[500px] lg:w-[600px] h-[90%] bg-contain bg-bottom bg-no-repeat" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDg7JUYjKA9K9ovq3ENw0FYuyIrRjZrit-LaE8do-dw0eq8RgyCg2-5U5UXoyOOAxoRL8-Gg8wMUt4vjmdpvlIoGG_jYe4bjVkiD-_2UsO27j2Jeok2q2DNtCvBXkPsUouy-A3XZQt-aMUCb5JMpeJ0Xta5yjhlN3Ip6RuhoV6Yc39l-jLjAOLrMIyVex7nDFWqOSYNBHl3pnYg4q8JNfV6CxK7r1i5mWjdnePVcXbVUeweVaW-UT6PRbOVOIbHgNE5oweAwOpns2kB'); filter: contrast(1.1) brightness(0.9);">
+</div>
+</div>
+<div class="absolute top-4 left-4 flex items-center gap-2 z-20">
+<div class="flex items-center gap-2 bg-red-600/90 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg backdrop-blur-sm border border-red-400/30 uppercase tracking-wider">
+<span class="animate-pulse w-2 h-2 bg-white rounded-full"></span>
+                    直播中
+                </div>
+<div class="bg-black/60 text-white/80 text-[10px] font-bold px-2 py-1 rounded backdrop-blur-sm border border-white/10 uppercase tracking-wider">
+                    高清 1080p
+                </div>
+</div>
+<div class="absolute top-4 right-4 flex flex-col items-end gap-1 z-20">
+<div class="bg-black/60 backdrop-blur-md px-4 py-2 rounded border-l-2 border-accent-gold">
+<span class="text-white font-serif font-bold text-lg block leading-none">澳門貴賓廳</span>
+<span class="text-accent-gold text-xs font-mono uppercase tracking-wider">牌桌 #888 • 無限注德州撲克</span>
+</div>
+</div>
+<div class="absolute bottom-4 right-[25%] lg:right-[30%] z-20 max-w-[200px]">
+<div class="bg-white/10 backdrop-blur-md border border-white/20 p-3 rounded-tr-xl rounded-tl-xl rounded-bl-xl shadow-lg animate-fade-in-up">
+<p class="text-xs text-white italic font-serif leading-relaxed">"祝您好運！"</p>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-black/70 to-transparent p-6 pt-12 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-20">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full border-2 border-accent-gold/50 bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDg7JUYjKA9K9ovq3ENw0FYuyIrRjZrit-LaE8do-dw0eq8RgyCg2-5U5UXoyOOAxoRL8-Gg8wMUt4vjmdpvlIoGG_jYe4bjVkiD-_2UsO27j2Jeok2q2DNtCvBXkPsUouy-A3XZQt-aMUCb5JMpeJ0Xta5yjhlN3Ip6RuhoV6Yc39l-jLjAOLrMIyVex7nDFWqOSYNBHl3pnYg4q8JNfV6CxK7r1i5mWjdnePVcXbVUeweVaW-UT6PRbOVOIbHgNE5oweAwOpns2kB'); background-position: center top;"></div>
+<div>
+<h3 class="text-white font-bold text-base">美玲 (Mei Ling)</h3>
+<p class="text-accent-gold/80 text-xs uppercase tracking-wide">專業荷官 • 4 年經驗</p>
+</div>
+</div>
+</div>
+</div>
+<div class="flex-1 relative flex items-center justify-center p-4 z-10 overflow-hidden -mt-10">
+<div class="relative w-full max-w-5xl aspect-[2.1/1] bg-[#35654d] rounded-[200px] border-[16px] border-[#3e2723] shadow-[0_0_60px_rgba(0,0,0,0.8),inset_0_0_40px_rgba(0,0,0,0.6)] flex items-center justify-center felt-texture ring-1 ring-white/5 wood-texture">
+<div class="absolute inset-4 rounded-[180px] border border-yellow-400/10 pointer-events-none"></div>
+<div class="absolute opacity-5 pointer-events-none select-none flex flex-col items-center justify-center transform scale-y-75">
+<span class="text-6xl font-serif font-bold text-black tracking-[0.5em] mb-2">ROYAL</span>
+<span class="text-4xl font-serif text-black tracking-[0.3em]">CASINO</span>
+</div>
+<div class="flex gap-3 items-center justify-center mb-10 z-20">
+<div class="w-16 h-24 bg-white rounded shadow-card flex flex-col justify-between p-1.5 border border-gray-300 transform hover:-translate-y-1 transition-transform duration-200">
+<div class="text-suit-red font-card font-bold text-lg leading-none">A</div>
+<div class="self-center text-4xl text-suit-red leading-none">♥</div>
+<div class="text-suit-red font-card font-bold text-lg leading-none self-end rotate-180">A</div>
+</div>
+<div class="w-16 h-24 bg-white rounded shadow-card flex flex-col justify-between p-1.5 border border-gray-300 transform hover:-translate-y-1 transition-transform duration-200">
+<div class="text-suit-black font-card font-bold text-lg leading-none">10</div>
+<div class="self-center text-4xl text-suit-black leading-none">♣</div>
+<div class="text-suit-black font-card font-bold text-lg leading-none self-end rotate-180">10</div>
+</div>
+<div class="w-16 h-24 bg-white rounded shadow-card flex flex-col justify-between p-1.5 border border-gray-300 transform hover:-translate-y-1 transition-transform duration-200">
+<div class="text-suit-red font-card font-bold text-lg leading-none">J</div>
+<div class="self-center text-4xl text-suit-red leading-none">♦</div>
+<div class="text-suit-red font-card font-bold text-lg leading-none self-end rotate-180">J</div>
+</div>
+<div class="w-16 h-24 rounded border border-white/10 shadow-inner bg-black/10 flex items-center justify-center">
+<div class="w-14 h-22 border-2 border-dashed border-white/10 rounded-sm"></div>
+</div>
+<div class="w-16 h-24 rounded border border-white/10 shadow-inner bg-black/10 flex items-center justify-center">
+<div class="w-14 h-22 border-2 border-dashed border-white/10 rounded-sm"></div>
+</div>
+</div>
+<div class="absolute top-[60%] left-1/2 -translate-x-1/2 flex flex-col items-center z-10">
+<div class="bg-black/60 px-5 py-1.5 rounded-full text-accent-gold font-mono text-lg font-bold border border-accent-gold/30 shadow-lg backdrop-blur-sm mb-2">
+                        $4,250
+                    </div>
+<div class="text-white/40 text-[10px] uppercase tracking-widest font-bold mb-1">總底池</div>
+<div class="flex items-center justify-center -space-x-4 mt-1 perspective-500">
+<div class="w-8 h-8 rounded-full bg-red-600 border-4 border-dashed border-white/40 shadow-chip relative poker-chip"></div>
+<div class="w-8 h-8 rounded-full bg-blue-700 border-4 border-dashed border-white/40 shadow-chip relative poker-chip -mt-2"></div>
+<div class="w-8 h-8 rounded-full bg-zinc-900 border-4 border-dashed border-white/40 shadow-chip relative poker-chip"></div>
+<div class="w-8 h-8 rounded-full bg-red-600 border-4 border-dashed border-white/40 shadow-chip relative poker-chip -mt-2"></div>
+</div>
+</div>
+<div class="absolute -top-10 left-[20%] flex flex-col items-center gap-2 group z-20">
+<div class="relative">
+<div class="w-16 h-16 rounded-full border-[3px] border-surface-dark bg-gray-800 bg-cover bg-center shadow-lg ring-1 ring-white/10" data-alt="Player avatar male" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDZea4DohwOf58EZLePqBVENMNbyyaUicObDdQB0nCVblbqRx44aqdmG2HJ5dcSKFoxZXKgick1eLp_2pUt2viadQlIElnsNO2cnHcTXlTfLWji5E18JnkY6UCtyAvij4m7yv2tDhTMjTeIzrbAmJoyT8VYibUONKP5iZgDu9B76fJmYXPeiE--2tDTyt35smAOZuOcioGMANALeZi1VJQBrpjSqykQhtqoriwah_iXUavI4C2cB1_ecoSf-YzG2aU45GeC30676QWF')"></div>
+<div class="absolute -bottom-1 -right-1 w-6 h-6 bg-surface-dark rounded-full flex items-center justify-center border border-gray-600 shadow text-[10px] text-white font-bold">莊</div>
+</div>
+<div class="bg-surface-dark/95 backdrop-blur px-4 py-1.5 rounded border border-gray-700 text-center min-w-[90px] shadow-lg">
+<div class="text-xs text-gray-200 font-bold truncate max-w-[80px]">撲克王</div>
+<div class="text-[11px] text-accent-gold font-mono">$2,400</div>
+</div>
+<div class="absolute top-12 left-full ml-2 flex gap-1 transform rotate-6 origin-bottom-left">
+<div class="w-8 h-11 rounded-sm card-pattern shadow-md"></div>
+<div class="w-8 h-11 rounded-sm card-pattern shadow-md -ml-6"></div>
+</div>
+</div>
+<div class="absolute -top-10 right-[20%] flex flex-col items-center gap-2 opacity-40 z-20 grayscale">
+<div class="relative">
+<div class="w-16 h-16 rounded-full border-[3px] border-surface-dark bg-gray-800 bg-cover bg-center shadow-lg" data-alt="Player avatar female" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCvsG8lq5EG-YlTz9bUfTTj11jBglg_RWr1KzIiEzcA9xxgRa2CWO1RltLf_GptVtczCqox_3LGyy0Tq5QUloHRlqOlqXuCpSHPoXpOZ_zNAkQuJnvK3LvtgEsmW8kKgn01DdZ3lndMz8tpZsvkfJ-vuPY-2ri0_yCxmNe83JdYMMssFqsVUfX06qul4EEvbSiwMDbORiWUGL_Y9GrY7rZAoD0FsyAEkEtfSzjIl0PeOv9y3bFaKQcjdd1zLkngFYalbH2sYgaOu-Rj')"></div>
+</div>
+<div class="bg-surface-dark/95 backdrop-blur px-4 py-1.5 rounded border border-gray-700 text-center min-w-[90px] shadow-lg">
+<div class="text-xs text-gray-200 font-bold truncate max-w-[80px]">莎拉</div>
+<div class="text-[11px] text-gray-400 font-mono uppercase text-[10px]">已棄牌</div>
+</div>
+</div>
+<div class="absolute top-1/2 -left-10 -translate-y-1/2 flex flex-col items-center gap-2 z-20">
+<div class="relative">
+<div class="w-16 h-16 rounded-full border-[3px] border-surface-dark bg-gray-800 bg-cover bg-center shadow-lg" data-alt="Player avatar male" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDu0MwViA7kLjQ0R-Ml3Zyq29c1_7jwqcGegEsmk5JI8CJVtvxFn2_jrPJY8j5qClYutMGQZPqhjW6AV96dBocJRB1wT1EMHJIHCRQ2Od_KeYc5Kt4w_BZHBkcWBKnpEEgoqyl595vZWWP_B5Ezk53_Srs64dWatONUrr19m-tsgxC-rsaoitE0Xex2MhVGWLdg5Y3cr4caqiNDLZA-GwF1P_ImNDjTgfulrsVNVHudqlQB4zKuQ3YJJlXKsexOYWM4zABfip9W029G')"></div>
+<svg class="absolute inset-[-4px] w-[72px] h-[72px] -rotate-90 pointer-events-none" viewBox="0 0 36 36">
+<path class="text-transparent" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="2"></path>
+<path class="text-accent-gold stroke-current drop-shadow-[0_0_3px_rgba(197,160,89,0.8)]" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-dasharray="60, 100" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</div>
+<div class="bg-surface-dark/95 backdrop-blur px-4 py-1.5 rounded border border-accent-gold text-center min-w-[90px] shadow-[0_0_15px_rgba(197,160,89,0.15)]">
+<div class="text-xs text-white font-bold truncate max-w-[80px]">麥克</div>
+<div class="text-[10px] text-accent-gold font-mono animate-pulse">思考中...</div>
+</div>
+<div class="absolute left-full ml-4 top-1/2 -translate-y-1/2 flex gap-1">
+<div class="w-10 h-14 rounded-sm card-pattern shadow-md border border-white/20 transform -rotate-6"></div>
+<div class="w-10 h-14 rounded-sm card-pattern shadow-md border border-white/20 transform rotate-6 -ml-6"></div>
+</div>
+</div>
+<div class="absolute top-1/2 -right-10 -translate-y-1/2 flex flex-col items-center gap-2 z-20">
+<div class="relative">
+<div class="w-16 h-16 rounded-full border-[3px] border-surface-dark bg-gray-800 bg-cover bg-center shadow-lg" data-alt="Player avatar male" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBnektDCxTtQ5xo99StKJci-TjGdFBWxcuYKOIRfFO_mCmANT9WMl3rVAox9IXwYbOktL_LOJQu2LhJyOkMoJIhuYtDNawMCFmyw-MsIQJlOIeVo_F7D7ni5lB3nu-GHj6SBslf7VBZPnYcmBUzQByXXNatl_V4Pduae7Y60M-MlMp1Lhq-zrWVbkG99GDp9wyJIDnohD2dBuPQKX4cxGIIPpERrtvMMjQVGkQSYD3ib-1IFrOpg4r_NU0qYOx4A9KzXhMrB36IB1ut')"></div>
+</div>
+<div class="bg-surface-dark/95 backdrop-blur px-4 py-1.5 rounded border border-gray-700 text-center min-w-[90px] shadow-lg">
+<div class="text-xs text-gray-200 font-bold truncate max-w-[80px]">幸運星</div>
+<div class="text-[11px] text-accent-gold font-mono">$8,900</div>
+</div>
+<div class="absolute right-full mr-6 top-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="flex -space-y-1 flex-col-reverse mb-1">
+<div class="w-6 h-6 rounded-full bg-red-600 border-2 border-dashed border-white/40 shadow-chip poker-chip"></div>
+<div class="w-6 h-6 rounded-full bg-red-600 border-2 border-dashed border-white/40 shadow-chip poker-chip"></div>
+</div>
+<span class="text-[10px] font-bold text-white bg-black/70 px-1.5 py-0.5 rounded border border-white/10">$200</span>
+</div>
+<div class="absolute right-12 top-0 flex gap-1 transform -rotate-12 origin-bottom-right">
+<div class="w-8 h-11 rounded-sm card-pattern shadow-md"></div>
+<div class="w-8 h-11 rounded-sm card-pattern shadow-md -ml-6"></div>
+</div>
+</div>
+<div class="absolute -bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-30">
+<div class="flex gap-2 -mb-8 z-10 hover:-translate-y-6 transition-transform duration-300 cursor-pointer">
+<div class="w-20 h-28 bg-white rounded-md shadow-[0_5px_15px_rgba(0,0,0,0.4)] flex flex-col justify-between p-2 border border-gray-300 relative transform -rotate-6 hover:rotate-0 transition-transform origin-bottom-right group">
+<div class="text-suit-black font-card font-bold text-xl leading-none">K</div>
+<div class="self-center text-5xl text-suit-black leading-none mt-1">♠</div>
+<div class="text-suit-black font-card font-bold text-xl leading-none self-end rotate-180">K</div>
+<div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none rounded-md"></div>
+</div>
+<div class="w-20 h-28 bg-white rounded-md shadow-[0_5px_15px_rgba(0,0,0,0.4)] flex flex-col justify-between p-2 border border-gray-300 relative transform rotate-6 hover:rotate-0 transition-transform origin-bottom-left group">
+<div class="text-suit-red font-card font-bold text-xl leading-none">K</div>
+<div class="self-center text-5xl text-suit-red leading-none mt-1">♥</div>
+<div class="text-suit-red font-card font-bold text-xl leading-none self-end rotate-180">K</div>
+<div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none rounded-md"></div>
+</div>
+</div>
+<div class="relative z-20 mt-6 flex flex-col items-center">
+<div class="relative">
+<div class="w-24 h-24 rounded-full border-[4px] border-accent-gold bg-gray-700 bg-cover bg-center shadow-[0_0_20px_rgba(197,160,89,0.3)]" data-alt="My avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCTm-RhluBb24B262Zv2010xB9PSXIYduv_3fQRg5O5E2PKl3vt0wAD27Ix5xGw12cxzHOxvJSaGjJbFxrB4tcgtWteDbbc_yrcY-JYRS-GMUlI0pU4Fy0Je4YcguFxkCyqxuCN1iZnqO4ayj0YwZSQ9RA4ietbQjjt1o4Co2Dtc3Tiu1Lk5I40taDfO5CcsCEwbzlu2lrjKepezIognA-5Un5fSVRk3hR9BrVm4QeBdZhWZBEMlJEVWF1p0hfJE3NhEG2gV5Pf031-')"></div>
+<div class="absolute -top-3 -right-3 w-8 h-8 bg-accent-gold text-surface-dark rounded-full flex items-center justify-center border-2 border-surface-dark shadow-md z-10">
+<span class="material-symbols-outlined text-sm font-bold">star</span>
+</div>
+</div>
+<div class="bg-surface-dark px-6 py-2 rounded-lg border border-accent-gold/50 text-center min-w-[120px] shadow-xl -mt-4 z-20 relative">
+<div class="text-sm text-white font-bold uppercase tracking-wider">我</div>
+<div class="text-xs text-accent-gold font-mono font-bold">$14,250</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="h-28 bg-[#1a1a1a] border-t border-accent-gold/20 flex items-center px-8 gap-6 z-40 shadow-[0_-5px_20px_rgba(0,0,0,0.3)]">
+<div class="flex gap-3 items-center mr-auto">
+<button class="h-10 px-4 rounded bg-[#333] hover:bg-[#444] border border-white/5 text-gray-300 text-xs font-bold uppercase tracking-wider transition-colors shadow-md active:translate-y-0.5">1/2 底池</button>
+<button class="h-10 px-4 rounded bg-[#333] hover:bg-[#444] border border-white/5 text-gray-300 text-xs font-bold uppercase tracking-wider transition-colors shadow-md active:translate-y-0.5">3/4 底池</button>
+<button class="h-10 px-4 rounded bg-[#333] hover:bg-[#444] border border-white/5 text-gray-300 text-xs font-bold uppercase tracking-wider transition-colors shadow-md active:translate-y-0.5">底池</button>
+<button class="h-10 px-4 rounded bg-[#333] hover:bg-[#444] border border-white/5 text-gray-300 text-xs font-bold uppercase tracking-wider transition-colors shadow-md active:translate-y-0.5 text-accent-gold">全下</button>
+</div>
+<div class="flex flex-col w-64 mx-6 gap-2">
+<div class="flex justify-between items-end mb-1">
+<span class="text-xs text-gray-400 font-mono">下注金額</span>
+<div class="bg-black border border-accent-gold/30 px-3 py-1 rounded text-accent-gold font-mono font-bold text-lg">$500</div>
+</div>
+<input class="w-full h-1.5 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-accent-gold" max="14250" min="100" type="range" value="500"/>
+<div class="flex justify-between text-[10px] text-gray-500 font-mono mt-1">
+<span>$100</span>
+<span>$14,250</span>
+</div>
+</div>
+<div class="flex gap-4">
+<button class="h-14 min-w-[110px] rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-sm border-b-4 border-zinc-950 active:border-b-0 active:translate-y-1 transition-all uppercase tracking-wider shadow-lg">
+                    棄牌
+                </button>
+<button class="h-14 min-w-[110px] rounded-lg bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-sm border-b-4 border-emerald-950 active:border-b-0 active:translate-y-1 transition-all uppercase tracking-wider shadow-lg flex flex-col items-center justify-center leading-tight">
+<span>過牌</span>
+</button>
+<button class="h-14 min-w-[140px] rounded-lg bg-gradient-to-b from-primary to-primary-dark hover:from-red-600 hover:to-red-800 text-white font-bold text-lg border-b-4 border-red-950 active:border-b-0 active:translate-y-1 transition-all uppercase tracking-wider flex flex-col items-center justify-center leading-tight shadow-[0_0_15px_rgba(185,28,28,0.4)]">
+<span>加注</span>
+<span class="text-[10px] font-normal opacity-90 tracking-normal normal-case">至 $500</span>
+</button>
+</div>
+</div>
+</div>
+<div class="w-80 bg-[#151515] border-l border-accent-gold/20 flex flex-col shrink-0 z-20 shadow-2xl">
+<div class="flex border-b border-white/5 bg-[#1a1a1a]">
+<button class="flex-1 py-4 text-xs font-bold uppercase tracking-widest text-accent-gold border-b-2 border-accent-gold bg-white/5">聊天</button>
+<button class="flex-1 py-4 text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-gray-300 hover:bg-white/5 transition-colors">歷史</button>
+<button class="flex-1 py-4 text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-gray-300 hover:bg-white/5 transition-colors">玩家</button>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide bg-[#121212]">
+<div class="text-center">
+<span class="text-[10px] text-gray-600 font-mono bg-[#1a1a1a] px-2 py-1 rounded">今天, 晚上 8:32</span>
+</div>
+<div class="flex gap-3 group">
+<div class="bg-gray-700 rounded w-8 h-8 shrink-0 bg-cover border border-white/10" data-alt="User avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAhjufYjoW_EPw475refTWMLRgxVLdALEi0VLDUwlS-9ySZ8BCJymSkKk5uZrbsiaIgK5hqOcvRGd04L_Th0jvMpbg7bmMYWjBCGxZYUmwyHHbcdIVlxhrBiaoxzUaEY2gMzRPLHN-K4wWTfpj3VJUh77D_tVeCS0jYQlH5SHgpSheYDKfe0wD_7nkM95zUNNzXWRS4Kb1LM6TDC__iv9DVyOxKbWRU02-vOcf6Z54riPCeO-SWf7SOZnlGZVScca4hkd7JSHdxrkOH')"></div>
+<div>
+<div class="flex items-baseline gap-2">
+<span class="text-xs font-bold text-gray-300 group-hover:text-white transition-colors">撲克王</span>
+<span class="text-[10px] text-gray-600">晚上 8:33</span>
+</div>
+<p class="text-sm text-gray-400 font-light leading-relaxed">一手好牌！那個同花聽牌太嚇人了。</p>
+</div>
+</div>
+<div class="flex gap-3 group">
+<div class="bg-gray-700 rounded w-8 h-8 shrink-0 bg-cover border border-white/10" data-alt="User avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBqO24E9_UdS78Y8xHUYtjjhK7-XZ2fKEH37piGT80joAp75Sn2qCthOkBzOuarVgaOprkRshYvfyZdFQx30iUKliQ8wKerTCmHE0hZX__Epfi19K1zsSWpz5uOOUgnPK7sNH-n0Wlv1akXSl3bQDgiVPwG1WqRicsFEDjVvrBCCYFIaH9p0AobDtRLU2-xdOIgdJrB07o4P980iM9_sK7H81RZRYRmadTeTENFcp55ieQHe1ysuI1boyNFkKnMgELSGUaBR6JW2hpu')"></div>
+<div>
+<div class="flex items-baseline gap-2">
+<span class="text-xs font-bold text-accent-gold">幸運星</span>
+<span class="text-[10px] text-gray-600">晚上 8:34</span>
+</div>
+<p class="text-sm text-gray-400 font-light leading-relaxed">等下有人要打錦標賽嗎？</p>
+</div>
+</div>
+<div class="my-4 relative flex items-center justify-center">
+<div class="absolute inset-0 flex items-center">
+<div class="w-full border-t border-white/10"></div>
+</div>
+<span class="relative bg-[#121212] px-3 text-[10px] text-primary font-mono uppercase tracking-wider">更換荷官</span>
+</div>
+<div class="flex gap-3 bg-white/5 p-2 rounded border border-white/5">
+<div class="bg-indigo-900 rounded w-8 h-8 shrink-0 flex items-center justify-center text-[10px] text-white font-bold border border-indigo-500 shadow-inner">系統</div>
+<div>
+<div class="flex items-baseline gap-2">
+<span class="text-xs font-bold text-indigo-400">系統</span>
+<span class="text-[10px] text-gray-600">晚上 8:35</span>
+</div>
+<p class="text-sm text-gray-400 italic">玩家 麥克 正在思考中...</p>
+</div>
+</div>
+</div>
+<div class="p-4 border-t border-white/5 bg-[#1a1a1a]">
+<div class="relative">
+<input class="w-full bg-[#0f0f0f] text-gray-300 text-sm rounded pl-4 pr-10 py-3 border border-white/10 focus:outline-none focus:border-accent-gold/50 focus:ring-1 focus:ring-accent-gold/50 placeholder-gray-600 transition-all shadow-inner" placeholder="輸入訊息..." type="text"/>
+<button class="absolute right-2 top-2 p-1 text-accent-gold hover:text-white rounded hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-[20px]">send</span>
+</button>
+</div>
+<div class="flex justify-between mt-3 px-1 items-center">
+<div class="flex gap-3 text-gray-500">
+<button class="hover:text-accent-gold transition-colors"><span class="material-symbols-outlined text-[20px]">sentiment_satisfied</span></button>
+<button class="hover:text-accent-gold transition-colors"><span class="material-symbols-outlined text-[20px]">gif</span></button>
+</div>
+<div class="flex gap-2">
+<button class="text-[10px] font-bold uppercase text-gray-500 hover:text-white hover:border-white/20 border border-transparent px-2 py-1 rounded bg-white/5 transition-all">打得好</button>
+<button class="text-[10px] font-bold uppercase text-gray-500 hover:text-white hover:border-white/20 border border-transparent px-2 py-1 rounded bg-white/5 transition-all">好牌</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+</body></html>

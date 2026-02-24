@@ -1,0 +1,74 @@
+﻿
+> texas-poker-game@0.1.0 lint
+> eslint
+
+
+C:\Users\User\Downloads\TEXASPORKER\app\history\page.tsx
+  5:10  warning  'Modal' is defined but never used                           @typescript-eslint/no-unused-vars
+  8:10  warning  'isComingSoonModalOpen' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\User\Downloads\TEXASPORKER\app\layout.tsx
+   3:3   warning  'SignInButton' is defined but never used                                                                                                                         @typescript-eslint/no-unused-vars
+   4:3   warning  'SignUpButton' is defined but never used                                                                                                                         @typescript-eslint/no-unused-vars
+   5:3   warning  'SignedIn' is defined but never used                                                                                                                             @typescript-eslint/no-unused-vars
+   6:3   warning  'SignedOut' is defined but never used                                                                                                                            @typescript-eslint/no-unused-vars
+   7:3   warning  'UserButton' is defined but never used                                                                                                                           @typescript-eslint/no-unused-vars
+  39:11  warning  Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
+  40:11  warning  Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
+
+C:\Users\User\Downloads\TEXASPORKER\app\lobby\page.tsx
+  10:10  warning  'isComingSoonModalOpen' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\User\Downloads\TEXASPORKER\app\page.tsx
+   63:9   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\User\Downloads\TEXASPORKER\app\page.tsx:63:9
+  61 |     useEffect(() => {
+  62 |         // Randomly select dealer on mount
+> 63 |         setDealer(DEALER_POOL[Math.floor(Math.random() * DEALER_POOL.length)]);
+     |         ^^^^^^^^^ Avoid calling setState() directly within an effect
+  64 |
+  65 |         const aiNames = ['?犖', '鞈剔?', '擃?, '撠?', '?踵?', '?瑁', '?其???, '?怎', 'Lucky', 'Pro'];
+  66 |                                                                                                                                                                     react-hooks/set-state-in-effect
+  111:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\User\Downloads\TEXASPORKER\app\page.tsx:111:13
+  109 |     useEffect(() => {
+  110 |         if (gameStage === 'PREFLOP' || gameStage === 'FLOP' || gameStage === 'TURN' || gameStage === 'RIVER') {
+> 111 |             setDealerMessage(gameStage === 'PREFLOP' ? "?潛?銝?.." : "銝?撘萇?...");
+      |             ^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  112 |             const timer = setTimeout(() => setDealerMessage(null), 2500);
+  113 |             return () => clearTimeout(timer);
+  114 |         } else if (gameStage === 'SHOWDOWN') {  react-hooks/set-state-in-effect
+
+C:\Users\User\Downloads\TEXASPORKER\convert_html_to_jsx.js
+  1:12  error    A `require()` style import is forbidden      @typescript-eslint/no-require-imports
+  2:14  error    A `require()` style import is forbidden      @typescript-eslint/no-require-imports
+  7:7   warning  'isDark' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\User\Downloads\TEXASPORKER\fix-header-links.js
+  1:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\User\Downloads\TEXASPORKER\fix-history-styles.js
+  1:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\User\Downloads\TEXASPORKER\fix-lobby-links.js
+  1:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+??21 problems (10 errors, 11 warnings)
+

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html class="dark" lang="zh-Hant"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>皇家德州撲克 - 全球排行榜</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#f4c434",
+                        "primary-dark": "#b38b15",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#1a160a", 
+                        "surface-dark": "#2a2415",
+                        "surface-light": "#ffffff",
+                        "gold-accent": "#cbbc90",
+                    },
+                    fontFamily: {
+                        display: ["Manrope", "Noto Sans TC", "sans-serif"],
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                        'card-gradient': 'linear-gradient(180deg, rgba(42,36,21,0.9) 0%, rgba(26,22,10,0.95) 100%)',
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col overflow-x-hidden">
+<header class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-[#493f22] bg-surface-dark/95 backdrop-blur-md px-10 py-3 shadow-lg">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-8 flex items-center justify-center">
+<span class="material-symbols-outlined text-4xl">playing_cards</span>
+</div>
+<h2 class="text-white text-xl font-bold leading-tight tracking-[-0.015em]">皇家德州撲克</h2>
+</div>
+<nav class="hidden lg:flex items-center gap-9">
+<a class="text-white/80 hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">大廳</a>
+<a class="text-white/80 hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">牌桌</a>
+<a class="text-primary text-sm font-bold leading-normal relative after:content-[''] after:absolute after:-bottom-5 after:left-0 after:w-full after:h-0.5 after:bg-primary" href="#">排行榜</a>
+<a class="text-white/80 hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">錦標賽</a>
+<a class="text-white/80 hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">VIP 俱樂部</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<div class="hidden md:flex w-full max-w-xs items-center rounded-xl bg-[#131007] border border-[#493f22] focus-within:border-primary transition-colors">
+<div class="text-gold-accent pl-3 pr-2 flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="w-full bg-transparent border-none text-white placeholder:text-gold-accent/50 focus:ring-0 text-sm py-2.5" placeholder="搜尋玩家..."/>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center justify-center rounded-xl size-10 bg-[#2a2415] hover:bg-[#3d341f] text-white transition-colors border border-[#493f22]">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-xl size-10 bg-[#2a2415] hover:bg-[#3d341f] text-white transition-colors border border-[#493f22]">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+</button>
+<div class="relative group cursor-pointer">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 border-2 border-primary" data-alt="User profile avatar showing a man in a suit" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCIo8E_eV6Sgc6DrdMLdAEuEaqntsdVBSrK8NZmgg7pawPxFjUtJiKNcvK18UjjMY6mXrgVETgPDeWn8UWgxCBA4ZrxVQ-G6YfeQMe_Iy5YIbfWQ6zC5EDne-nWVM2wAEu_iCpvGUTDb8J47CZiB7fCbuY0YeHXGIVYG2h7ZaS6rpCDsx_PNLMr6WbtdZfxN-hI1C4Neuijq0jEIo5R6ROCoFMdwPX2SBFOaV_Cw8p-3ALzX-NUe8wADHAj0VIt_RETTAZPBsqmZQMm");'></div>
+<div class="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full border-2 border-[#1a160a]"></div>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-grow flex flex-col relative w-full max-w-[1440px] mx-auto px-4 md:px-8 py-8">
+<div class="fixed inset-0 z-[-1] opacity-20 pointer-events-none" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDdrjxPkcwDPERm82UCyW95AOwvMhoqSk0il2PiV5lVFpynSL5UcaSlClgFJkfbL5VCiPxnt-QHdgFql9EcE_-2QO0Hwz0wck6COgTEf9DQVk7e_GkBtEEm4HGXcoMm9K6otlqimTTnvKCIkiBPFYGnZJY_AnvkquQM4kksKzNzCkeejzJ5gdFKE_ihM19FttFmxBDJbf0MoPpmKyC8ZFNSxVuTApgaRUq-BIZeq5PW7GKpyOb6665e71Mxs6Vj8u1003C2fPu6YzPD');"></div>
+<div class="fixed inset-0 z-[-2] bg-background-dark"></div>
+<div class="flex flex-col md:flex-row justify-between items-end md:items-center gap-6 mb-10">
+<div class="flex flex-col gap-2">
+<h1 class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-primary tracking-tight">全球與好友排行榜</h1>
+<p class="text-gold-accent text-lg">澳門頂級精英圈</p>
+</div>
+<div class="flex gap-3 bg-surface-dark/50 p-1.5 rounded-xl border border-[#493f22]">
+<button class="px-6 py-2.5 rounded-lg bg-primary text-background-dark font-bold text-sm shadow-lg shadow-primary/20 transition-all hover:scale-105">全球菁英</button>
+<button class="px-6 py-2.5 rounded-lg text-gold-accent hover:text-white hover:bg-white/5 font-medium text-sm transition-all">好友</button>
+<button class="px-6 py-2.5 rounded-lg text-gold-accent hover:text-white hover:bg-white/5 font-medium text-sm transition-all">每週排行</button>
+</div>
+</div>
+<div class="relative w-full mb-12">
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-primary/10 blur-[100px] rounded-full pointer-events-none"></div>
+<div class="flex flex-col md:flex-row items-end justify-center gap-4 md:gap-8 min-h-[420px] pb-8">
+<div class="order-2 md:order-1 flex flex-col items-center w-full max-w-[280px] relative group">
+<div class="relative z-10 mb-4 transform group-hover:-translate-y-2 transition-transform duration-300">
+<div class="w-28 h-28 md:w-32 md:h-32 rounded-full border-4 border-slate-300 p-1 bg-gradient-to-b from-slate-200 to-slate-400 shadow-[0_0_20px_rgba(203,213,225,0.3)]">
+<div class="w-full h-full rounded-full bg-cover bg-center" data-alt="Portrait of the second rank player" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC3OnRFnFRDgEHtzAMC2XP-c_8Z2Iv_7MhcOLcJ4BqMVPS6MdQ--vq14NCAD-GJUTA4gL6SODU5b-QMP4fYd5rvRwHpIwGDWoF-IcLTJD8s7UL2vw5IClzCDsJrCxlUhO3nIKDGO_XhUpmH3Sl-MnLd5YF-ObqS6kHnFU8A-QCwAruzQAIcN9FILaOOasOPZ4gp5FGh1D3CFYmk_2ynSQ7nGpGGZLC4N7wksC1yBwkxNR-lnu2typ3wn8_yo6xMZ8DfUMjZJZDQsYOn');"></div>
+</div>
+<div class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-slate-300 text-slate-900 font-bold px-3 py-0.5 rounded-full text-sm shadow-lg border border-white">第 2 名</div>
+</div>
+<div class="w-full bg-card-gradient border border-white/10 rounded-t-2xl p-6 flex flex-col items-center text-center shadow-2xl relative overflow-hidden h-64 justify-end">
+<div class="absolute inset-0 bg-gradient-to-t from-slate-500/10 to-transparent pointer-events-none"></div>
+<h3 class="text-xl font-bold text-white mb-1">MacauKing</h3>
+<div class="flex items-center gap-1 mb-3 text-sm text-gold-accent">
+<span class="material-symbols-outlined text-sm">diamond</span>
+<span>白金 VIP</span>
+</div>
+<p class="text-2xl font-mono text-primary font-bold tracking-tight">$72.5M</p>
+<p class="text-xs text-white/40 mt-1">贏取籌碼</p>
+</div>
+</div>
+<div class="order-1 md:order-2 flex flex-col items-center w-full max-w-[320px] relative z-20 -mt-12 md:-mt-0 group">
+<div class="absolute -top-16 text-primary animate-bounce">
+<span class="material-symbols-outlined text-5xl drop-shadow-[0_0_15px_rgba(244,196,52,0.6)]">crown</span>
+</div>
+<div class="relative z-10 mb-4 transform group-hover:-translate-y-2 transition-transform duration-300">
+<div class="w-36 h-36 md:w-44 md:h-44 rounded-full border-4 border-primary p-1 bg-gradient-to-b from-[#fcd34d] to-[#b45309] shadow-[0_0_30px_rgba(244,196,52,0.4)]">
+<div class="w-full h-full rounded-full bg-cover bg-center" data-alt="Portrait of the first rank player" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC74ehYaIsJ1Wohk7icCuHMyYdtGDC91E4bOtlhUywrdS96NgdTIksDZ5aXg2_xhIwo9AOUzW-VXt-dElPmxheC6YPAAiCj1H481BXZY8XjWs3ZbwaJ6_KasXcq2yeUlwQgWwDw6HtoqetqMTdt5pE8Gjy9kBGWvM71bozke-5obZmzghw1k4bh_0Nii6qadykZLskHLHPfNOA2pfPBXTwKBuoJXY6mWxIO_jjW4JwS2wDOHwqrJXaM2vpRrVN8hyl0x53zeCZUpWA6');"></div>
+</div>
+<div class="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-primary text-black font-bold px-4 py-1 rounded-full text-base shadow-lg border-2 border-[#fff7ed] min-w-[3rem] text-center">第 1 名</div>
+</div>
+<div class="w-full bg-gradient-to-b from-[#3a311c] to-[#1a160a] border border-primary/30 rounded-t-2xl p-8 flex flex-col items-center text-center shadow-[0_0_40px_rgba(0,0,0,0.5)] relative overflow-hidden h-80 justify-end">
+<div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
+<div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20"></div>
+<h3 class="text-2xl font-bold text-white mb-1">DragonMaster88</h3>
+<div class="flex items-center gap-1 mb-4 text-sm text-primary">
+<span class="material-symbols-outlined text-sm">workspace_premium</span>
+<span>鑽石 VIP</span>
+</div>
+<p class="text-3xl md:text-4xl font-mono text-primary font-black tracking-tighter drop-shadow-md">$88.0M</p>
+<p class="text-xs text-white/40 mt-1">總贏取籌碼</p>
+</div>
+</div>
+<div class="order-3 flex flex-col items-center w-full max-w-[280px] relative group">
+<div class="relative z-10 mb-4 transform group-hover:-translate-y-2 transition-transform duration-300">
+<div class="w-28 h-28 md:w-32 md:h-32 rounded-full border-4 border-orange-300 p-1 bg-gradient-to-b from-orange-200 to-orange-700 shadow-[0_0_20px_rgba(194,65,12,0.3)]">
+<div class="w-full h-full rounded-full bg-cover bg-center" data-alt="Portrait of the third rank player" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBipq4Qh2PnxaICk4v4tBs4oy-ZFhF6v3ZRJzyuV6l6yDwb1a5wlMtlrRatjGTAVS5ssJI6BIqTX1pBUgX-NXGRj5DGmzAPw2p6FzarPlvhS6amfa9EQc9NHuRw2I76l6P961LKwNFKusXVv-u4DD4XayZOcAaH6H_Bh7ARsD1OzDVjIpL9c7wLYTd73DSLn4H-I5Kri4qCvq99eDQJWTvCfsVvC9j8lCmtjscdLloqUyEGF5sO5cT7xdulQUcnQg4Bnwd5B5_tC_SG');"></div>
+</div>
+<div class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-orange-400 text-white font-bold px-3 py-0.5 rounded-full text-sm shadow-lg border border-orange-200">第 3 名</div>
+</div>
+<div class="w-full bg-card-gradient border border-white/10 rounded-t-2xl p-6 flex flex-col items-center text-center shadow-2xl relative overflow-hidden h-56 justify-end">
+<div class="absolute inset-0 bg-gradient-to-t from-orange-900/10 to-transparent pointer-events-none"></div>
+<h3 class="text-xl font-bold text-white mb-1">PokerFace_J</h3>
+<div class="flex items-center gap-1 mb-3 text-sm text-gold-accent">
+<span class="material-symbols-outlined text-sm">stars</span>
+<span>黃金 VIP</span>
+</div>
+<p class="text-2xl font-mono text-primary font-bold tracking-tight">$54.2M</p>
+<p class="text-xs text-white/40 mt-1">贏取籌碼</p>
+</div>
+</div>
+</div>
+</div>
+<div class="w-full bg-surface-dark/40 backdrop-blur-sm rounded-3xl border border-[#493f22] overflow-hidden flex flex-col shadow-2xl mb-24">
+<div class="grid grid-cols-12 gap-4 px-6 py-4 border-b border-[#493f22] bg-[#1a160a]/50 text-xs font-bold text-gold-accent uppercase tracking-wider">
+<div class="col-span-2 md:col-span-1 text-center">排名</div>
+<div class="col-span-6 md:col-span-5">玩家名稱</div>
+<div class="hidden md:block col-span-3 text-center">VIP 等級</div>
+<div class="col-span-4 md:col-span-3 text-right pr-4">總贏取籌碼</div>
+</div>
+<div class="divide-y divide-[#493f22]/50">
+<div class="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-white/5 transition-colors group">
+<div class="col-span-2 md:col-span-1 text-center text-white/60 font-mono font-medium text-lg">4</div>
+<div class="col-span-6 md:col-span-5 flex items-center gap-4">
+<div class="size-10 rounded-full bg-cover bg-center border border-[#493f22]" data-alt="Avatar of player ranked 4" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBeXpXnkSD0kHjylaVMl43RlbP7KnxZEcTDcH0wnDntluTFRiWxTZJa5v_EBthxBh6NmjiNlT5G2aTEGhs5Avl551VsKvZW6aMsBazeRSNLvhRq4oI_MnwOn9RezaBXzRJHsYDHVde-UUjWcTaGxBaO74hrzq6lpaMWWXicG3yQGnajM9Qo8qTefBnwN5SZkohl76G4T_2L2sldPOSpWA5j8uVa4Mr_wgflLmINEvFbGZUx1oeDuCjm2y_K37-ATMNpxo9buAqR2Vgk');"></div>
+<span class="text-white font-bold group-hover:text-primary transition-colors">LadyLuck99</span>
+</div>
+<div class="hidden md:block col-span-3 text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-900/30 text-purple-200 border border-purple-700/50">
+                            白金 VIP
+                        </span>
+</div>
+<div class="col-span-4 md:col-span-3 text-right pr-4 font-mono text-gold-accent font-medium">$42,105,000</div>
+</div>
+<div class="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-white/5 transition-colors group">
+<div class="col-span-2 md:col-span-1 text-center text-white/60 font-mono font-medium text-lg">5</div>
+<div class="col-span-6 md:col-span-5 flex items-center gap-4">
+<div class="size-10 rounded-full bg-cover bg-center border border-[#493f22]" data-alt="Avatar of player ranked 5" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAbbgqpgdqOWzBbfu0eGM2nYNBMChjpbTD3QvaIAL4v9TCszP5Q1TZqbrh0sKDjGN0xuftxdFLw0iCQcUeMjzSGXd2rQMiRY31KfCLmMk-s_MLYr-Tm_0VIXQKkuzzwpuOqiqccB5pIr4ZdZDET5hqhy3EJossCisphQscfWMRFY-j1wh-Gboc5O0B6QlH0OujY8x3N2aDe5E2O8l2uQ4MDFLTvCLGGSuy0c0NYZ-BwbusF5qZbYvYpnsHIFZb3vZQD3sRRYQzbmjts');"></div>
+<span class="text-white font-bold group-hover:text-primary transition-colors">AceHunter</span>
+</div>
+<div class="hidden md:block col-span-3 text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-900/30 text-yellow-200 border border-yellow-700/50">
+                            黃金 VIP
+                        </span>
+</div>
+<div class="col-span-4 md:col-span-3 text-right pr-4 font-mono text-gold-accent font-medium">$38,920,400</div>
+</div>
+<div class="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-white/5 transition-colors group">
+<div class="col-span-2 md:col-span-1 text-center text-white/60 font-mono font-medium text-lg">6</div>
+<div class="col-span-6 md:col-span-5 flex items-center gap-4">
+<div class="size-10 rounded-full bg-cover bg-center border border-[#493f22]" data-alt="Avatar of player ranked 6" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuATI2FU_gO16w4732ZKYybtC7dBqg1DUgr3jSDx_JDIpmLoYb1NlF7o01p2MX8xYpFpzUCkjincnajqbIJb9sT6yaMaelNKpwhpeZMqBCxATPdl-I5-BSUu5zICPyjK7xdr03Vduu_q6T-UN6DX-RwcGpk2CM7BU0hH4UjbHkEvn__RwvL1b3wsy_lmYFtA6qeEPRogYvPKwZgvKYVhWEm-uRSurGeU9uVwIFEPB0CRyiffQZW8xN93y3Vy63ZCVz9wmINMkiL4Ur2S');"></div>
+<span class="text-white font-bold group-hover:text-primary transition-colors">RiverRat_X</span>
+</div>
+<div class="hidden md:block col-span-3 text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-800 text-slate-300 border border-slate-600">
+                            白銀 VIP
+                        </span>
+</div>
+<div class="col-span-4 md:col-span-3 text-right pr-4 font-mono text-gold-accent font-medium">$25,600,000</div>
+</div>
+<div class="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-white/5 transition-colors group">
+<div class="col-span-2 md:col-span-1 text-center text-white/60 font-mono font-medium text-lg">7</div>
+<div class="col-span-6 md:col-span-5 flex items-center gap-4">
+<div class="size-10 rounded-full bg-cover bg-center border border-[#493f22]" data-alt="Avatar of player ranked 7" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBAhN92cdifNXsJGz8ap2uZXoSQvYboi05ZApVTiDbPITB-yTa6jaPZBZX54odKWhIgZeeL7N0Co1ZiTU3OrNGToxTD1Yahhb_cDWlbeCp_MTHu7kINRF9JIKBUZmxWqEW2qrYtYHrvTo0gT5GZxBSdEJfU9PayTx4ld-ipuyt0KWDCuIMRTTrRduSKMRvtW0InS9jBAnhjl4yi-AtUYgdrdxph_Tse3KLQoF2gi4jDlZ1u8SlxTithhoNiEGYJqKt1R4G08bUozSZ0');"></div>
+<span class="text-white font-bold group-hover:text-primary transition-colors">HighRoller007</span>
+</div>
+<div class="hidden md:block col-span-3 text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-900/30 text-purple-200 border border-purple-700/50">
+                            白金 VIP
+                        </span>
+</div>
+<div class="col-span-4 md:col-span-3 text-right pr-4 font-mono text-gold-accent font-medium">$21,450,100</div>
+</div>
+</div>
+<div class="p-4 flex justify-center border-t border-[#493f22] bg-[#1a160a]/30">
+<button class="text-xs font-bold text-primary hover:text-white uppercase tracking-wider flex items-center gap-1 transition-colors">
+                    查看完整排行榜
+                    <span class="material-symbols-outlined text-base">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+<div class="fixed bottom-0 left-0 right-0 z-40 bg-[#1a160a] border-t border-primary/40 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+<div class="max-w-[1440px] mx-auto px-4 md:px-10 py-3">
+<div class="grid grid-cols-12 gap-4 items-center">
+<div class="col-span-2 md:col-span-1 text-center">
+<div class="flex flex-col items-center">
+<span class="text-[10px] uppercase text-white/40 tracking-wider">我的排名</span>
+<span class="text-white font-mono font-bold text-xl">42</span>
+</div>
+</div>
+<div class="col-span-6 md:col-span-5 flex items-center gap-4">
+<div class="relative">
+<div class="size-12 rounded-full bg-cover bg-center border-2 border-primary" data-alt="Current user avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCUNsdJY8dSwR0Tl-7OFF4LbL6SnIIwav6MdHErOj0xApJKZKvOjPgZXWZi0ZzQHO3qU_pl-NxmlEa76MLbM7O5evLewmdX7C16ek33d3dB6lZBIn3TbpyFuUQ7cpRF890ahOLjALKjcj-_1zYvBeg8q0K4C4tPW5DAF_YmunmGuLq47IS4na6v0n5ql1bI5nPpU9WptJ2WO9QAd0vVBFjHiORCoa9BnjRxMGOG7K7zd1EaVmu_uw1AyYRMC6IeKpyQyZ3qswvQSLyb');"></div>
+<div class="absolute -bottom-1 -right-1 bg-primary text-[#1a160a] rounded-full p-0.5 border border-[#1a160a]">
+<span class="material-symbols-outlined text-[14px] block">check</span>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="text-white font-bold text-lg">你</span>
+<span class="text-gold-accent text-xs">前 5% 玩家</span>
+</div>
+</div>
+<div class="hidden md:block col-span-3 text-center">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-primary text-[#1a160a]">
+                        白銀 VIP
+                    </span>
+</div>
+<div class="col-span-4 md:col-span-3 text-right pr-4">
+<div class="flex flex-col items-end">
+<span class="text-[10px] uppercase text-white/40 tracking-wider">總贏取籌碼</span>
+<span class="text-primary font-mono font-bold text-xl">$1,250,500</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</body></html>

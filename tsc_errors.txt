@@ -1,0 +1,2 @@
+app/history/page.tsx(302,48): error TS2559: Type 'string' has no properties in common with type 'Properties<string | number, string & {}>'.
+app/history/page.tsx(401,101): error TS2559: Type 'string' has no properties in common with type 'Properties<string | number, string & {}>'.
