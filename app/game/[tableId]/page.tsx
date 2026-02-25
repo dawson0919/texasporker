@@ -42,7 +42,7 @@ const HAND_NAME_MAP: Record<string, string> = {
 };
 
 const DEALER_POOL = [
-    { id: '5', name: 'Elena', style: '極致奢華', desc: '傳奇荷官 • 尊享體驗', image: '/dealers/dealer-new.png?v=3.0' },
+    { id: '5', name: 'Elena', style: '極致奢華', desc: '傳奇荷官 • 尊享體驗', image: '/dealers/dealer-v3.png' },
 ];
 
 export default function MultiplayerGamePage() {
@@ -539,7 +539,7 @@ export default function MultiplayerGamePage() {
                         </div>
                         {/* Dealer image */}
                         <div className="relative h-full aspect-[3/4] md:aspect-[4/5]">
-                            <img src={`${dealer.image}?v=${Date.now()}`} alt={dealer.name} className="h-full w-full object-cover object-top" />
+                            <img src={dealer.image} alt={dealer.name} className="h-full w-full object-cover object-top" />
                         </div>
                         {/* Dealer message bubble */}
                         {dealerMessage && (
