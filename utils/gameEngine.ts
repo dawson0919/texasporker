@@ -86,15 +86,30 @@ export function makeAiDecision(
         handStrength = Math.min(handStrength, 1.0);
     }
 
-    const randomFactor = (Math.random() - 0.5) * 0.3;
-    const adjusted = Math.max(0, Math.min(1, handStrength + randomFactor));
     const isPreflop = communityCards.length === 0;
 
+    // Potentially boost hand strength slightly preflop to encourage more "playable" hands
+    let adjustedHandStrength = handStrength;
+    if (isPreflop) {
+        adjustedHandStrength = Math.min(1.0, handStrength + 0.15); // Preflop optimism
+    }
+
+    const randomFactor = (Math.random() - 0.5) * 0.3;
+    const adjusted = Math.max(0, Math.min(1, adjustedHandStrength + randomFactor));
+
     // AI is more willing to gamble preflop or if bluffing
-    const bluffThreshold = isPreflop ? 0.15 : 0.08;
+    const bluffThreshold = isPreflop ? 0.25 : 0.08;
     const bluff = Math.random() < bluffThreshold;
 
-    if (adjusted >= (isPreflop ? 0.6 : 0.65) || bluff) {
+    // 1. Mandatory Call Check (Preflop tiny bets)
+    // If it's preflop and cost to call is <= 1BB, AI calls 95% of the time regardless of logic
+    if (isPreflop && callCost <= BIG_BLIND && Math.random() < 0.95) {
+        if (canCheck) return { action: 'check' };
+        if (callCost >= seat.chipBalance) return { action: 'all-in' };
+        return { action: 'call' };
+    }
+
+    if (adjusted >= (isPreflop ? 0.55 : 0.65) || bluff) {
         if (seat.chipBalance <= callCost) {
             return { action: 'all-in' };
         }
@@ -103,30 +118,19 @@ export function makeAiDecision(
         const raiseTotal = currentBet + Math.floor(BIG_BLIND * raiseMultiplier);
         const maxRaise = Math.min(raiseTotal, seat.chipBalance + seat.bet);
         return { action: 'raise', raiseAmount: maxRaise };
-    } else if (adjusted >= (isPreflop ? 0.2 : 0.3) || (canCheck && adjusted >= 0.1)) {
+    } else if (adjusted >= (isPreflop ? 0.15 : 0.3) || (canCheck && adjusted >= 0.1)) {
         if (canCheck) return { action: 'check' };
 
-        // Pot odds / commitment logic: 
-        // Preflop, AI should almost always call the BIG_BLIND if they've already put in SMALL_BLIND
-        // or if the cost to call is very small relative to their stack.
         const stackPortion = callCost / Math.max(1, seat.chipBalance);
         const potOdds = callCost / Math.max(1, potSize + callCost);
 
-        if (isPreflop && callCost <= BIG_BLIND) {
-            return { action: 'call' };
-        }
-
-        if (stackPortion <= 0.3 || adjusted > 0.45 || (potOdds < 0.2 && adjusted > 0.2)) {
+        if (stackPortion <= 0.4 || adjusted > 0.4 || (potOdds < 0.25 && adjusted > 0.15)) {
             if (callCost >= seat.chipBalance) return { action: 'all-in' };
             return { action: 'call' };
         }
         return { action: 'fold' };
     } else {
         if (canCheck) return { action: 'check' };
-        // Even with garbage, small chance to stay in preflop for a cheap call
-        if (isPreflop && callCost <= BIG_BLIND && Math.random() < 0.3) {
-            return { action: 'call' };
-        }
         return { action: 'fold' };
     }
 }
