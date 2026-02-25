@@ -532,15 +532,16 @@ export default function MultiplayerGamePage() {
                     {/* Poker Table Area */}
                     <div className="flex-1 relative flex items-center justify-center p-4 z-10">
                         <div className="relative w-full max-w-5xl aspect-[1.8/1] md:aspect-[2.2/1] bg-[#35654d] rounded-[80px] md:rounded-[180px] border-[8px] md:border-[16px] border-[#3e2723] shadow-[0_0_60px_rgba(0,0,0,0.8),inset_0_0_40px_rgba(0,0,0,0.6)] flex items-center justify-center felt-texture ring-1 ring-white/5 wood-texture mt-4 md:mt-8">
-                            {/* Dealer Visual - Sitting at the table rim */}
-                            <div className="absolute -top-[5%] left-1/2 -translate-x-1/2 w-[120px] md:w-[240px] aspect-square flex items-end justify-center z-20 pointer-events-none transform -translate-y-[30%] md:-translate-y-[35%]">
-                                <div className="relative w-full h-full bg-no-repeat transition-all duration-700 drop-shadow-[0_10px_25px_rgba(0,0,0,0.8)]" style={{ backgroundImage: `url('${dealer.image}?v=${Date.now()}')`, backgroundSize: 'contain', backgroundPosition: 'center bottom' }}>
-                                    {dealerMessage && (
-                                        <div className="absolute top-0 left-[80%] bg-surface-dark/95 border border-primary/40 text-white px-3 py-1.5 rounded-2xl rounded-bl-sm font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)] z-50 backdrop-blur text-[10px] md:text-sm whitespace-nowrap animate-bounce-subtle">
-                                            {dealerMessage}
-                                        </div>
-                                    )}
+                            {/* Dealer Visual - Sitting at the table rim dealing cards */}
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-[55%] md:-translate-y-[52%] w-[160px] md:w-[320px] z-20 pointer-events-none">
+                                <div className="relative w-full aspect-square overflow-hidden rounded-b-2xl">
+                                    <img src={`${dealer.image}?v=${Date.now()}`} alt={dealer.name} className="w-full h-full object-cover object-top drop-shadow-[0_10px_30px_rgba(0,0,0,0.9)]" />
                                 </div>
+                                {dealerMessage && (
+                                    <div className="absolute top-2 left-[85%] bg-surface-dark/95 border border-primary/40 text-white px-3 py-1.5 rounded-2xl rounded-bl-sm font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)] z-50 backdrop-blur text-[10px] md:text-sm whitespace-nowrap animate-bounce-subtle">
+                                        {dealerMessage}
+                                    </div>
+                                )}
                             </div>
 
                             <div className="absolute inset-4 rounded-[160px] border border-yellow-400/10 pointer-events-none"></div>
