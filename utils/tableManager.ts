@@ -53,13 +53,14 @@ export async function assignSeat(
             .select('seat_index, player_type')
             .eq('table_id', table.id);
 
-        const realCount = (players || []).filter(p => p.player_type === 'real').length;
-        const totalCount = (players || []).length;
+        const validPlayers = (players || []).filter(p => p.seat_index < MAX_SEATS);
+        const realCount = validPlayers.filter(p => p.player_type === 'real').length;
 
         // Table has room (either empty seat or AI to replace)
         if (realCount < MAX_SEATS) {
             // Find a seat: prefer empty seat, then replace AI
-            const occupied = new Set((players || []).map(p => p.seat_index));
+            const gs: PublicGameState = table.game_state;
+            const occupied = new Set(validPlayers.map(p => p.seat_index));
             let targetSeat = -1;
 
             // Try empty seat first
@@ -98,6 +99,37 @@ export async function assignSeat(
                             .eq('id', table.id);
                     }
                 }
+            }
+
+            // NEW: If no seat found, but realCount < MAX_SEATS, there must be invalid indices blocking
+            // OR if there's a "ghost" seat index in the DB that is null in gameState.seats
+            if (targetSeat < 0) {
+                for (let i = 0; i < MAX_SEATS; i++) {
+                    const isOccupiedInDB = occupied.has(i);
+                    const isOccupiedInGS = gs.seats[i] !== null;
+
+                    // If DB says occupied but GS says empty, it's a ghost seat
+                    if (isOccupiedInDB && !isOccupiedInGS) {
+                        targetSeat = i;
+                        // Clean up the ghost record
+                        await supabase
+                            .from('table_players')
+                            .delete()
+                            .eq('table_id', table.id)
+                            .eq('seat_index', targetSeat);
+                        break;
+                    }
+                }
+            }
+
+            // Still no seat? Clean up indices >= MAX_SEATS that might be polluting the count
+            const overflowPlayers = (players || []).filter(p => p.seat_index >= MAX_SEATS);
+            if (overflowPlayers.length > 0) {
+                await supabase
+                    .from('table_players')
+                    .delete()
+                    .eq('table_id', table.id)
+                    .in('seat_index', overflowPlayers.map(p => p.seat_index));
             }
 
             if (targetSeat >= 0) {

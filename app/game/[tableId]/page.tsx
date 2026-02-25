@@ -99,6 +99,19 @@ export default function MultiplayerGamePage() {
         };
         fetchMyCards();
 
+        // Fetch global balance for header
+        const fetchGlobalBalance = async () => {
+            try {
+                const res = await fetch('/api/user/balance');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.balance !== undefined) setPlayerBalance(data.balance);
+                }
+            } catch (err) {
+                console.error('Failed to fetch balance:', err);
+            }
+        };
+
         // Subscribe to Realtime
         const channel = supabase
             .channel(`table:${tableId}`)
@@ -108,9 +121,16 @@ export default function MultiplayerGamePage() {
                 (payload) => {
                     const newState = payload.new.game_state as PublicGameState;
                     handleStateUpdate(newState);
+
+                    // Refresh global balance when a hand ends or is waiting
+                    if (newState.stage === 'WAITING' || newState.stage === 'SHOWDOWN') {
+                        fetchGlobalBalance();
+                    }
                 }
             )
             .subscribe();
+
+        fetchGlobalBalance();
 
         return () => {
             supabase.removeChannel(channel);
