@@ -42,13 +42,8 @@ const HAND_NAME_MAP: Record<string, string> = {
 };
 
 const DEALER_POOL = [
-    { id: '1', name: 'Elena', style: '巴西風情', desc: '首席荷官 • 熱情活力', image: '/dealers/dealer-new.png' },
-    { id: '2', name: 'Elena', style: '俄式優雅', desc: '明星荷官 • 冷豔高貴', image: '/dealers/dealer-new.png' },
-    { id: '3', name: 'Elena', style: '法式魅力', desc: '王牌荷官 • 人氣最高', image: '/dealers/dealer-new.png' },
-    { id: '4', name: 'Elena', style: '泰式風華', desc: '專業荷官 • 傳統融合', image: '/dealers/dealer-new.png' },
     { id: '5', name: 'Elena', style: '極致奢華', desc: '傳奇荷官 • 尊享體驗', image: '/dealers/dealer-new.png' },
 ];
-console.log("GRAVITY CLAW: v2.3-FORCED-ELENA LOADED");
 
 export default function MultiplayerGamePage() {
     const { signOut } = useClerk();
@@ -76,8 +71,8 @@ export default function MultiplayerGamePage() {
     const prevStateRef = useRef<PublicGameState | null>(null);
     const hasStartedFirstHand = useRef(false);
 
-    // v2.1 - Forced New Dealer & Fixes
-    const [dealer] = useState(DEALER_POOL[4]); // Force Elena (New Dealer)
+    // v2.4 - Elena Only & Asset Sync
+    const [dealer] = useState(DEALER_POOL[0]);
 
     useEffect(() => { soundEnabledRef.current = soundEnabled; }, [soundEnabled]);
 
@@ -461,7 +456,7 @@ export default function MultiplayerGamePage() {
                         <h2 className="text-accent-gold-light text-base md:text-xl font-serif font-bold leading-tight tracking-wide">多人德州撲克</h2>
                         <div className="flex items-center gap-2">
                             <span className="text-[8px] md:text-[10px] text-gray-400 uppercase tracking-widest hidden sm:block">牌桌 #{gameState.handCount}</span>
-                            <span className="text-white bg-red-600 text-[9px] font-black px-1.5 py-0.5 rounded animate-pulse shadow-[0_0_10px_rgba(220,38,38,0.5)]">v2.3 DEPLOYMENT VERIFIED</span>
+                            <span className="text-white bg-blue-600 text-[9px] font-black px-1.5 py-0.5 rounded animate-pulse shadow-[0_0_10px_rgba(37,99,235,0.5)]">v2.4-FINAL-ASSET-SYNC</span>
                         </div>
                     </div>
                 </div>
