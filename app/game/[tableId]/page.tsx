@@ -125,6 +125,7 @@ export default function MultiplayerGamePage() {
                 console.error('Failed to fetch balance:', err);
             }
         };
+        fetchGlobalBalance();
 
         // Subscribe to Realtime
         const channel = supabase
@@ -136,7 +137,6 @@ export default function MultiplayerGamePage() {
                     const newState = payload.new.game_state as PublicGameState;
                     handleStateUpdate(newState);
 
-                    // Refresh global balance when a hand ends or is waiting
                     if (newState.stage === 'WAITING' || newState.stage === 'SHOWDOWN') {
                         fetchGlobalBalance();
                     }
@@ -144,56 +144,22 @@ export default function MultiplayerGamePage() {
             )
             .subscribe();
 
-        fetchGlobalBalance();
+        // Heartbeat to ensure AI fill triggers
+        const heartbeat = setInterval(async () => {
+            await fetch('/api/multiplayer/fill-ai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tableId })
+            });
+        }, 10000);
 
         return () => {
             supabase.removeChannel(channel);
+            clearInterval(heartbeat);
         };
-    }, [tableId]);
+    }, [tableId, handleStateUpdate]);
 
-    // Handle state updates with sound effects
-    const handleStateUpdate = useCallback((newState: PublicGameState) => {
-        const prev = prevStateRef.current;
-        setGameState(newState);
-        prevStateRef.current = newState;
-
-        // Play sounds based on state changes
-        if (prev) {
-            if (!prev.isHandInProgress && newState.isHandInProgress) {
-                playSound('blind');
-                setTimeout(() => playSound('deal'), 300);
-                // Fetch new hole cards
-                fetch(`/api/multiplayer/my-cards?tableId=${tableId}`)
-                    .then(r => r.json())
-                    .then(d => { if (d.holeCards) setMyHoleCards(d.holeCards); });
-            }
-            if (prev.stage !== newState.stage && newState.stage !== 'SHOWDOWN' && newState.stage !== 'PREFLOP') {
-                playSound('newStage');
-            }
-            if (newState.stage === 'SHOWDOWN' && prev.stage !== 'SHOWDOWN') {
-                playSound('win');
-                // Show win animation
-                const winner = newState.seats.find(s => s?.isWinner);
-                if (winner) {
-                    setWinAnimation({
-                        active: true,
-                        winnerSeatIndex: winner.seatIndex,
-                        winnerName: winner.displayName,
-                        potAmount: newState.potSize,
-                        handName: winner.handName,
-                    });
-                    setTimeout(() => setWinAnimation(null), 4000); // Extended to 4s for better readability
-                }
-            }
-            // Check if it became our turn
-            if (mySeatIndex >= 0 && newState.currentSeatIndex === mySeatIndex && newState.isHandInProgress) {
-                playSound('yourTurn');
-            }
-        }
-
-    }, [mySeatIndex, playSound, tableId]);
-
-    // Keep playerBalance in sync with game state (fixes stale closure in Realtime subscription)
+    // Keep playerBalance in sync with game state
     useEffect(() => {
         if (gameState && mySeatIndex >= 0) {
             const seat = gameState.seats[mySeatIndex];
@@ -474,13 +440,13 @@ export default function MultiplayerGamePage() {
                     </div>
 
                     {/* Poker Table Area */}
-                    <div className="flex-1 relative flex items-center justify-center p-2 z-10 overflow-hidden">
-                        <div className="relative w-full max-w-5xl aspect-[1.8/1] md:aspect-[2.2/1] bg-[#35654d] rounded-[80px] md:rounded-[180px] border-[8px] md:border-[16px] border-[#3e2723] shadow-[0_0_60px_rgba(0,0,0,0.8),inset_0_0_40px_rgba(0,0,0,0.6)] flex items-center justify-center felt-texture ring-1 ring-white/5 wood-texture mt-12">
-                            {/* Dealer Visual - Now sitting on the top edge */}
-                            <div className="absolute -top-[15%] md:-top-[25%] left-1/2 -translate-x-1/2 w-[120px] md:w-[220px] h-[30%] md:h-[40%] flex items-end justify-center z-20 pointer-events-none">
-                                <div className="relative w-full h-full bg-no-repeat transition-all duration-700" style={{ backgroundImage: `url('${dealer.image}')`, backgroundSize: 'contain', backgroundPosition: 'center bottom' }}>
+                    <div className="flex-1 relative flex items-center justify-center p-4 z-10">
+                        <div className="relative w-full max-w-5xl aspect-[1.8/1] md:aspect-[2.2/1] bg-[#35654d] rounded-[80px] md:rounded-[180px] border-[8px] md:border-[16px] border-[#3e2723] shadow-[0_0_60px_rgba(0,0,0,0.8),inset_0_0_40px_rgba(0,0,0,0.6)] flex items-center justify-center felt-texture ring-1 ring-white/5 wood-texture mt-4 md:mt-8">
+                            {/* Dealer Visual - Precision leaning on the rim */}
+                            <div className="absolute -top-[10%] left-1/2 -translate-x-1/2 w-[150px] md:w-[280px] aspect-square flex items-end justify-center z-20 pointer-events-none transform -translate-y-[75%] md:-translate-y-[80%]">
+                                <div className="relative w-full h-full bg-no-repeat transition-all duration-700 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]" style={{ backgroundImage: `url('${dealer.image}')`, backgroundSize: 'contain', backgroundPosition: 'center bottom' }}>
                                     {dealerMessage && (
-                                        <div className="absolute top-[-5%] left-[105%] bg-surface-dark/95 border border-primary/40 text-white px-3 py-1.5 rounded-2xl rounded-bl-sm font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)] z-50 backdrop-blur text-[10px] md:text-sm whitespace-nowrap animate-bounce-subtle">
+                                        <div className="absolute top-0 left-[80%] bg-surface-dark/95 border border-primary/40 text-white px-3 py-1.5 rounded-2xl rounded-bl-sm font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)] z-50 backdrop-blur text-[10px] md:text-sm whitespace-nowrap animate-bounce-subtle">
                                             {dealerMessage}
                                         </div>
                                     )}
@@ -530,30 +496,24 @@ export default function MultiplayerGamePage() {
 
                             {/* Win Animation Overlay */}
                             {winAnimation?.active && (
-                                <div className="absolute inset-0 flex items-center justify-center z-50 pointer-events-none animate-in fade-in zoom-in duration-500">
-                                    <div className="bg-gradient-to-b from-black/90 to-surface-dark border-2 border-accent-gold/50 rounded-2xl p-6 md:p-8 flex flex-col items-center shadow-[0_0_50px_rgba(212,175,55,0.4)] backdrop-blur-md">
-                                        <div className="text-accent-gold text-sm md:text-base font-bold tracking-widest uppercase mb-1">WINNER</div>
-                                        <div className="text-white text-2xl md:text-4xl font-serif font-bold mb-4 drop-shadow-md">{winAnimation.winnerName}</div>
+                                <div className="absolute inset-0 flex items-center justify-center z-[100] pointer-events-none">
+                                    <div className="bg-gradient-to-b from-black/95 to-[#1a1a1a] border-2 border-accent-gold rounded-3xl p-8 md:p-12 flex flex-col items-center shadow-[0_0_100px_rgba(212,175,55,0.6)] backdrop-blur-xl animate-in zoom-in duration-500 ring-4 ring-accent-gold/20">
+                                        <div className="bg-accent-gold text-black px-4 py-1 rounded-full text-[10px] md:text-sm font-black tracking-[0.2em] mb-3 shadow-[0_0_20px_rgba(212,175,55,0.5)]">CONGRATULATIONS</div>
+                                        <div className="text-white text-3xl md:text-6xl font-serif font-black mb-6 drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] tracking-tight">{winAnimation.winnerName}</div>
 
-                                        <div className="flex items-center gap-3 mb-4">
-                                            <div className="h-px w-8 md:w-16 bg-accent-gold/30"></div>
-                                            <div className="bg-accent-gold/10 px-4 py-1.5 rounded-full border border-accent-gold/40">
-                                                <div className="text-accent-gold-light text-base md:text-2xl font-bold whitespace-nowrap">
+                                        <div className="flex items-center gap-4 md:gap-8 mb-8">
+                                            <div className="h-0.5 w-12 md:w-24 bg-gradient-to-r from-transparent to-accent-gold"></div>
+                                            <div className="bg-accent-gold/10 px-6 py-2 md:py-3 rounded-2xl border border-accent-gold/60 shadow-[inset_0_0_20px_rgba(212,175,55,0.2)]">
+                                                <div className="text-accent-gold-light text-xl md:text-4xl font-black whitespace-nowrap drop-shadow-lg">
                                                     {winAnimation.handName ? (HAND_NAME_MAP[winAnimation.handName] || winAnimation.handName) : '勝出'}
                                                 </div>
                                             </div>
-                                            <div className="h-px w-8 md:w-16 bg-accent-gold/30"></div>
+                                            <div className="h-0.5 w-12 md:w-24 bg-gradient-to-l from-transparent to-accent-gold"></div>
                                         </div>
 
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-6 h-6 rounded-full bg-yellow-500 flex items-center justify-center text-black text-xs font-black shadow-inner">$</div>
-                                            <div className="text-yellow-400 text-xl md:text-3xl font-mono font-black">+{winAnimation.potAmount.toLocaleString()}</div>
-                                        </div>
-
-                                        <div className="mt-4 flex gap-1 animate-bounce">
-                                            {Array(3).fill(0).map((_, i) => (
-                                                <div key={i} className="w-2 h-2 rounded-full bg-accent-gold/60"></div>
-                                            ))}
+                                        <div className="flex items-center gap-3 bg-black/40 px-6 py-3 rounded-2xl border border-white/5 shadow-inner">
+                                            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-b from-yellow-300 to-yellow-600 flex items-center justify-center text-black text-sm md:text-xl font-black shadow-lg">$</div>
+                                            <div className="text-yellow-400 text-3xl md:text-5xl font-mono font-black tracking-tighter shadow-yellow-500/20 drop-shadow-md">+{winAnimation.potAmount.toLocaleString()}</div>
                                         </div>
                                     </div>
                                 </div>

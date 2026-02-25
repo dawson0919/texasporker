@@ -286,18 +286,26 @@ export async function fillTableWithAI(tableId: string): Promise<PublicGameState 
 
     if (!table) return null;
 
-    // Check deadline
+    // 1. Check if deadline reached
     if (table.fill_deadline && new Date(table.fill_deadline) > new Date()) {
-        return table.game_state; // Not yet time to fill
+        return table.game_state;
     }
 
-    const { data: existingPlayers } = await supabase
+    // 2. Count real players - if 0, table is likely abandoned
+    const { data: players } = await supabase
         .from('table_players')
-        .select('seat_index')
+        .select('*')
         .eq('table_id', tableId);
 
-    const occupied = new Set((existingPlayers || []).map(p => p.seat_index));
-    if (occupied.size >= MAX_SEATS) return table.game_state; // Already full
+    const existingPlayers = players || [];
+    const realPlayers = existingPlayers.filter(p => p.player_type === 'real');
+
+    // If no real players, don't fill with AI
+    if (realPlayers.length === 0) return table.game_state;
+
+    // 3. Identify empty seats
+    const occupied = new Set(existingPlayers.map(p => p.seat_index));
+    if (occupied.size >= MAX_SEATS) return table.game_state;
 
     const gameState: PublicGameState = table.game_state;
     const newSeats = [...gameState.seats];
@@ -308,12 +316,14 @@ export async function fillTableWithAI(tableId: string): Promise<PublicGameState 
     const availableNames = AI_NAMES.filter(n => !usedNames.has(n));
     let nameIdx = 0;
 
+    // 4. Fill empty seats in DB and local GameState
     for (let i = 0; i < MAX_SEATS; i++) {
         if (!occupied.has(i)) {
             const aiName = availableNames[nameIdx % availableNames.length] || `AI_${i}`;
             nameIdx++;
             const aiBalance = 2000 + Math.floor(Math.random() * 8000);
 
+            // Insert into DB
             await supabase.from('table_players').insert({
                 table_id: tableId,
                 seat_index: i,
@@ -323,10 +333,11 @@ export async function fillTableWithAI(tableId: string): Promise<PublicGameState 
                 chip_balance: aiBalance,
             });
 
+            // Update local seats array
             newSeats[i] = {
                 seatIndex: i,
                 playerType: 'ai',
-                playerId: '',
+                playerId: '', // will be reconciled by client if needed
                 displayName: aiName,
                 avatarUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(aiName)}&background=random`,
                 chipBalance: aiBalance,
@@ -342,11 +353,12 @@ export async function fillTableWithAI(tableId: string): Promise<PublicGameState 
         seats: newSeats,
     };
 
+    // 5. Update Table Status
     await supabase
         .from('poker_tables')
         .update({
             game_state: updatedState,
-            status: 'playing',
+            status: 'playing', // Transition from waiting to playing
         })
         .eq('id', tableId);
 
