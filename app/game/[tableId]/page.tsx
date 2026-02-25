@@ -472,38 +472,38 @@ export default function MultiplayerGamePage() {
                         <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black"></div>
                     </div>
 
-                    {/* Dealer Area */}
-                    <div className="relative z-30 w-full h-[10vh] md:h-[14vh] bg-black shadow-2xl border-b border-accent-gold/20 shrink-0">
-                        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60"></div>
-                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-full flex items-end justify-center z-10 pointer-events-none">
-                            <div className="relative w-[80px] md:w-[140px] h-[110%] bg-no-repeat transition-all duration-700 rounded-t-xl" style={{ backgroundImage: `url('${dealer.image}')`, backgroundSize: '180%', backgroundPosition: 'center 12%' }}>
-                                <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none"></div>
+                    {/* Poker Table Area */}
+                    <div className="flex-1 relative flex items-center justify-center p-2 z-10 overflow-hidden">
+                        {/* Dealer Visual - Now integrated on the table edge */}
+                        <div className="absolute top-[5%] md:top-[10%] left-1/2 -translate-x-1/2 w-full max-w-4xl h-[12vh] md:h-[18vh] flex items-end justify-center z-20 pointer-events-none">
+                            <div className="relative w-[100px] md:w-[180px] h-full bg-no-repeat transition-all duration-700" style={{ backgroundImage: `url('${dealer.image}')`, backgroundSize: 'contain', backgroundPosition: 'center bottom' }}>
+                                <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#35654d]/40 to-transparent pointer-events-none"></div>
                                 {dealerMessage && (
-                                    <div className="absolute top-[10%] right-[-30%] bg-surface-dark/95 border border-primary/40 text-white px-3 py-1.5 rounded-2xl rounded-bl-sm font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)] z-50 backdrop-blur text-[10px] md:text-xs whitespace-nowrap">
+                                    <div className="absolute top-[-10%] right-[-40%] md:right-[-30%] bg-surface-dark/95 border border-primary/40 text-white px-3 py-1.5 rounded-2xl rounded-bl-sm font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)] z-50 backdrop-blur text-[10px] md:text-sm whitespace-nowrap animate-bounce-subtle">
                                         {dealerMessage}
                                     </div>
                                 )}
                             </div>
                         </div>
-                        <div className="absolute top-2 right-3 flex flex-col items-end gap-1 z-20">
-                            <div className="bg-black/60 backdrop-blur-md px-3 py-1 rounded border-l-2 border-accent-gold">
-                                <span className="text-white font-serif font-bold text-xs md:text-sm block leading-none">多人牌桌</span>
-                                <span className="text-accent-gold text-[9px] md:text-[10px] font-mono uppercase tracking-wider">{SMALL_BLIND}/{BIG_BLIND} • {gameState.seats.slice(0, MAX_SEATS).filter(s => s !== null).length}人</span>
-                            </div>
-                        </div>
-                    </div>
 
-                    {/* Poker Table */}
-                    <div className="flex-1 relative flex items-center justify-center p-2 z-10 overflow-hidden -mt-8 md:-mt-12">
-                        <div className="relative w-full max-w-5xl aspect-[1.8/1] md:aspect-[2.2/1] bg-[#35654d] rounded-[80px] md:rounded-[180px] border-[8px] md:border-[16px] border-[#3e2723] shadow-[0_0_60px_rgba(0,0,0,0.8),inset_0_0_40px_rgba(0,0,0,0.6)] flex items-center justify-center felt-texture ring-1 ring-white/5 wood-texture">
+                        <div className="relative w-full max-w-5xl aspect-[1.8/1] md:aspect-[2.2/1] bg-[#35654d] rounded-[80px] md:rounded-[180px] border-[8px] md:border-[16px] border-[#3e2723] shadow-[0_0_60px_rgba(0,0,0,0.8),inset_0_0_40px_rgba(0,0,0,0.6)] flex items-center justify-center felt-texture ring-1 ring-white/5 wood-texture mt-8 md:mt-12">
                             <div className="absolute inset-4 rounded-[160px] border border-yellow-400/10 pointer-events-none"></div>
+
+                            {/* Table Info Badge */}
+                            <div className="absolute -top-10 md:-top-16 right-4 md:right-8 flex flex-col items-end gap-1 z-20">
+                                <div className="bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg border-l-4 border-accent-gold shadow-xl">
+                                    <span className="text-white font-serif font-bold text-xs md:text-base block leading-tight">多人競技場</span>
+                                    <span className="text-accent-gold text-[10px] md:text-xs font-mono font-bold uppercase tracking-wider">{SMALL_BLIND}/{BIG_BLIND} • {gameState.seats.slice(0, MAX_SEATS).filter(s => s !== null).length}人</span>
+                                </div>
+                            </div>
+
                             <div className="absolute opacity-5 pointer-events-none select-none flex flex-col items-center justify-center transform scale-y-75">
                                 <span className="text-4xl md:text-6xl font-serif font-bold text-black tracking-[0.5em] mb-2">ROYAL</span>
                                 <span className="text-2xl md:text-4xl font-serif text-black tracking-[0.3em]">CASINO</span>
                             </div>
 
                             {/* Community Cards */}
-                            <div className="flex gap-1 md:gap-2.5 items-center justify-center mb-6 md:mb-10 z-20 h-14 md:h-22">
+                            <div className="flex gap-1 md:gap-2.5 items-center justify-center mb-6 md:mb-10 z-30 h-14 md:h-22">
                                 {communityCards.map((card, idx) => (
                                     <div key={idx} className="w-9 h-14 md:w-14 md:h-22 bg-white rounded shadow-card flex flex-col justify-between p-0.5 md:p-1.5 border border-gray-300 animate-fade-in-up">
                                         <div className={`${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} font-card font-bold text-[10px] md:text-base leading-none`}>{card.rank}</div>
