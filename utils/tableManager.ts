@@ -43,6 +43,9 @@ export async function assignSeat(
     }
 
     // Proactive Cleanup: Remove players who joined > 2 hours ago (ghost prevention)
+    // Use raw SQL for safer relative time comparison across environments
+    await supabase.rpc('delete_stale_multiplayer_players');
+    // Fallback if RPC fails: simpler JS logic
     const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
     await supabase.from('table_players')
         .delete()
