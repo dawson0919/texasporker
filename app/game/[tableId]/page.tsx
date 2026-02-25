@@ -38,6 +38,7 @@ const HAND_NAME_MAP: Record<string, string> = {
     'Two Pair': '兩對',
     'Pair': '對子',
     'High Card': '高牌',
+    'Fold Win': '棄牌獲勝',
 };
 
 const DEALER_POOL = [
@@ -474,19 +475,18 @@ export default function MultiplayerGamePage() {
 
                     {/* Poker Table Area */}
                     <div className="flex-1 relative flex items-center justify-center p-2 z-10 overflow-hidden">
-                        {/* Dealer Visual - Now integrated on the table edge */}
-                        <div className="absolute top-[5%] md:top-[10%] left-1/2 -translate-x-1/2 w-full max-w-4xl h-[12vh] md:h-[18vh] flex items-end justify-center z-20 pointer-events-none">
-                            <div className="relative w-[100px] md:w-[180px] h-full bg-no-repeat transition-all duration-700" style={{ backgroundImage: `url('${dealer.image}')`, backgroundSize: 'contain', backgroundPosition: 'center bottom' }}>
-                                <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#35654d]/40 to-transparent pointer-events-none"></div>
-                                {dealerMessage && (
-                                    <div className="absolute top-[-10%] right-[-40%] md:right-[-30%] bg-surface-dark/95 border border-primary/40 text-white px-3 py-1.5 rounded-2xl rounded-bl-sm font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)] z-50 backdrop-blur text-[10px] md:text-sm whitespace-nowrap animate-bounce-subtle">
-                                        {dealerMessage}
-                                    </div>
-                                )}
+                        <div className="relative w-full max-w-5xl aspect-[1.8/1] md:aspect-[2.2/1] bg-[#35654d] rounded-[80px] md:rounded-[180px] border-[8px] md:border-[16px] border-[#3e2723] shadow-[0_0_60px_rgba(0,0,0,0.8),inset_0_0_40px_rgba(0,0,0,0.6)] flex items-center justify-center felt-texture ring-1 ring-white/5 wood-texture mt-12">
+                            {/* Dealer Visual - Now sitting on the top edge */}
+                            <div className="absolute -top-[15%] md:-top-[25%] left-1/2 -translate-x-1/2 w-[120px] md:w-[220px] h-[30%] md:h-[40%] flex items-end justify-center z-20 pointer-events-none">
+                                <div className="relative w-full h-full bg-no-repeat transition-all duration-700" style={{ backgroundImage: `url('${dealer.image}')`, backgroundSize: 'contain', backgroundPosition: 'center bottom' }}>
+                                    {dealerMessage && (
+                                        <div className="absolute top-[-5%] left-[105%] bg-surface-dark/95 border border-primary/40 text-white px-3 py-1.5 rounded-2xl rounded-bl-sm font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)] z-50 backdrop-blur text-[10px] md:text-sm whitespace-nowrap animate-bounce-subtle">
+                                            {dealerMessage}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="relative w-full max-w-5xl aspect-[1.8/1] md:aspect-[2.2/1] bg-[#35654d] rounded-[80px] md:rounded-[180px] border-[8px] md:border-[16px] border-[#3e2723] shadow-[0_0_60px_rgba(0,0,0,0.8),inset_0_0_40px_rgba(0,0,0,0.6)] flex items-center justify-center felt-texture ring-1 ring-white/5 wood-texture mt-8 md:mt-12">
                             <div className="absolute inset-4 rounded-[160px] border border-yellow-400/10 pointer-events-none"></div>
 
                             {/* Table Info Badge */}

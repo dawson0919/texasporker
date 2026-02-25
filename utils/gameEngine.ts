@@ -504,7 +504,7 @@ export function runShowdown(
             ...seat,
             chipBalance: seat.chipBalance + winAmount,
             isWinner,
-            handName: isWinner ? (overallHandName || handNames[idx]) : handNames[idx],
+            handName: isWinner ? (overallHandName || handNames[idx] || '高牌') : (handNames[idx] || '高牌'),
             revealedCards: activePlayers.some(p => p.seatIndex === idx)
                 ? holeCardsBySeat[idx]
                 : undefined,
@@ -541,6 +541,7 @@ export function handleLastPlayerWin(state: PublicGameState): PublicGameState {
     if (winner) {
         winner.chipBalance += finalPot;
         winner.isWinner = true;
+        winner.handName = 'Fold Win';
     }
 
     return {
