@@ -508,24 +508,24 @@ export default function MultiplayerGamePage() {
                                     return (
                                         <div key={`seat-${idx}`} className={posClass}>
                                             {/* Hole cards */}
-                                            <div className="flex gap-1 md:gap-1.5 -mb-4 md:-mb-6 z-10">
+                                            <div className="flex gap-0.5 md:gap-1.5 -mb-2 md:-mb-6 z-10">
                                                 {myHoleCards.length > 0 && gameState.isHandInProgress ? myHoleCards.map((card, ci) => (
-                                                    <div key={ci} className={`w-12 h-18 md:w-18 md:h-26 bg-white rounded-md shadow-[0_5px_15px_rgba(0,0,0,0.4)] flex flex-col justify-between p-1 md:p-1.5 border border-gray-300 ${ci === 0 ? '-rotate-6' : 'rotate-6'} transition-transform`}>
-                                                        <div className={`${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} font-card font-bold text-sm md:text-lg leading-none`}>{card.rank}</div>
-                                                        <div className={`self-center text-2xl md:text-4xl ${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} leading-none`}>{card.suit}</div>
-                                                        <div className={`${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} font-card font-bold text-sm md:text-lg leading-none self-end rotate-180`}>{card.rank}</div>
+                                                    <div key={ci} className={`w-8 h-12 md:w-18 md:h-26 bg-white rounded shadow-[0_3px_10px_rgba(0,0,0,0.4)] flex flex-col justify-between p-0.5 md:p-1.5 border border-gray-300 ${ci === 0 ? '-rotate-6' : 'rotate-6'} transition-transform`}>
+                                                        <div className={`${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} font-card font-bold text-[10px] md:text-lg leading-none`}>{card.rank}</div>
+                                                        <div className={`self-center text-base md:text-4xl ${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} leading-none`}>{card.suit}</div>
+                                                        <div className={`${card.suit === '♠' || card.suit === '♣' ? 'text-black' : 'text-red-600'} font-card font-bold text-[10px] md:text-lg leading-none self-end rotate-180`}>{card.rank}</div>
                                                     </div>
                                                 )) : seat.status === 'sitting-out' ? null : (
-                                                    <div className="flex gap-1">
-                                                        <div className="w-12 h-18 md:w-18 md:h-26 rounded-md card-pattern shadow-md -rotate-6"></div>
-                                                        <div className="w-12 h-18 md:w-18 md:h-26 rounded-md card-pattern shadow-md rotate-6"></div>
+                                                    <div className="flex gap-0.5">
+                                                        <div className="w-8 h-12 md:w-18 md:h-26 rounded card-pattern shadow-md -rotate-6"></div>
+                                                        <div className="w-8 h-12 md:w-18 md:h-26 rounded card-pattern shadow-md rotate-6"></div>
                                                     </div>
                                                 )}
                                             </div>
                                             {/* Avatar + info */}
-                                            <div className="relative z-20 mt-2 md:mt-4 flex flex-col items-center">
+                                            <div className="relative z-20 mt-1 md:mt-4 flex flex-col items-center">
                                                 <div className="relative">
-                                                    <div className={`w-14 h-14 md:w-20 md:h-20 rounded-full border-[3px] ${seat.isWinner ? 'border-yellow-400' : isCurrentTurn ? 'border-green-400 shadow-[0_0_25px_rgba(74,222,128,0.5)] animate-pulse' : 'border-accent-gold'} bg-gray-700 bg-cover bg-center shadow-lg`} style={{ backgroundImage: `url('${seat.avatarUrl || clerkUser?.imageUrl || ''}')` }}></div>
+                                                    <div className={`w-10 h-10 md:w-20 md:h-20 rounded-full border-2 md:border-[3px] ${seat.isWinner ? 'border-yellow-400' : isCurrentTurn ? 'border-green-400 shadow-[0_0_25px_rgba(74,222,128,0.5)] animate-pulse' : 'border-accent-gold'} bg-gray-700 bg-cover bg-center shadow-lg`} style={{ backgroundImage: `url('${seat.avatarUrl || clerkUser?.imageUrl || ''}')` }}></div>
                                                     {turnTimeLeft > 0 && isCurrentTurn && (
                                                         <svg className="absolute inset-[-4px] w-[84px] h-[84px] -rotate-90 pointer-events-none" viewBox="0 0 36 36">
                                                             <circle cx="18" cy="18" r="15.9155" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
