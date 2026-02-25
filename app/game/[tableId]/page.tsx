@@ -315,7 +315,7 @@ export default function MultiplayerGamePage() {
         if (lastTimeoutDeadlineRef.current === gameState.actionDeadline) return;
 
         const deadline = new Date(gameState.actionDeadline).getTime();
-        const delay = deadline - Date.now() + 5000; // 5s after deadline
+        const delay = deadline - Date.now() + 2000; // 2s after deadline
 
         const callTimeout = () => {
             lastTimeoutDeadlineRef.current = gameState.actionDeadline!;

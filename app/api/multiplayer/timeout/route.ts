@@ -38,7 +38,7 @@ export async function POST(req: Request) {
     }
 
     const deadline = new Date(state.actionDeadline).getTime();
-    const grace = 3000; // 3s grace period
+    const grace = 1000; // 1s grace period
     if (Date.now() < deadline + grace) {
         return NextResponse.json({ error: 'Deadline not yet expired' }, { status: 400 });
     }
