@@ -301,6 +301,10 @@ export default function MultiplayerGamePage() {
         };
     }, [gameState?.currentSeatIndex, gameState?.actionDeadline, mySeatIndex]);
 
+    // Store latest game state for the timeout loop to check without stale closures
+    const gameStateRef = useRef<PublicGameState | null>(null);
+    useEffect(() => { gameStateRef.current = gameState; }, [gameState]);
+
     // Opponent timeout watcher: if another player's deadline expires, force-fold them via API
     // Track which deadline we already triggered timeout for, to prevent spam
     const lastTimeoutDeadlineRef = useRef<string | null>(null);
@@ -311,26 +315,39 @@ export default function MultiplayerGamePage() {
         if (gameState.currentSeatIndex === mySeatIndex) return;
         if (gameState.currentSeatIndex < 0) return;
         if (!gameState.actionDeadline) return;
-        // Only call timeout once per unique deadline
-        if (lastTimeoutDeadlineRef.current === gameState.actionDeadline) return;
 
-        const deadline = new Date(gameState.actionDeadline).getTime();
-        const delay = deadline - Date.now() + 2000; // 2s after deadline
+        const targetDeadline = gameState.actionDeadline;
+        const deadline = new Date(targetDeadline).getTime();
+        const delay = Math.max(0, deadline - Date.now() + 2000); // 2s after deadline
 
-        const callTimeout = () => {
-            lastTimeoutDeadlineRef.current = gameState.actionDeadline!;
-            fetch('/api/multiplayer/timeout', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tableId }),
-            }).catch(() => {});
-        };
+        // Prevent multiple concurrent polling loops for the same deadline
+        if (lastTimeoutDeadlineRef.current === targetDeadline) return;
+        lastTimeoutDeadlineRef.current = targetDeadline;
 
-        if (delay <= 0) {
+        const timer = setTimeout(() => {
+            const callTimeout = () => {
+                // Stop polling if the turn advanced or game ended
+                if (gameStateRef.current?.actionDeadline !== targetDeadline) return;
+
+                fetch('/api/multiplayer/timeout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tableId }),
+                })
+                    .then(async res => {
+                        if (!res.ok) {
+                            // If it fails (e.g. server clock is behind, or network error), check again in 2 seconds
+                            setTimeout(callTimeout, 2000);
+                        }
+                    })
+                    .catch(() => {
+                        // Network failure, retry later
+                        setTimeout(callTimeout, 2000);
+                    });
+            };
             callTimeout();
-            return;
-        }
-        const timer = setTimeout(callTimeout, delay);
+        }, delay);
+
         return () => clearTimeout(timer);
     }, [gameState?.currentSeatIndex, gameState?.actionDeadline, gameState?.isHandInProgress, gameState?.stage, mySeatIndex, tableId]);
 
