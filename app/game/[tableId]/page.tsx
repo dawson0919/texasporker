@@ -537,14 +537,14 @@ export default function MultiplayerGamePage() {
 
                             <div className="absolute inset-4 rounded-[160px] border border-yellow-400/10 pointer-events-none"></div>
 
-                            {/* Dealer - absolute positioned at top center of table */}
-                            <div className="absolute -top-[100px] md:-top-[180px] left-1/2 -translate-x-1/2 z-20 pointer-events-none">
-                                <div className="relative h-[140px] md:h-[250px] aspect-[2/3]">
+                            {/* Dealer - positioned at top center, overlapping table edge */}
+                            <div className="absolute -top-[70px] md:-top-[110px] left-1/2 -translate-x-1/2 z-20 pointer-events-none">
+                                <div className="relative h-[130px] md:h-[220px] aspect-[2/3]">
                                     <img src={dealer.image} alt={dealer.name} className="h-full w-full object-contain object-bottom drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)]" />
                                 </div>
                                 {/* Dealer message bubble */}
                                 {dealerMessage && (
-                                    <div className="absolute top-0 md:top-2 left-[105%] bg-surface-dark/95 border border-primary/40 text-white px-3 py-1.5 rounded-2xl rounded-bl-sm font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)] backdrop-blur text-[10px] md:text-sm whitespace-nowrap animate-bounce-subtle pointer-events-auto">
+                                    <div className="absolute top-2 md:top-4 left-[105%] bg-surface-dark/95 border border-primary/40 text-white px-3 py-1.5 rounded-2xl rounded-bl-sm font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)] backdrop-blur text-[10px] md:text-sm whitespace-nowrap animate-bounce-subtle pointer-events-auto">
                                         {dealerMessage}
                                     </div>
                                 )}
