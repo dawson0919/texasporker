@@ -198,6 +198,17 @@ export default function MultiplayerGamePage() {
         };
     }, [tableId, handleStateUpdate]);
 
+    // Aggressive card fetch when hand starts
+    useEffect(() => {
+        if (gameState?.isHandInProgress && mySeatIndex >= 0) {
+            fetch(`/api/multiplayer/my-cards?tableId=${tableId}`)
+                .then(r => r.json())
+                .then(d => { if (d.holeCards) setMyHoleCards(d.holeCards); });
+        } else if (!gameState?.isHandInProgress) {
+            setMyHoleCards([]);
+        }
+    }, [gameState?.isHandInProgress, mySeatIndex, tableId]);
+
     // Keep playerBalance in sync with game state
     useEffect(() => {
         if (gameState && mySeatIndex >= 0) {
@@ -456,7 +467,7 @@ export default function MultiplayerGamePage() {
                         <h2 className="text-accent-gold-light text-base md:text-xl font-serif font-bold leading-tight tracking-wide">多人德州撲克</h2>
                         <div className="flex items-center gap-2">
                             <span className="text-[8px] md:text-[10px] text-gray-400 uppercase tracking-widest hidden sm:block">牌桌 #{gameState.handCount}</span>
-                            <span className="text-white bg-blue-600 text-[9px] font-black px-1.5 py-0.5 rounded animate-pulse shadow-[0_0_10px_rgba(37,99,235,0.5)]">v2.4-FINAL-ASSET-SYNC</span>
+                            <span className="text-white bg-blue-600 text-[9px] font-black px-1.5 py-0.5 rounded animate-pulse shadow-[0_0_10px_rgba(37,99,235,0.5)]">v2.5-FINAL-HOTFIX</span>
                         </div>
                     </div>
                 </div>
