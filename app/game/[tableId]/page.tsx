@@ -42,7 +42,7 @@ const HAND_NAME_MAP: Record<string, string> = {
 };
 
 const DEALER_POOL = [
-    { id: '5', name: 'Elena', style: '極致奢華', desc: '傳奇荷官 • 尊享體驗', image: '/dealers/dealer-v3.png' },
+    { id: '5', name: 'Elena', style: '極致奢華', desc: '傳奇荷官 • 尊享體驗', image: '/dealers/dealer-v4.png' },
 ];
 
 export default function MultiplayerGamePage() {
@@ -537,9 +537,9 @@ export default function MultiplayerGamePage() {
                             <div className="absolute top-4 right-[20%] w-12 h-12 md:w-20 md:h-20 rounded-full bg-blue-400/20 blur-2xl"></div>
                             <div className="absolute bottom-0 left-[40%] w-20 h-20 md:w-32 md:h-32 rounded-full bg-amber-400/15 blur-3xl"></div>
                         </div>
-                        {/* Dealer image - extends below the strip into the table */}
-                        <div className="relative h-[120%] md:h-[150%] aspect-[3/4] md:aspect-[4/5] z-30">
-                            <img src={dealer.image} alt={dealer.name} className="h-full w-full object-cover object-top drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]" />
+                        {/* Dealer image - transparent PNG extends below strip into table */}
+                        <div className="relative h-[140%] md:h-[180%] aspect-[3/4] z-30 mt-4 md:mt-6">
+                            <img src={dealer.image} alt={dealer.name} className="h-full w-full object-contain object-bottom drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]" />
                         </div>
                         {/* Dealer message bubble */}
                         {dealerMessage && (
