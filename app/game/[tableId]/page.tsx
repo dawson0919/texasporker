@@ -42,7 +42,7 @@ const HAND_NAME_MAP: Record<string, string> = {
 };
 
 const DEALER_POOL = [
-    { id: '5', name: 'Elena', style: '極致奢華', desc: '傳奇荷官 • 尊享體驗', image: '/dealers/dealer-new.png?v=2.5' },
+    { id: '5', name: 'Elena', style: '極致奢華', desc: '傳奇荷官 • 尊享體驗', image: '/dealers/dealer-new.png?v=3.0' },
 ];
 
 export default function MultiplayerGamePage() {
@@ -176,6 +176,18 @@ export default function MultiplayerGamePage() {
                     const newState = payload.new.game_state as PublicGameState;
                     handleStateUpdate(newState);
 
+                    // Re-fetch hole cards if hand is in progress but we have none
+                    if (newState.isHandInProgress && mySeatIndex >= 0) {
+                        setMyHoleCards(prev => {
+                            if (!prev || prev.length === 0) {
+                                fetch(`/api/multiplayer/my-cards?tableId=${tableId}`)
+                                    .then(r => r.json())
+                                    .then(d => { if (d.holeCards?.length > 0) setMyHoleCards(d.holeCards); });
+                            }
+                            return prev;
+                        });
+                    }
+
                     if (newState.stage === 'WAITING' || newState.stage === 'SHOWDOWN') {
                         fetchGlobalBalance();
                     }
@@ -198,15 +210,40 @@ export default function MultiplayerGamePage() {
         };
     }, [tableId, handleStateUpdate]);
 
-    // Aggressive card fetch when hand starts
+    // Aggressive card fetch when hand starts — with retry polling
     useEffect(() => {
-        if (gameState?.isHandInProgress && mySeatIndex >= 0) {
+        if (!gameState?.isHandInProgress) {
+            setMyHoleCards([]);
+            return;
+        }
+        if (mySeatIndex < 0) return;
+
+        let cancelled = false;
+        let retries = 0;
+        const maxRetries = 6;
+
+        const fetchCards = () => {
             fetch(`/api/multiplayer/my-cards?tableId=${tableId}`)
                 .then(r => r.json())
-                .then(d => { if (d.holeCards) setMyHoleCards(d.holeCards); });
-        } else if (!gameState?.isHandInProgress) {
-            setMyHoleCards([]);
-        }
+                .then(d => {
+                    if (cancelled) return;
+                    if (d.holeCards && d.holeCards.length > 0) {
+                        setMyHoleCards(d.holeCards);
+                    } else if (retries < maxRetries) {
+                        retries++;
+                        setTimeout(fetchCards, 1500);
+                    }
+                })
+                .catch(() => {
+                    if (!cancelled && retries < maxRetries) {
+                        retries++;
+                        setTimeout(fetchCards, 1500);
+                    }
+                });
+        };
+        fetchCards();
+
+        return () => { cancelled = true; };
     }, [gameState?.isHandInProgress, mySeatIndex, tableId]);
 
     // Keep playerBalance in sync with game state
@@ -467,7 +504,7 @@ export default function MultiplayerGamePage() {
                         <h2 className="text-accent-gold-light text-base md:text-xl font-serif font-bold leading-tight tracking-wide">多人德州撲克</h2>
                         <div className="flex items-center gap-2">
                             <span className="text-[8px] md:text-[10px] text-gray-400 uppercase tracking-widest hidden sm:block">牌桌 #{gameState.handCount}</span>
-                            <span className="text-white bg-blue-600 text-[9px] font-black px-1.5 py-0.5 rounded animate-pulse shadow-[0_0_10px_rgba(37,99,235,0.5)]">v2.5-FINAL-HOTFIX</span>
+                            <span className="text-white bg-blue-600 text-[9px] font-black px-1.5 py-0.5 rounded animate-pulse shadow-[0_0_10px_rgba(37,99,235,0.5)]">v3.0</span>
                         </div>
                     </div>
                 </div>
@@ -495,9 +532,9 @@ export default function MultiplayerGamePage() {
                     {/* Poker Table Area */}
                     <div className="flex-1 relative flex items-center justify-center p-4 z-10">
                         <div className="relative w-full max-w-5xl aspect-[1.8/1] md:aspect-[2.2/1] bg-[#35654d] rounded-[80px] md:rounded-[180px] border-[8px] md:border-[16px] border-[#3e2723] shadow-[0_0_60px_rgba(0,0,0,0.8),inset_0_0_40px_rgba(0,0,0,0.6)] flex items-center justify-center felt-texture ring-1 ring-white/5 wood-texture mt-4 md:mt-8">
-                            {/* Dealer Visual - Deep integration leaning on the rim */}
-                            <div className="absolute -top-[5%] left-1/2 -translate-x-1/2 w-[180px] md:w-[350px] aspect-square flex items-end justify-center z-20 pointer-events-none transform -translate-y-[65%] md:-translate-y-[68%]">
-                                <div className="relative w-full h-full bg-no-repeat transition-all duration-700 drop-shadow-[0_15px_30px_rgba(0,0,0,0.7)]" style={{ backgroundImage: `url('${dealer.image}?v=${Date.now()}')`, backgroundSize: 'contain', backgroundPosition: 'center bottom' }}>
+                            {/* Dealer Visual - Sitting at the table rim */}
+                            <div className="absolute -top-[5%] left-1/2 -translate-x-1/2 w-[120px] md:w-[240px] aspect-square flex items-end justify-center z-20 pointer-events-none transform -translate-y-[30%] md:-translate-y-[35%]">
+                                <div className="relative w-full h-full bg-no-repeat transition-all duration-700 drop-shadow-[0_10px_25px_rgba(0,0,0,0.8)]" style={{ backgroundImage: `url('${dealer.image}?v=${Date.now()}')`, backgroundSize: 'contain', backgroundPosition: 'center bottom' }}>
                                     {dealerMessage && (
                                         <div className="absolute top-0 left-[80%] bg-surface-dark/95 border border-primary/40 text-white px-3 py-1.5 rounded-2xl rounded-bl-sm font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)] z-50 backdrop-blur text-[10px] md:text-sm whitespace-nowrap animate-bounce-subtle">
                                             {dealerMessage}
