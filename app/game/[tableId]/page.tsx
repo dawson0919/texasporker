@@ -75,7 +75,8 @@ export default function MultiplayerGamePage() {
     const prevStateRef = useRef<PublicGameState | null>(null);
     const hasStartedFirstHand = useRef(false);
 
-    const [dealer] = useState(() => DEALER_POOL[Math.floor(Math.random() * DEALER_POOL.length)]);
+    // v2.1 - Forced New Dealer & Fixes
+    const [dealer] = useState(DEALER_POOL[4]); // Force Elena (New Dealer)
 
     useEffect(() => { soundEnabledRef.current = soundEnabled; }, [soundEnabled]);
 
