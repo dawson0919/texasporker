@@ -42,9 +42,9 @@ const HAND_NAME_MAP: Record<string, string> = {
 };
 
 const DEALER_POOL = [
-    { id: '1', name: 'Elena', style: '極致奢華', desc: '傳奇荷官 • 尊享體驗', image: '/dealers/dealer-red.png' },
-    { id: '2', name: 'Sophie', style: '皇家風範', desc: '頂級荷官 • 優雅迷人', image: '/dealers/dealer-blue.png' },
-    { id: '3', name: 'Mei', style: '東方神秘', desc: '旗袍荷官 • 賭神指定', image: '/dealers/dealer-black.png' },
+    { id: '1', name: 'Elena', style: '極致奢華', desc: '傳奇荷官 • 尊享體驗', image: '/dealers/dealer-red.png?v=2' },
+    { id: '2', name: 'Sophie', style: '皇家風範', desc: '頂級荷官 • 優雅迷人', image: '/dealers/dealer-blue.png?v=2' },
+    { id: '3', name: 'Mei', style: '東方神秘', desc: '旗袍荷官 • 賭神指定', image: '/dealers/dealer-black.png?v=2' },
 ];
 
 export default function MultiplayerGamePage() {
