@@ -446,7 +446,13 @@ export function runShowdown(
     );
 
     if (activePlayers.length === 0) {
-        return { ...state, stage: 'SHOWDOWN', isHandInProgress: false, communityCards: cc };
+        return {
+            ...state,
+            stage: 'SHOWDOWN',
+            isHandInProgress: false,
+            communityCards: cc,
+            autoStartAt: new Date(Date.now() + 4000).toISOString(),
+        };
     }
 
     // Side pot distribution
