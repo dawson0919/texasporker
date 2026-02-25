@@ -46,6 +46,7 @@ const DEALER_POOL = [
     { id: '2', name: 'Natasha', style: '俄式優雅', desc: '明星荷官 • 冷豔高貴', image: '/dealers/dealer-2.png' },
     { id: '3', name: 'Camille', style: '法式魅力', desc: '王牌荷官 • 人氣最高', image: '/dealers/dealer-3.png' },
     { id: '4', name: 'Ploy', style: '泰式風華', desc: '專業荷官 • 傳統融合', image: '/dealers/dealer-4.png' },
+    { id: '5', name: 'Elena', style: '極致奢華', desc: '傳奇荷官 • 尊享體驗', image: '/dealers/dealer-new.png' },
 ];
 
 export default function MultiplayerGamePage() {
@@ -442,9 +443,9 @@ export default function MultiplayerGamePage() {
                     {/* Poker Table Area */}
                     <div className="flex-1 relative flex items-center justify-center p-4 z-10">
                         <div className="relative w-full max-w-5xl aspect-[1.8/1] md:aspect-[2.2/1] bg-[#35654d] rounded-[80px] md:rounded-[180px] border-[8px] md:border-[16px] border-[#3e2723] shadow-[0_0_60px_rgba(0,0,0,0.8),inset_0_0_40px_rgba(0,0,0,0.6)] flex items-center justify-center felt-texture ring-1 ring-white/5 wood-texture mt-4 md:mt-8">
-                            {/* Dealer Visual - Precision leaning on the rim */}
-                            <div className="absolute -top-[10%] left-1/2 -translate-x-1/2 w-[150px] md:w-[280px] aspect-square flex items-end justify-center z-20 pointer-events-none transform -translate-y-[75%] md:-translate-y-[80%]">
-                                <div className="relative w-full h-full bg-no-repeat transition-all duration-700 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]" style={{ backgroundImage: `url('${dealer.image}')`, backgroundSize: 'contain', backgroundPosition: 'center bottom' }}>
+                            {/* Dealer Visual - Deep integration leaning on the rim */}
+                            <div className="absolute -top-[5%] left-1/2 -translate-x-1/2 w-[180px] md:w-[350px] aspect-square flex items-end justify-center z-20 pointer-events-none transform -translate-y-[65%] md:-translate-y-[68%]">
+                                <div className="relative w-full h-full bg-no-repeat transition-all duration-700 drop-shadow-[0_15px_30px_rgba(0,0,0,0.7)]" style={{ backgroundImage: `url('${dealer.image}')`, backgroundSize: 'contain', backgroundPosition: 'center bottom' }}>
                                     {dealerMessage && (
                                         <div className="absolute top-0 left-[80%] bg-surface-dark/95 border border-primary/40 text-white px-3 py-1.5 rounded-2xl rounded-bl-sm font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)] z-50 backdrop-blur text-[10px] md:text-sm whitespace-nowrap animate-bounce-subtle">
                                             {dealerMessage}
@@ -619,8 +620,8 @@ export default function MultiplayerGamePage() {
                                             <div className="text-[10px] text-accent-gold font-mono">
                                                 {seat.isWinner ? (
                                                     <div className="flex flex-col items-center">
-                                                        <span className="text-yellow-400 font-bold">��</span>
-                                                        {seat.handName && <span className="text-yellow-300/80 text-[8px]">{seat.handName}</span>}
+                                                        <span className="text-yellow-400 font-bold">勝出!</span>
+                                                        {seat.handName && <span className="text-yellow-300/80 text-[8px]">{HAND_NAME_MAP[seat.handName] || seat.handName}</span>}
                                                     </div>
                                                 ) : seat.status === 'folded' ? <span className="text-gray-400 text-[9px]">已棄牌</span>
                                                     : seat.status === 'all-in' ? <span className="text-red-400 font-bold text-[9px]">ALL-IN</span>
