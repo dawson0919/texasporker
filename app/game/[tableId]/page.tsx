@@ -27,6 +27,19 @@ const WIN_ANIM_TARGETS: Record<number, { x: string; y: string }> = {
     4: { x: '140%', y: '0%' },
 };
 
+const HAND_NAME_MAP: Record<string, string> = {
+    'Royal Flush': '皇家同花順',
+    'Straight Flush': '同花順',
+    'Four of a Kind': '四條',
+    'Full House': '葫蘆',
+    'Flush': '同花',
+    'Straight': '順子',
+    'Three of a Kind': '三條',
+    'Two Pair': '兩對',
+    'Pair': '對子',
+    'High Card': '高牌',
+};
+
 const DEALER_POOL = [
     { id: '1', name: 'Lucia', style: '巴西風情', desc: '首席荷官 • 熱情活力', image: '/dealers/dealer-1.png' },
     { id: '2', name: 'Natasha', style: '俄式優雅', desc: '明星荷官 • 冷豔高貴', image: '/dealers/dealer-2.png' },
@@ -52,7 +65,7 @@ export default function MultiplayerGamePage() {
     const soundEnabledRef = useRef(true);
     const [turnTimeLeft, setTurnTimeLeft] = useState(-1);
     const turnTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-    const [winAnimation, setWinAnimation] = useState<{ active: boolean; winnerSeatIndex: number; winnerName: string; potAmount: number } | null>(null);
+    const [winAnimation, setWinAnimation] = useState<{ active: boolean; winnerSeatIndex: number; winnerName: string; potAmount: number; handName?: string } | null>(null);
     const [fillDeadline, setFillDeadline] = useState<string | null>(null);
     const [isActionPending, setIsActionPending] = useState(false);
     const [autoFold, setAutoFold] = useState(false);
@@ -166,8 +179,9 @@ export default function MultiplayerGamePage() {
                         winnerSeatIndex: winner.seatIndex,
                         winnerName: winner.displayName,
                         potAmount: newState.potSize,
+                        handName: winner.handName,
                     });
-                    setTimeout(() => setWinAnimation(null), 2500);
+                    setTimeout(() => setWinAnimation(null), 4000); // Extended to 4s for better readability
                 }
             }
             // Check if it became our turn
@@ -459,7 +473,7 @@ export default function MultiplayerGamePage() {
                     </div>
 
                     {/* Dealer Area */}
-                    <div className="relative z-10 w-full h-[8vh] md:h-[12vh] bg-black shadow-2xl overflow-hidden border-b border-accent-gold/20 shrink-0">
+                    <div className="relative z-30 w-full h-[10vh] md:h-[14vh] bg-black shadow-2xl border-b border-accent-gold/20 shrink-0">
                         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60"></div>
                         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-full flex items-end justify-center z-10 pointer-events-none">
                             <div className="relative w-[80px] md:w-[140px] h-[110%] bg-no-repeat transition-all duration-700 rounded-t-xl" style={{ backgroundImage: `url('${dealer.image}')`, backgroundSize: '180%', backgroundPosition: 'center 12%' }}>
@@ -480,7 +494,7 @@ export default function MultiplayerGamePage() {
                     </div>
 
                     {/* Poker Table */}
-                    <div className="flex-1 relative flex items-center justify-center p-2 z-10 overflow-hidden -mt-4">
+                    <div className="flex-1 relative flex items-center justify-center p-2 z-10 overflow-hidden -mt-8 md:-mt-12">
                         <div className="relative w-full max-w-5xl aspect-[1.8/1] md:aspect-[2.2/1] bg-[#35654d] rounded-[80px] md:rounded-[180px] border-[8px] md:border-[16px] border-[#3e2723] shadow-[0_0_60px_rgba(0,0,0,0.8),inset_0_0_40px_rgba(0,0,0,0.6)] flex items-center justify-center felt-texture ring-1 ring-white/5 wood-texture">
                             <div className="absolute inset-4 rounded-[160px] border border-yellow-400/10 pointer-events-none"></div>
                             <div className="absolute opacity-5 pointer-events-none select-none flex flex-col items-center justify-center transform scale-y-75">
@@ -510,6 +524,37 @@ export default function MultiplayerGamePage() {
                                     <div className="flex flex-col items-center gap-2 animate-pulse">
                                         <div className="text-6xl md:text-8xl font-bold text-accent-gold drop-shadow-[0_0_30px_rgba(212,175,55,0.8)] font-mono">{startCountdown}</div>
                                         <div className="text-sm md:text-lg text-white/80 font-bold tracking-widest uppercase">開局倒數</div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Win Animation Overlay */}
+                            {winAnimation?.active && (
+                                <div className="absolute inset-0 flex items-center justify-center z-50 pointer-events-none animate-in fade-in zoom-in duration-500">
+                                    <div className="bg-gradient-to-b from-black/90 to-surface-dark border-2 border-accent-gold/50 rounded-2xl p-6 md:p-8 flex flex-col items-center shadow-[0_0_50px_rgba(212,175,55,0.4)] backdrop-blur-md">
+                                        <div className="text-accent-gold text-sm md:text-base font-bold tracking-widest uppercase mb-1">WINNER</div>
+                                        <div className="text-white text-2xl md:text-4xl font-serif font-bold mb-4 drop-shadow-md">{winAnimation.winnerName}</div>
+
+                                        <div className="flex items-center gap-3 mb-4">
+                                            <div className="h-px w-8 md:w-16 bg-accent-gold/30"></div>
+                                            <div className="bg-accent-gold/10 px-4 py-1.5 rounded-full border border-accent-gold/40">
+                                                <div className="text-accent-gold-light text-base md:text-2xl font-bold whitespace-nowrap">
+                                                    {winAnimation.handName ? (HAND_NAME_MAP[winAnimation.handName] || winAnimation.handName) : '勝出'}
+                                                </div>
+                                            </div>
+                                            <div className="h-px w-8 md:w-16 bg-accent-gold/30"></div>
+                                        </div>
+
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-6 h-6 rounded-full bg-yellow-500 flex items-center justify-center text-black text-xs font-black shadow-inner">$</div>
+                                            <div className="text-yellow-400 text-xl md:text-3xl font-mono font-black">+{winAnimation.potAmount.toLocaleString()}</div>
+                                        </div>
+
+                                        <div className="mt-4 flex gap-1 animate-bounce">
+                                            {Array(3).fill(0).map((_, i) => (
+                                                <div key={i} className="w-2 h-2 rounded-full bg-accent-gold/60"></div>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
                             )}
