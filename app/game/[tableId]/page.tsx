@@ -84,6 +84,47 @@ export default function MultiplayerGamePage() {
         if (soundEnabledRef.current) GameSounds[sound]();
     }, []);
 
+    // Handle state updates with sound effects
+    const handleStateUpdate = useCallback((newState: PublicGameState) => {
+        const prev = prevStateRef.current;
+        setGameState(newState);
+        prevStateRef.current = newState;
+
+        // Play sounds based on state changes
+        if (prev) {
+            if (!prev.isHandInProgress && newState.isHandInProgress) {
+                playSound('blind');
+                setTimeout(() => playSound('deal'), 300);
+                // Fetch new hole cards
+                fetch(`/api/multiplayer/my-cards?tableId=${tableId}`)
+                    .then(r => r.json())
+                    .then(d => { if (d.holeCards) setMyHoleCards(d.holeCards); });
+            }
+            if (prev.stage !== newState.stage && newState.stage !== 'SHOWDOWN' && newState.stage !== 'PREFLOP') {
+                playSound('newStage');
+            }
+            if (newState.stage === 'SHOWDOWN' && prev.stage !== 'SHOWDOWN') {
+                playSound('win');
+                // Show win animation
+                const winner = newState.seats.find(s => s?.isWinner);
+                if (winner) {
+                    setWinAnimation({
+                        active: true,
+                        winnerSeatIndex: winner.seatIndex,
+                        winnerName: winner.displayName,
+                        potAmount: newState.potSize,
+                        handName: winner.handName,
+                    });
+                    setTimeout(() => setWinAnimation(null), 4000);
+                }
+            }
+            // Check if it became our turn
+            if (mySeatIndex >= 0 && newState.currentSeatIndex === mySeatIndex && newState.isHandInProgress) {
+                playSound('yourTurn');
+            }
+        }
+    }, [mySeatIndex, playSound, tableId]);
+
     // Fetch initial state and subscribe to Realtime
     useEffect(() => {
         if (!tableId) return;
@@ -417,7 +458,10 @@ export default function MultiplayerGamePage() {
                     </Link>
                     <div>
                         <h2 className="text-accent-gold-light text-base md:text-xl font-serif font-bold leading-tight tracking-wide">多人德州撲克</h2>
-                        <div className="text-[8px] md:text-[10px] text-gray-400 uppercase tracking-widest hidden sm:block">牌桌 #{gameState.handCount}</div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-[8px] md:text-[10px] text-gray-400 uppercase tracking-widest hidden sm:block">牌桌 #{gameState.handCount}</span>
+                            <span className="text-accent-gold/40 text-[7px] font-mono border border-accent-gold/20 px-1 rounded">v2.2-FIXED</span>
+                        </div>
                     </div>
                 </div>
                 <div className="flex gap-2 md:gap-4 items-center">
