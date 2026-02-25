@@ -30,7 +30,7 @@ ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 RUN npm run build
 
-# Production
+# Production — IMPORTANT: standalone first, then public and static on top
 FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production
@@ -38,8 +38,11 @@ ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/public ./public
+# 1) standalone output (server.js + minimal node_modules)
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+# 2) public folder ON TOP (standalone doesn't include it)
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+# 3) static assets ON TOP
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
