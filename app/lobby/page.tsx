@@ -37,10 +37,10 @@ export default function LobbyPage() {
   ];
 
   useEffect(() => {
-    fetch('/api/user/balance').then(r => r.json()).then(d => setChipBalance(d.balance)).catch(() => {});
-    fetch('/api/user/stats').then(r => r.json()).then(d => { if (d.title) setStats(d); }).catch(() => {});
-    fetch('/api/multiplayer/tables').then(r => r.json()).then(d => { if (d.tables) setLiveTables(d.tables); }).catch(() => {});
-    fetch('/api/tournaments').then(r => r.json()).then(d => { if (d.tournaments?.length > 0) setNextTournament(d.tournaments[0]); }).catch(() => {});
+    fetch('/api/user/balance').then(r => r.json()).then(d => setChipBalance(d.balance)).catch(() => { });
+    fetch('/api/user/stats').then(r => r.json()).then(d => { if (d.title) setStats(d); }).catch(() => { });
+    fetch('/api/multiplayer/tables').then(r => r.json()).then(d => { if (d.tables) setLiveTables(d.tables); }).catch(() => { });
+    fetch('/api/tournaments').then(r => r.json()).then(d => { if (d.tournaments?.length > 0) setNextTournament(d.tournaments[0]); }).catch(() => { });
   }, []);
 
   // Tournament countdown
@@ -261,7 +261,7 @@ export default function LobbyPage() {
                   <div key={i} className="flex items-center justify-between text-sm">
                     <div className="flex items-center gap-2">
                       <span className={`font-bold ${i === 0 ? 'text-accent-gold' : i === 1 ? 'text-slate-400' : 'text-amber-700'}`}>{i + 1}</span>
-                      <div className="size-6 rounded-full bg-cover bg-center bg-slate-700" style={{ backgroundImage: `url('https://ui-avatars.com/api/?name=${encodeURIComponent(w.name.slice(0,2))}&background=random')` }}></div>
+                      <div className="size-6 rounded-full bg-cover bg-center bg-slate-700" style={{ backgroundImage: `url('https://ui-avatars.com/api/?name=${encodeURIComponent(w.name.slice(0, 2))}&background=random')` }}></div>
                       <span className="text-slate-200 truncate max-w-[100px]">{w.name}</span>
                       {i === 0 && <span className="text-[10px]">👑</span>}
                     </div>
@@ -416,7 +416,7 @@ export default function LobbyPage() {
                       <p>盲注: <span className="text-slate-200">$50/$100</span></p>
                       <p className="mt-1 flex items-center gap-1">
                         <span className="material-symbols-outlined text-[14px]">group</span>
-                        <span className="text-green-400">{table.realPlayers}真人</span> + {table.totalPlayers - table.realPlayers}AI / 8
+                        <span className="text-green-400">{table.realPlayers}真人</span> + {table.totalPlayers - table.realPlayers}AI / 5
                       </p>
                     </div>
                     <div className="bg-primary hover:bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">

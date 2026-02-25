@@ -11,6 +11,8 @@ import {
 
 // ========== MATCHMAKING ==========
 
+const MAX_REAL_PLAYERS = 3; // Mixed table must have at least 2 AI (MAX_SEATS=5)
+
 export async function assignSeat(
     userUuid: string,
     clerkUserId: string,
@@ -40,6 +42,13 @@ export async function assignSeat(
         }
     }
 
+    // Proactive Cleanup: Remove players who joined > 2 hours ago (ghost prevention)
+    const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
+    await supabase.from('table_players')
+        .delete()
+        .eq('player_type', 'real')
+        .lt('joined_at', twoHoursAgo);
+
     // Find available table (prefer tables with real players but not full)
     const { data: tables } = await supabase
         .from('poker_tables')
@@ -56,8 +65,8 @@ export async function assignSeat(
         const validPlayers = (players || []).filter(p => p.seat_index < MAX_SEATS);
         const realCount = validPlayers.filter(p => p.player_type === 'real').length;
 
-        // Table has room (either empty seat or AI to replace)
-        if (realCount < MAX_SEATS) {
+        // Table has room (limit to MAX_REAL_PLAYERS to reserve 2 AI seats)
+        if (realCount < MAX_REAL_PLAYERS) {
             // Find a seat: prefer empty seat, then replace AI
             const gs: PublicGameState = table.game_state;
             const occupied = new Set(validPlayers.map(p => p.seat_index));
