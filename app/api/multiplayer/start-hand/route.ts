@@ -35,7 +35,41 @@ export async function POST(req: Request) {
         .select('*')
         .eq('table_id', tableId);
 
-    const playerMap = new Map((dbPlayers || []).map(p => [p.seat_index, p]));
+    // Deduplicate: if same user_id appears at multiple seats, keep only the first
+    const seenUsers = new Set<string>();
+    const dedupedPlayers = (dbPlayers || []).filter(p => {
+        if (p.user_id) {
+            if (seenUsers.has(p.user_id)) {
+                // Delete the duplicate from DB
+                supabase.from('table_players').delete()
+                    .eq('table_id', tableId)
+                    .eq('seat_index', p.seat_index)
+                    .eq('user_id', p.user_id)
+                    .then(() => {});
+                return false;
+            }
+            seenUsers.add(p.user_id);
+        }
+        return true;
+    });
+
+    // Also deduplicate AI by display_name
+    const seenNames = new Set<string>();
+    const finalPlayers = dedupedPlayers.filter(p => {
+        if (p.player_type === 'ai') {
+            if (seenNames.has(p.display_name)) {
+                supabase.from('table_players').delete()
+                    .eq('table_id', tableId)
+                    .eq('seat_index', p.seat_index)
+                    .then(() => {});
+                return false;
+            }
+            seenNames.add(p.display_name);
+        }
+        return true;
+    });
+
+    const playerMap = new Map(finalPlayers.map(p => [p.seat_index, p]));
 
     // Truncate seats to MAX_SEATS (handles old 8-seat tables)
     const truncatedSeats = state.seats.slice(0, MAX_SEATS);

@@ -529,26 +529,26 @@ export default function MultiplayerGamePage() {
                         <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black"></div>
                     </div>
 
-                    {/* Dealer Cinematic Strip */}
-                    <div className="relative z-10 shrink-0 h-[80px] md:h-[140px] bg-gradient-to-b from-[#1a1a1a] via-[#111] to-transparent flex items-center justify-center overflow-hidden">
+                    {/* Dealer Cinematic Strip - overflow-visible so dealer extends into table */}
+                    <div className="relative z-20 shrink-0 h-[60px] md:h-[100px] bg-gradient-to-b from-[#1a1a1a] via-[#111] to-transparent flex items-center justify-center overflow-visible">
                         {/* Bokeh background */}
-                        <div className="absolute inset-0 opacity-20">
+                        <div className="absolute inset-0 opacity-20 overflow-hidden">
                             <div className="absolute top-2 left-[15%] w-16 h-16 md:w-24 md:h-24 rounded-full bg-amber-500/30 blur-2xl"></div>
                             <div className="absolute top-4 right-[20%] w-12 h-12 md:w-20 md:h-20 rounded-full bg-blue-400/20 blur-2xl"></div>
                             <div className="absolute bottom-0 left-[40%] w-20 h-20 md:w-32 md:h-32 rounded-full bg-amber-400/15 blur-3xl"></div>
                         </div>
-                        {/* Dealer image */}
-                        <div className="relative h-full aspect-[3/4] md:aspect-[4/5]">
-                            <img src={dealer.image} alt={dealer.name} className="h-full w-full object-cover object-top" />
+                        {/* Dealer image - extends below the strip into the table */}
+                        <div className="relative h-[120%] md:h-[150%] aspect-[3/4] md:aspect-[4/5] z-30">
+                            <img src={dealer.image} alt={dealer.name} className="h-full w-full object-cover object-top drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]" />
                         </div>
                         {/* Dealer message bubble */}
                         {dealerMessage && (
-                            <div className="absolute top-2 md:top-4 left-[55%] md:left-[54%] bg-surface-dark/95 border border-primary/40 text-white px-3 py-1.5 rounded-2xl rounded-bl-sm font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)] backdrop-blur text-[10px] md:text-sm whitespace-nowrap animate-bounce-subtle">
+                            <div className="absolute top-2 md:top-4 left-[55%] md:left-[54%] bg-surface-dark/95 border border-primary/40 text-white px-3 py-1.5 rounded-2xl rounded-bl-sm font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)] backdrop-blur text-[10px] md:text-sm whitespace-nowrap animate-bounce-subtle z-40">
                                 {dealerMessage}
                             </div>
                         )}
                         {/* Table Info Badge */}
-                        <div className="absolute top-2 md:top-4 right-3 md:right-6">
+                        <div className="absolute top-2 md:top-4 right-3 md:right-6 z-40">
                             <div className="bg-black/60 backdrop-blur-md px-2.5 py-1 md:px-3 md:py-1.5 rounded-lg border-l-4 border-accent-gold shadow-xl">
                                 <span className="text-white font-serif font-bold text-[10px] md:text-sm block leading-tight">澳門貴賓廳</span>
                                 <span className="text-accent-gold text-[8px] md:text-xs font-mono font-bold uppercase tracking-wider">{SMALL_BLIND}/{BIG_BLIND} • {gameState.seats.slice(0, MAX_SEATS).filter(s => s !== null).length}人</span>
@@ -557,7 +557,7 @@ export default function MultiplayerGamePage() {
                     </div>
 
                     {/* Poker Table Area */}
-                    <div className="flex-1 relative flex items-center justify-center p-2 md:p-4 z-10 -mt-2 md:-mt-4">
+                    <div className="flex-1 relative flex items-center justify-center p-2 md:p-4 z-10 -mt-6 md:-mt-12">
                         <div className="relative w-full max-w-5xl aspect-[1.8/1] md:aspect-[2.2/1] bg-[#35654d] rounded-[80px] md:rounded-[180px] border-[8px] md:border-[16px] border-[#3e2723] shadow-[0_0_60px_rgba(0,0,0,0.8),inset_0_0_40px_rgba(0,0,0,0.6)] flex items-center justify-center felt-texture ring-1 ring-white/5 wood-texture">
 
                             <div className="absolute inset-4 rounded-[160px] border border-yellow-400/10 pointer-events-none"></div>

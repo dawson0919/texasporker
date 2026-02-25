@@ -21,26 +21,42 @@ export async function assignSeat(
     chipBalance: number,
 ): Promise<{ tableId: string; seatIndex: number; tableNumber: number; isNewTable: boolean }> {
 
-    // Check if user is already seated somewhere
-    const { data: existingSeat } = await supabase
+    // Check if user is already seated somewhere (use maybeSingle to handle 0 or 1 row)
+    const { data: existingSeats } = await supabase
         .from('table_players')
         .select('table_id, seat_index, poker_tables!inner(id, table_number, status)')
         .eq('user_id', userUuid)
-        .eq('player_type', 'real')
-        .limit(1)
-        .single();
+        .eq('player_type', 'real');
 
-    if (existingSeat) {
-        const table = (existingSeat as any).poker_tables;
-        if (table && (table.status === 'waiting' || table.status === 'playing')) {
+    if (existingSeats && existingSeats.length > 0) {
+        // Find a valid active seat
+        const activeSeat = existingSeats.find(s => {
+            const table = (s as any).poker_tables;
+            return table && (table.status === 'waiting' || table.status === 'playing');
+        });
+
+        if (activeSeat) {
+            // Clean up any OTHER duplicate entries for this user (keep only the active one)
+            if (existingSeats.length > 1) {
+                for (const dup of existingSeats) {
+                    if (dup.table_id !== activeSeat.table_id || dup.seat_index !== activeSeat.seat_index) {
+                        await supabase.from('table_players').delete()
+                            .eq('table_id', dup.table_id)
+                            .eq('seat_index', dup.seat_index)
+                            .eq('user_id', userUuid);
+                    }
+                }
+            }
+
+            const table = (activeSeat as any).poker_tables;
             return {
-                tableId: existingSeat.table_id,
-                seatIndex: existingSeat.seat_index,
+                tableId: activeSeat.table_id,
+                seatIndex: activeSeat.seat_index,
                 tableNumber: table.table_number,
                 isNewTable: false,
             };
         }
-        // If the table is closed/invalid, delete this stale entry
+        // All entries are stale — delete them all
         await supabase.from('table_players').delete().eq('user_id', userUuid).eq('player_type', 'real');
     }
 
@@ -311,9 +327,11 @@ export async function fillTableWithAI(tableId: string): Promise<PublicGameState 
 
     const gameState: PublicGameState = table.game_state;
     const newSeats = [...gameState.seats];
-    const usedNames = new Set(
-        newSeats.filter((s): s is PublicSeat => s !== null).map(s => s.displayName)
-    );
+    // Use BOTH game_state and DB names to prevent duplicates
+    const usedNames = new Set([
+        ...newSeats.filter((s): s is PublicSeat => s !== null).map(s => s.displayName),
+        ...existingPlayers.map(p => p.display_name),
+    ]);
 
     const availableNames = AI_NAMES.filter(n => !usedNames.has(n));
     let nameIdx = 0;
