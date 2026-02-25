@@ -40,6 +40,8 @@ export async function assignSeat(
                 isNewTable: false,
             };
         }
+        // If the table is closed/invalid, delete this stale entry
+        await supabase.from('table_players').delete().eq('user_id', userUuid).eq('player_type', 'real');
     }
 
     // Proactive Cleanup: Remove players who joined > 2 hours ago (ghost prevention)
